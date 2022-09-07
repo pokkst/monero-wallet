@@ -45,7 +45,7 @@ public class Ledger {
     private static final byte PROTOCOL_VERSION = 0x03;
     public static final int SW_OK = 0x9000;
     public static final int SW_INS_NOT_SUPPORTED = 0x6D00;
-    public static final int OK[] = {SW_OK};
+    public static final int[] OK = {SW_OK};
     public static final int MINIMUM_LEDGER_VERSION = (1 << 16) + (8 << 8) + (0); // 1.6.0
 
     public static UsbDevice findDevice(UsbManager usbManager) {
@@ -153,7 +153,7 @@ public class Ledger {
         return result;
     }
 
-    private byte[] exchangeCheck(byte[] apdu, int acceptedSW[]) throws BTChipException {
+    private byte[] exchangeCheck(byte[] apdu, int[] acceptedSW) throws BTChipException {
         byte[] response = exchange(apdu);
         if (acceptedSW == null) {
             return response;
@@ -166,7 +166,7 @@ public class Ledger {
         throw new BTChipException("Invalid status", lastSW);
     }
 
-    private byte[] exchangeApduNoOpt(Instruction instruction, byte[] data, int acceptedSW[])
+    private byte[] exchangeApduNoOpt(Instruction instruction, byte[] data, int[] acceptedSW)
             throws BTChipException {
         byte[] apdu = new byte[data.length + 6];
         apdu[0] = PROTOCOL_VERSION;

@@ -41,7 +41,7 @@ public class RestoreHeight {
         return Singleton;
     }
 
-    private Map<String, Long> blockheight = new HashMap<>();
+    private final Map<String, Long> blockheight = new HashMap<>();
 
     RestoreHeight() {
         blockheight.put("2014-05-01", 18844L);

@@ -19,6 +19,7 @@ package com.m2049r.xmrwallet.model;
 public interface WalletListener {
     /**
      * moneySpent - called when money spent
+     *
      * @param txId   - transaction id
      * @param amount - tvAmount
      */
@@ -26,6 +27,7 @@ public interface WalletListener {
 
     /**
      * moneyReceived - called when money received
+     *
      * @param txId   - transaction id
      * @param amount - tvAmount
      */
@@ -33,6 +35,7 @@ public interface WalletListener {
 
     /**
      * unconfirmedMoneyReceived - called when payment arrived in tx pool
+     *
      * @param txId   - transaction id
      * @param amount - tvAmount
      */
@@ -40,6 +43,7 @@ public interface WalletListener {
 
     /**
      * newBlock      - called when new block received
+     *
      * @param height - block height
      */
     void newBlock(long height);

@@ -3,8 +3,8 @@ package com.m2049r.xmrwallet.service;
 import com.m2049r.xmrwallet.MainActivity;
 
 public class ServiceBase {
-    private MainActivity mainActivity;
-    private MoneroHandlerThread thread;
+    private final MainActivity mainActivity;
+    private final MoneroHandlerThread thread;
 
     public ServiceBase(MainActivity mainActivity, MoneroHandlerThread thread) {
         this.mainActivity = mainActivity;

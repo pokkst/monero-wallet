@@ -27,7 +27,7 @@ public class TransactionHistory {
         System.loadLibrary("monerujo");
     }
 
-    private long handle;
+    private final long handle;
 
     int accountIndex;
 

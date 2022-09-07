@@ -155,7 +155,7 @@ public class NetCipherHelper implements StatusCallback {
         DISABLED,
         NOT_INSTALLED,
         NOT_ENABLED,
-        UNKNOWN;
+        UNKNOWN
     }
 
     private Status status = Status.UNKNOWN;

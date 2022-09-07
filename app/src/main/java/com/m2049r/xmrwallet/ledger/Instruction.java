@@ -147,7 +147,7 @@ public enum Instruction {
         return (byte) (value & 0xFF);
     }
 
-    private int value;
+    private final int value;
 
     Instruction(int value) {
         this.value = value;

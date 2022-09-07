@@ -17,18 +17,9 @@
 
 package com.m2049r.xmrwallet.service;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.m2049r.xmrwallet.data.DefaultNodes;
 import com.m2049r.xmrwallet.data.Node;
 import com.m2049r.xmrwallet.data.TxData;
-import com.m2049r.xmrwallet.fragment.home.HomeViewModel;
 import com.m2049r.xmrwallet.model.PendingTransaction;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletListener;
@@ -64,15 +55,20 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     }
 
     @Override
-    public void moneySpent(String txId, long amount) {}
+    public void moneySpent(String txId, long amount) {
+    }
+
     @Override
-    public void moneyReceived(String txId, long amount) {}
+    public void moneyReceived(String txId, long amount) {
+    }
+
     @Override
-    public void unconfirmedMoneyReceived(String txId, long amount) {}
+    public void unconfirmedMoneyReceived(String txId, long amount) {
+    }
 
     @Override
     public void newBlock(long height) {
-        if(height % 1000 == 0) {
+        if (height % 1000 == 0) {
             refresh();
         }
     }

@@ -21,8 +21,6 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-
 import com.m2049r.levin.scanner.LevinPeer;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.util.NetCipherHelper;
@@ -65,7 +63,7 @@ public class NodeInfo extends Node {
     private boolean tested = false;
     @Getter
     @Setter
-    private boolean selecting = false;
+    private final boolean selecting = false;
 
     public void clear() {
         height = 0;

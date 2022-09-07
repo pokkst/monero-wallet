@@ -110,7 +110,7 @@ public class Node {
     private boolean favourite = false;
     @Getter
     @Setter
-    private boolean selected = false;
+    private final boolean selected = false;
 
     @Override
     public int hashCode() {
@@ -144,13 +144,13 @@ public class Node {
         if ((nodeString == null) || nodeString.isEmpty())
             throw new IllegalArgumentException("daemon is empty");
         String daemonAddress;
-        String a[] = nodeString.split("@");
+        String[] a = nodeString.split("@");
         if (a.length == 1) { // no credentials
             daemonAddress = a[0];
             username = "";
             password = "";
         } else if (a.length == 2) { // credentials
-            String userPassword[] = a[0].split(":");
+            String[] userPassword = a[0].split(":");
             if (userPassword.length != 2)
                 throw new IllegalArgumentException("User:Password invalid");
             username = userPassword[0];
@@ -164,12 +164,12 @@ public class Node {
             throw new IllegalArgumentException("Too many @");
         }
 
-        String daParts[] = daemonAddress.split("/");
+        String[] daParts = daemonAddress.split("/");
         if ((daParts.length > 3) || (daParts.length < 1))
             throw new IllegalArgumentException("Too many '/' or too few");
 
         daemonAddress = daParts[0];
-        String da[] = daemonAddress.split(":");
+        String[] da = daemonAddress.split(":");
         if ((da.length > 2) || (da.length < 1))
             throw new IllegalArgumentException("Too many ':' or too few");
         String host = da[0];

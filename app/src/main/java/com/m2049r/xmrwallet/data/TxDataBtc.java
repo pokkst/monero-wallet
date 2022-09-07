@@ -95,7 +95,7 @@ public class TxDataBtc extends TxData {
         if (crypto.isCasefull()) { // compare as-is
             return address.equals(btcAddress);
         } else { // normalize & compare (e.g. ETH with and without checksum capitals
-            return address.toLowerCase().equals(btcAddress.toLowerCase());
+            return address.equalsIgnoreCase(btcAddress);
         }
     }
 }
