@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DotBar">
+        <attr name="inactiveColor" format="color" />
+        <attr name="activeColor" format="color" />
+        <attr name="dotSize" format="dimension" />
+        <attr name="activeDot" format="integer" />
+        <attr name="numberDots" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="ExchangeEditText">
+        <attr name="baseSymbol" format="string" />
+    </declare-styleable>
+
+    <attr name="gradientTopColor" format="reference" />
+    <attr name="gradientBottomColor" format="reference" />
+    <attr name="favouriteColor" format="reference" />
+    <attr name="softFavouriteColor" format="reference" />
+    <attr name="positiveColor" format="reference" />
+    <attr name="negativeColor" format="reference" />
+    <attr name="neutralColor" format="reference" />
+    <attr name="streetColorA" format="reference" />
+    <attr name="streetColorB" format="reference" />
+    <attr name="noticeColor" format="reference" />
+    <attr name="toolbarTextColor" format="reference" />
+</resources>

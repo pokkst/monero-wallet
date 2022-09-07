@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etDummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/pbProgress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/MoneroText.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@string/tx_subaddress"
+            android:textAlignment="textStart" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvAddress"
+                style="@style/MoneroText.Medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                tools:text="TAG 9wZnnNctRc7RaLya1rxykH21dUwfQpNGmVLjAvkvqe7nKT2Mw848AJNGMunW5xjoSZ5vCCU3uDnUoVqSSHxzRtQBE3f6crx" />
+
+            <ImageButton
+                android:id="@+id/bCopyAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="?android:selectableItemBackground"
+                android:padding="8dp"
+                android:src="@drawable/ic_content_copy_24dp" />
+
+        </LinearLayout>
+
+        <com.m2049r.xmrwallet.widget.ExchangeView
+            android:id="@+id/evAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etNotes"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MoneroEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/receive_desc_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:textAlignment="textStart" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cvQrCode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@id/tvNfc"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:backgroundTint="#ffffffff"
+                android:clickable="true"
+                android:focusable="true"
+                card_view:contentPadding="4dp">
+
+                <TextView
+                    android:id="@+id/tvQrCode"
+                    style="@style/MoneroFab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="4dp"
+                    android:text="@string/label_receive_info_gen_qr_code"
+                    android:textAlignment="center"
+                    android:textColor="#2D1A2E"
+                    android:textSize="16sp"
+                    android:visibility="visible"
+                    card_view:drawableStartCompat="@drawable/ic_info_outline_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/qrCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:src="#fff" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tvNfc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/nfc_tag_tap"
+                android:visibility="visible"
+                app:drawableStartCompat="@drawable/ic_nfc" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/qrCodeFull"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="#dd000000"
+        android:visibility="gone" />
+</FrameLayout>

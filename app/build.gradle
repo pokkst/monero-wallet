@@ -1,0 +1,159 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 31
+    buildToolsVersion '30.0.3'
+    ndkVersion '17.2.4988734'
+    defaultConfig {
+        applicationId "com.m2049r.xmrwallet"
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 3002
+        versionName "3.0.2 'Fluorine Fermi'"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                arguments '-DANDROID_STL=c++_shared'
+            }
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
+    flavorDimensions 'type', 'net'
+    productFlavors {
+        mainnet {
+            dimension 'net'
+        }
+        stagenet {
+            dimension 'net'
+            applicationIdSuffix '.stage'
+            versionNameSuffix ' (stage)'
+        }
+        devnet {
+            dimension 'net'
+            applicationIdSuffix '.test'
+            versionNameSuffix ' (test)'
+        }
+        alpha {
+            dimension 'type'
+            applicationIdSuffix '.alpha'
+            versionNameSuffix ' (alpha)'
+        }
+        prod {
+            dimension 'type'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+        }
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "ID_A", "\"" + getId("ID_A") + "\""
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            universalApk true
+        }
+    }
+
+    // Map for the version code that gives each ABI a value.
+    def abiCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2, 'x86': 3, 'x86_64': 4]
+
+    // Enumerate translated locales
+    def availableLocales = ["en"]
+    new File("app/src/main/res/").eachFileMatch(~/^values-.*/) { file ->
+        def languageTag = file.name.substring(7).replace("-r", "-")
+        if (languageTag != "night")
+            availableLocales.add(languageTag)
+    }
+
+    // APKs for the same app that all have the same version information.
+    android.applicationVariants.all { variant ->
+        // Update string resource: available_locales
+        variant.resValue("string", "available_locales", availableLocales.join(","))
+        // Assigns a different version code for each output APK.
+        variant.outputs.all {
+            output ->
+                def abiName = output.getFilter(com.android.build.OutputFile.ABI)
+                output.versionCodeOverride = abiCodes.get(abiName, 0) + 10 * versionCode
+
+                if (abiName == null) abiName = "universal"
+                def v = "${variant.versionName}".replaceFirst(" '.*' ?", "")
+                        .replace(".", "x")
+                        .replace("(", "-")
+                        .replace(")", "")
+                outputFileName = "$rootProject.ext.apkName-" + v + "_" + abiName + ".apk"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.m2049r.xmrwallet'
+}
+
+static def getId(name) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(new File('monerujo.id')))
+    return props[name]
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.preference:preference:1.2.0'
+
+    implementation 'com.google.android.material:material:1.6.0'
+
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    implementation "io.github.rburgst:okhttp-digest:2.6"
+    implementation "com.jakewharton.timber:timber:5.0.1"
+
+    implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
+    //implementation 'info.guardianproject.netcipher:netcipher-okhttp3:2.1.0'
+    implementation fileTree(dir: 'libs/classes', include: ['*.jar'])
+    implementation 'com.nulab-inc:zxcvbn:1.5.2'
+
+    implementation 'dnsjava:dnsjava:2.1.9'
+    implementation 'org.jitsi:dnssecjava:1.2.0'
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
+    implementation 'com.github.brnunes:swipeablerecyclerview:1.0.2'
+
+    //noinspection GradleDependency
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.mockito:mockito-all:1.10.19"
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.9.3"
+    testImplementation 'org.json:json:20211205'
+    testImplementation 'net.jodah:concurrentunit:0.4.6'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}

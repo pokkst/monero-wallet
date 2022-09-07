@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <com.m2049r.xmrwallet.widget.PasswordEntryView
+            android:id="@+id/etWalletPasswordA"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxStrokeErrorColor="?colorPrimary"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/ic_smiley_gunther_filled"
+            app:errorIconTint="?colorPrimary"
+            app:errorTextColor="?colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MoneroEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/generate_password_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textVisiblePassword"
+                android:textAlignment="textStart" />
+        </com.m2049r.xmrwallet.widget.PasswordEntryView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etWalletPasswordB"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/section_top"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MoneroEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/generate_password_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textVisiblePassword"
+                android:textAlignment="textStart" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/llFingerprintAuth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/generate_fingerprint_hint"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
