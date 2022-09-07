@@ -39,8 +39,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity == null) return;
 
         ImageView settingsImageView = view.findViewById(R.id.settings_imageview);
         ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
