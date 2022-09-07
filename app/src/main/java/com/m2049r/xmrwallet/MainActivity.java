@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         }
         WalletManager.getInstance().setProxy("127.0.0.1:9050");
         thread = new MoneroHandlerThread("WalletService", wallet, this);
-        thread.start();
         this.txService = new TxService(this, thread);
         this.balanceService = new BalanceService(this, thread);
         this.addressService = new AddressService(this, thread);
         this.historyService = new HistoryService(this, thread);
+        thread.start();
     }
 
     @Override

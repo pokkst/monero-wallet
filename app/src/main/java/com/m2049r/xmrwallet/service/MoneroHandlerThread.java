@@ -41,6 +41,11 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         super(null, null, name, THREAD_STACK_SIZE);
         this.wallet = wallet;
         this.listener = listener;
+    }
+
+    @Override
+    public synchronized void start() {
+        super.start();
         this.listener.onRefresh();
     }
 
