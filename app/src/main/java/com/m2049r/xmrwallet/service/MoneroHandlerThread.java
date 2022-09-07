@@ -17,6 +17,8 @@
 
 package com.m2049r.xmrwallet.service;
 
+import static com.m2049r.xmrwallet.model.Wallet.SWEEP_ALL;
+
 import com.m2049r.xmrwallet.data.DefaultNodes;
 import com.m2049r.xmrwallet.data.Node;
 import com.m2049r.xmrwallet.data.TxData;
@@ -97,7 +99,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     public boolean sendTx(String address, String amountStr) {
         long amount = Wallet.getAmountFromString(amountStr);
-        PendingTransaction pendingTx = wallet.createTransaction(new TxData(address, amount, 0, PendingTransaction.Priority.Priority_Default));
+        PendingTransaction pendingTx = wallet.createTransaction(new TxData(address, SWEEP_ALL, 0, PendingTransaction.Priority.Priority_Default));
         return pendingTx.commit("", true);
     }
 

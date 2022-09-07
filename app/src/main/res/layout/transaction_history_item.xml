@@ -28,14 +28,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-                <ImageView
-                    android:id="@+id/ivTxType"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_xmrto_btc"
-                    android:visibility="visible" />
-
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/pbConfirmations"
                     android:layout_width="0dp"
