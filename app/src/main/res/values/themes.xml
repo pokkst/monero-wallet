@@ -1,10 +1,5 @@
 <resources>
 
-    <style name="MyMaterialThemeClassic.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="MyMaterialThemeClassic.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="MyMaterialThemeClassic.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

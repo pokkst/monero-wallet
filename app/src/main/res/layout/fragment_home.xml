@@ -16,76 +16,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ImageView
-        android:id="@+id/monero_qr_imageview"
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_fingerprint"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <ImageView
-        android:id="@+id/monero_logo_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_monero_qr"
-        app:layout_constraintBottom_toBottomOf="@id/monero_qr_imageview"
-        app:layout_constraintEnd_toEndOf="@id/monero_qr_imageview"
-        app:layout_constraintTop_toTopOf="@id/monero_qr_imageview"
-        app:layout_constraintStart_toStartOf="@id/monero_qr_imageview"/>
-
-    <TextView
-        android:id="@+id/address_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:textAlignment="center"
-        tools:text="ADDRESS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monero_qr_imageview" />
-
     <TextView
         android:id="@+id/balance_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
         android:textAlignment="center"
         tools:text="BALANCE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/address_textview" />
+        app:layout_constraintTop_toTopOf="@id/settings_imageview"
+        app:layout_constraintBottom_toBottomOf="@id/settings_imageview"/>
 
-    <EditText
-        android:id="@+id/address_edittext"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/receive_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:hint="Address"
-        app:layout_constraintBottom_toTopOf="@id/amount_edittext"/>
-    <EditText
-        android:id="@+id/amount_edittext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:hint="Amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@id/send_button"/>
+        android:layout_marginBottom="16dp"
+        android:text="Receive"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/send_button"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <Button
         android:id="@+id/send_button"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         android:text="Send"
+        app:layout_constraintStart_toEndOf="@id/receive_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

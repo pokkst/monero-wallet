@@ -36,36 +36,32 @@
         <item name="android:navigationBarColor">@color/oled_navigationBarColor</item>
         <item name="android:textColorPrimary">@color/oled_textColorPrimary</item>
         <item name="android:textColorSecondary">@color/oled_textColorSecondary</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog_Rounded</item>
     </style>
 
-    <style name="MyMaterialThemeClassic" parent="MyMaterialTheme">
-        <item name="toolbarTextColor">@color/classic_toolbarTextColor</item>
-        <item name="gradientTopColor">@color/classic_gradientTopColor</item>
-        <item name="gradientBottomColor">@color/classic_gradientBottomColor</item>
-        <item name="favouriteColor">@color/classic_favouriteColor</item>
-        <item name="softFavouriteColor">@color/classic_softFavouriteColor</item>
-        <item name="positiveColor">@color/classic_positiveColor</item>
-        <item name="negativeColor">@color/classic_negativeColor</item>
-        <item name="neutralColor">@color/classic_neutralColor</item>
-        <item name="streetColorA">@color/classic_streetColorA</item>
-        <item name="streetColorB">@color/classic_streetColorB</item>
-        <item name="noticeColor">@color/classic_noticeColor</item>
-        <item name="colorPrimary">@color/classic_colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/classic_colorPrimaryVariant</item>
-        <item name="colorOnPrimary">@color/classic_colorOnPrimary</item>
-        <item name="colorSecondary">@color/classic_colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/classic_colorSecondaryVariant</item>
-        <item name="colorOnSecondary">@color/classic_colorOnSecondary</item>
-        <item name="colorError">@color/classic_colorError</item>
-        <item name="colorOnError">@color/classic_colorOnError</item>
-        <item name="colorSurface">@color/classic_colorSurface</item>
-        <item name="colorOnSurface">@color/classic_colorOnSurface</item>
-        <item name="android:colorBackground">@color/classic_colorBackground</item>
-        <item name="colorOnBackground">@color/classic_colorOnBackground</item>
-        <item name="android:statusBarColor">@color/classic_statusBarColor</item>
-        <item name="android:navigationBarColor">@color/classic_navigationBarColor</item>
-        <item name="android:textColorSecondary">@color/classic_textColorSecondary</item>
-        <item name="android:textColorPrimary">@color/classic_textColorPrimary</item>
+    <!-- BottomSheet Dialog-->
+    <style name="BottomSheetDialog_Rounded" parent="MyMaterialThemeOled">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="enableEdgeToEdge">true</item>
+        <item name="paddingBottomSystemWindowInsets">true</item>
+        <item name="paddingLeftSystemWindowInsets">true</item>
+        <item name="paddingRightSystemWindowInsets">true</item>
+        <item name="paddingTopSystemWindowInsets">true</item>
+        <item name="bottomSheetStyle">@style/BottomSheet_Rounded</item>
+    </style>
+
+    <style name="BottomSheet_Rounded" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceBottomSheetDialog_Rounded</item>
+    </style>
+
+    <style name="ShapeAppearanceBottomSheetDialog_Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
     <style name="MonerujoToolbar" parent="Widget.MaterialComponents.Toolbar">

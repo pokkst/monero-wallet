@@ -46,14 +46,7 @@ public class ThemeHelper {
     }
 
     public static void setTheme(@NonNull Activity activity, @NonNull String theme) {
-        switch (theme) {
-            case "Classic":
-                activity.setTheme(R.style.MyMaterialThemeClassic);
-                break;
-            case "Oled":
-                activity.setTheme(R.style.MyMaterialThemeOled);
-                break;
-        }
+        activity.setTheme(R.style.MyMaterialThemeOled);
     }
 
     public static void setPreferred(Activity activity) {

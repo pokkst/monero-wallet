@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +19,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.fragment.dialog.ReceiveBottomSheetDialog;
+import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
@@ -41,28 +45,12 @@ public class HomeFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         ImageView settingsImageView = view.findViewById(R.id.settings_imageview);
-        ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
-        TextView addressTextView = view.findViewById(R.id.address_textview);
         TextView balanceTextView = view.findViewById(R.id.balance_textview);
-        EditText addressEditText = view.findViewById(R.id.address_edittext);
-        EditText amountEditText = view.findViewById(R.id.amount_edittext);
         Button sendButton = view.findViewById(R.id.send_button);
-
-        AddressService.getInstance().address.observe(getViewLifecycleOwner(), addr -> {
-            if (!addr.isEmpty()) {
-                addressTextView.setText(addr);
-                addressImageView.setImageBitmap(mViewModel.generate(addr, 256, 256));
-            }
-        });
+        Button receiveButton = view.findViewById(R.id.receive_button);
 
         BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
             balanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
-        });
-
-        TxService.getInstance().clearSendEvent.observe(getViewLifecycleOwner(), o -> {
-            addressEditText.setText(null);
-            amountEditText.setText(null);
-            sendButton.setEnabled(true);
         });
 
         settingsImageView.setOnClickListener(view12 -> {
@@ -70,17 +58,13 @@ public class HomeFragment extends Fragment {
         });
 
         sendButton.setOnClickListener(view1 -> {
-            String address = addressEditText.getText().toString().trim();
-            String amount = amountEditText.getText().toString().trim();
-            boolean validAddress = Wallet.isAddressValid(address);
-            if (validAddress && !amount.isEmpty()) {
-                sendButton.setEnabled(false);
-                TxService.getInstance().sendTx(address, amount);
-            } else if (!validAddress) {
-                Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
-            } else if (amount.isEmpty()) {
-                Toast.makeText(getActivity(), getString(R.string.send_amount_empty), Toast.LENGTH_SHORT).show();
-            }
+            SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.show(getActivity().getSupportFragmentManager(), null);
+        });
+
+        receiveButton.setOnClickListener(view1 -> {
+            ReceiveBottomSheetDialog receiveDialog = new ReceiveBottomSheetDialog();
+            receiveDialog.show(getActivity().getSupportFragmentManager(), null);
         });
     }
 
