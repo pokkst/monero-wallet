@@ -112,6 +112,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'com.m2049r.xmrwallet'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 static def getId(name) {
@@ -146,6 +149,10 @@ dependencies {
     implementation 'org.jitsi:dnssecjava:1.2.0'
     implementation 'org.slf4j:slf4j-nop:1.7.36'
     implementation 'com.github.brnunes:swipeablerecyclerview:1.0.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-fragment:2.5.1'
+    implementation 'androidx.navigation:navigation-ui:2.5.1'
 
     //noinspection GradleDependency
     testImplementation "junit:junit:4.13.2"

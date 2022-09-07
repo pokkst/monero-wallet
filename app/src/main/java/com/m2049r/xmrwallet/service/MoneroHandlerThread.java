@@ -22,140 +22,85 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.m2049r.xmrwallet.data.DefaultNodes;
+import com.m2049r.xmrwallet.data.Node;
+import com.m2049r.xmrwallet.data.TxData;
+import com.m2049r.xmrwallet.fragment.home.HomeViewModel;
+import com.m2049r.xmrwallet.model.PendingTransaction;
+import com.m2049r.xmrwallet.model.Wallet;
+import com.m2049r.xmrwallet.model.WalletListener;
+import com.m2049r.xmrwallet.model.WalletManager;
+
 
 /**
  * Handy class for starting a new thread that has a looper. The looper can then be
  * used to create handler classes. Note that start() must still be called.
  * The started Thread has a stck size of STACK_SIZE (=5MB)
  */
-public class MoneroHandlerThread extends Thread {
+public class MoneroHandlerThread extends Thread implements WalletListener {
+    private Listener listener = null;
+    private Wallet wallet = null;
     // from src/cryptonote_config.h
     static public final long THREAD_STACK_SIZE = 5 * 1024 * 1024;
-    private int mPriority;
-    private int mTid = -1;
-    private Looper mLooper;
 
-    public MoneroHandlerThread(String name) {
+    public MoneroHandlerThread(String name, Wallet wallet, Listener listener) {
         super(null, null, name, THREAD_STACK_SIZE);
-        mPriority = Process.THREAD_PRIORITY_DEFAULT;
-    }
-
-    /**
-     * Constructs a MoneroHandlerThread.
-     *
-     * @param name
-     * @param priority The priority to run the thread at. The value supplied must be from
-     *                 {@link android.os.Process} and not from java.lang.Thread.
-     */
-    MoneroHandlerThread(String name, int priority) {
-        super(null, null, name, THREAD_STACK_SIZE);
-        mPriority = priority;
-    }
-
-    /**
-     * Call back method that can be explicitly overridden if needed to execute some
-     * setup before Looper loops.
-     */
-
-    private void onLooperPrepared() {
+        this.wallet = wallet;
+        this.listener = listener;
+        this.listener.onRefresh();
     }
 
     @Override
     public void run() {
-        mTid = Process.myTid();
-        Looper.prepare();
-        synchronized (this) {
-            mLooper = Looper.myLooper();
-            notifyAll();
-        }
-        Process.setThreadPriority(mPriority);
-        onLooperPrepared();
-        Looper.loop();
-        mTid = -1;
+        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
+        System.out.println(WalletManager.getInstance().getBlockchainHeight());
+        System.out.println(wallet.getSeed(""));
+        wallet.init(0);
+        wallet.setListener(this);
+        wallet.startRefresh();
     }
 
-    /**
-     * This method returns the Looper associated with this thread. If this thread not been started
-     * or for any reason is isAlive() returns false, this method will return null. If this thread
-     * has been started, this method will block until the looper has been initialized.
-     *
-     * @return The looper.
-     */
-    Looper getLooper() {
-        if (!isAlive()) {
-            return null;
-        }
+    @Override
+    public void moneySpent(String txId, long amount) {}
+    @Override
+    public void moneyReceived(String txId, long amount) {}
+    @Override
+    public void unconfirmedMoneyReceived(String txId, long amount) {}
 
-        // If the thread has been started, wait until the looper has been created.
-        synchronized (this) {
-            while (isAlive() && mLooper == null) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                }
-            }
+    @Override
+    public void newBlock(long height) {
+        if(height % 1000 == 0) {
+            refresh();
         }
-        return mLooper;
     }
 
-    /**
-     * Quits the handler thread's looper.
-     * <p>
-     * Causes the handler thread's looper to terminate without processing any
-     * more messages in the message queue.
-     * </p><p>
-     * Any attempt to post messages to the queue after the looper is asked to quit will fail.
-     * For example, the {@link Handler#sendMessage(Message)} method will return false.
-     * </p><p class="note">
-     * Using this method may be unsafe because some messages may not be delivered
-     * before the looper terminates.  Consider using {@link #quitSafely} instead to ensure
-     * that all pending work is completed in an orderly manner.
-     * </p>
-     *
-     * @return True if the looper looper has been asked to quit or false if the
-     * thread had not yet started running.
-     * @see #quitSafely
-     */
-    public boolean quit() {
-        Looper looper = getLooper();
-        if (looper != null) {
-            looper.quit();
-            return true;
-        }
-        return false;
+    @Override
+    public void updated() {
+        refresh();
     }
 
-    /**
-     * Quits the handler thread's looper safely.
-     * <p>
-     * Causes the handler thread's looper to terminate as soon as all remaining messages
-     * in the message queue that are already due to be delivered have been handled.
-     * Pending delayed messages with due times in the future will not be delivered.
-     * </p><p>
-     * Any attempt to post messages to the queue after the looper is asked to quit will fail.
-     * For example, the {@link Handler#sendMessage(Message)} method will return false.
-     * </p><p>
-     * If the thread has not been started or has finished (that is if
-     * {@link #getLooper} returns null), then false is returned.
-     * Otherwise the looper is asked to quit and true is returned.
-     * </p>
-     *
-     * @return True if the looper looper has been asked to quit or false if the
-     * thread had not yet started running.
-     */
-    public boolean quitSafely() {
-        Looper looper = getLooper();
-        if (looper != null) {
-            looper.quitSafely();
-            return true;
-        }
-        return false;
+    @Override
+    public void refreshed() {
+        wallet.setSynchronized();
+        refresh();
     }
 
-    /**
-     * Returns the identifier of this thread. See Process.myTid().
-     */
-    public int getThreadId() {
-        return mTid;
+    private void refresh() {
+        wallet.refreshHistory();
+        wallet.store();
+        listener.onRefresh();
+    }
+
+    public boolean sendTx(String address, String amountStr) {
+        long amount = Wallet.getAmountFromString(amountStr);
+        PendingTransaction pendingTx = wallet.createTransaction(new TxData(address, amount, 0, PendingTransaction.Priority.Priority_Default));
+        return pendingTx.commit("", true);
+    }
+
+    public interface Listener {
+        void onRefresh();
     }
 }

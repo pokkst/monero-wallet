@@ -16,7 +16,6 @@
 
 package com.m2049r.xmrwallet.model;
 
-import com.m2049r.xmrwallet.XmrWalletApplication;
 import com.m2049r.xmrwallet.data.Node;
 import com.m2049r.xmrwallet.ledger.Ledger;
 import com.m2049r.xmrwallet.util.RestoreHeight;
@@ -25,7 +24,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -248,7 +246,7 @@ public class WalletManager {
 //TODO virtual bool checkPayment(const std::string &address, const std::string &txid, const std::string &txkey, const std::string &daemon_address, uint64_t &received, uint64_t &height, std::string &error) const = 0;
 
     private String daemonAddress = null;
-    private final NetworkType networkType = XmrWalletApplication.getNetworkType();
+    private final NetworkType networkType = NetworkType.NetworkType_Mainnet;
 
     public NetworkType getNetworkType() {
         return networkType;

@@ -1,39 +1,62 @@
-/*
- * Copyright (c) 2018-2020 EarlOfEgo, m2049r
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.m2049r.xmrwallet;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import com.m2049r.xmrwallet.model.TransactionInfo;
+import com.m2049r.xmrwallet.model.Wallet;
+import com.m2049r.xmrwallet.model.WalletManager;
+import com.m2049r.xmrwallet.service.MoneroHandlerThread;
+import com.m2049r.xmrwallet.service.TxService;
+import java.io.File;
+import java.util.List;
 
-import com.m2049r.xmrwallet.onboarding.OnBoardingActivity;
-import com.m2049r.xmrwallet.onboarding.OnBoardingManager;
+public class MainActivity extends AppCompatActivity implements MoneroHandlerThread.Listener {
+    private final MutableLiveData<String> _address = new MutableLiveData<>("");
+    public LiveData<String> address = _address;
+    private final MutableLiveData<Long> _balance = new MutableLiveData<>(0L);
+    public LiveData<Long> balance = _balance;
+    private final MutableLiveData<List<TransactionInfo>> _history = new MutableLiveData<>();
+    public LiveData<List<TransactionInfo>> history = _history;
 
-public class MainActivity extends BaseActivity {
+    private MoneroHandlerThread thread = null;
+    private TxService txService = null;
+
     @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (OnBoardingManager.shouldShowOnBoarding(getApplicationContext())) {
-            startActivity(new Intent(this, OnBoardingActivity.class));
+        setContentView(R.layout.activity_main);
+        init();
+    }
+
+    public MoneroHandlerThread getThread() {
+        return thread;
+    }
+
+    private void init() {
+        File walletFile = new File(getApplicationInfo().dataDir, "xmr_wallet");
+        Wallet wallet = null;
+        if(walletFile.exists()) {
+            wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), "");
         } else {
-            startActivity(new Intent(this, LoginActivity.class));
+            wallet = WalletManager.getInstance().createWallet(walletFile, "", "English", 0);
         }
-        finish();
+        WalletManager.getInstance().setProxy("127.0.0.1:9050");
+        thread = new MoneroHandlerThread("WalletService", wallet, this);
+        thread.start();
+        this.txService = new TxService(this, thread);
+    }
+
+    @Override
+    public void onRefresh() {
+        WalletManager walletManager = WalletManager.getInstance();
+        Wallet wallet = walletManager.getWallet();
+        if(wallet != null) {
+            String address = wallet.getLastSubaddress(0);
+            _history.postValue(wallet.getHistory().getAll());
+            _balance.postValue(wallet.getBalance());
+            _address.postValue(address);
+        }
     }
 }

@@ -6,5 +6,6 @@
     <dimen name="header_top">16dp</dimen>
     <dimen name="section_top">24dp</dimen>
     <dimen name="data_top">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

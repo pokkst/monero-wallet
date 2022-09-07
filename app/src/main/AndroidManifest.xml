@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.m2049r.xmrwallet">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -28,7 +29,6 @@
     </queries>
 
     <application
-        android:name=".XmrWalletApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,65 +38,13 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden|uiMode"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".WalletActivity"
-            android:configChanges="orientation|keyboardHidden|uiMode"
-            android:label="@string/wallet_activity_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".LoginActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="locked">
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW" />
-
-                <data android:scheme="monero" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW" />
-
-                <data android:scheme="bitcoin" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/usb_device_filter" />
-        </activity>
-        <activity
-            android:name=".onboarding.OnBoardingActivity"
-            android:configChanges="orientation|keyboardHidden|uiMode"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <service
-            android:name=".service.WalletService"
-            android:description="@string/service_description"
-            android:exported="false"
-            android:label="Monero Wallet Service" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

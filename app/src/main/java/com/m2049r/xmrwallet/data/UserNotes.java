@@ -16,9 +16,6 @@
 
 package com.m2049r.xmrwallet.data;
 
-import com.m2049r.xmrwallet.service.shift.sideshift.api.CreateOrder;
-import com.m2049r.xmrwallet.util.Helper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,22 +52,6 @@ public class UserNotes {
             note = newNote;
         } else {
             note = "";
-        }
-        txNotes = buildTxNote();
-    }
-
-    public void setXmrtoOrder(CreateOrder order) {
-        if (order != null) {
-            xmrtoTag = order.TAG;
-            xmrtoKey = order.getOrderId();
-            xmrtoAmount = Helper.getDisplayAmount(order.getBtcAmount());
-            xmrtoCurrency = order.getBtcCurrency();
-            xmrtoDestination = order.getBtcAddress();
-        } else {
-            xmrtoTag = null;
-            xmrtoKey = null;
-            xmrtoAmount = null;
-            xmrtoDestination = null;
         }
         txNotes = buildTxNote();
     }

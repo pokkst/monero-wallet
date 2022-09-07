@@ -526,4 +526,15 @@
     </string-array>
 
     <string name="message_qr_failed">Failed to create QR for sharing!</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="wallet_balance_text">%1$s XMR</string>
+    <string name="send_amount_empty">Please enter an amount</string>
 </resources>
