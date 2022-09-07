@@ -153,6 +153,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.1'
     implementation 'androidx.navigation:navigation-ui:2.5.1'
+    implementation 'androidx.leanback:leanback:1.0.0'
 
     //noinspection GradleDependency
     testImplementation "junit:junit:4.13.2"

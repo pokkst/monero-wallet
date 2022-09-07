@@ -18,18 +18,23 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.adapter.TransactionInfoAdapter;
 import com.m2049r.xmrwallet.fragment.dialog.ReceiveBottomSheetDialog;
 import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
+import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
+import com.m2049r.xmrwallet.service.HistoryService;
 import com.m2049r.xmrwallet.service.TxService;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxInfoAdapterListener {
 
     private HomeViewModel mViewModel;
 
@@ -43,15 +48,14 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        bindObservers(view);
+        bindListeners(view);
+    }
 
+    private void bindListeners(View view) {
         ImageView settingsImageView = view.findViewById(R.id.settings_imageview);
-        TextView balanceTextView = view.findViewById(R.id.balance_textview);
         Button sendButton = view.findViewById(R.id.send_button);
         Button receiveButton = view.findViewById(R.id.receive_button);
-
-        BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
-            balanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
-        });
 
         settingsImageView.setOnClickListener(view12 -> {
             navigate(R.id.settings_fragment);
@@ -66,6 +70,32 @@ public class HomeFragment extends Fragment {
             ReceiveBottomSheetDialog receiveDialog = new ReceiveBottomSheetDialog();
             receiveDialog.show(getActivity().getSupportFragmentManager(), null);
         });
+    }
+
+    private void bindObservers(View view) {
+        RecyclerView txHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerview);
+        TextView balanceTextView = view.findViewById(R.id.balance_textview);
+
+        BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
+            balanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
+        });
+
+        TransactionInfoAdapter adapter = new TransactionInfoAdapter(this);
+        txHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        txHistoryRecyclerView.setAdapter(adapter);
+        HistoryService.getInstance().history.observe(getViewLifecycleOwner(), history -> {
+            if(history.isEmpty()) {
+                txHistoryRecyclerView.setVisibility(View.GONE);
+            } else {
+                adapter.submitList(history);
+                txHistoryRecyclerView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void onClickTransaction(TransactionInfo txInfo) {
+        System.out.println(txInfo.hash);
     }
 
     private void navigate(int destination) {
