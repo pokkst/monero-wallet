@@ -54,8 +54,6 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     @Override
     public void run() {
         WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
-        System.out.println(WalletManager.getInstance().getBlockchainHeight());
-        System.out.println(wallet.getSeed(""));
         wallet.init(0);
         wallet.setListener(this);
         wallet.startRefresh();
