@@ -124,7 +124,6 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
                     int x = 100 - Math.round(100f * n / (1f * daemonHeight - startHeight));
                     progressBar.setIndeterminate(height <= 1 || daemonHeight <= 0);
                     if (height > 1 && daemonHeight > 1) {
-                        if (x == 0) x = 101; // indeterminate
                         progressBar.setProgress(x);
                     }
                 } else {

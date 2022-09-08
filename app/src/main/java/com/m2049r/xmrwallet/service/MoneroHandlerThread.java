@@ -101,13 +101,13 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         } else {
             BlockchainService.getInstance().setDaemonHeight(wallet.getDaemonBlockChainHeight());
             wallet.setSynchronized();
+            wallet.store();
             refresh();
         }
     }
 
     private void refresh() {
         wallet.refreshHistory();
-        wallet.store();
         listener.onRefresh();
     }
 
