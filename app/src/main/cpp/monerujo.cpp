@@ -536,7 +536,7 @@ Java_com_m2049r_xmrwallet_model_WalletManager_resolveOpenAlias(JNIEnv *env, jobj
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_m2049r_xmrwallet_model_WalletManager_setProxy(JNIEnv *env, jobject instance,
+Java_com_m2049r_xmrwallet_model_WalletManager_setProxyJ(JNIEnv *env, jobject instance,
                                                        jstring address) {
     const char *_address = env->GetStringUTFChars(address, nullptr);
     bool rc =
@@ -705,14 +705,14 @@ JNIEXPORT jboolean JNICALL
 Java_com_m2049r_xmrwallet_model_Wallet_initJ(JNIEnv *env, jobject instance,
                                              jstring daemon_address,
                                              jlong upper_transaction_size_limit,
-                                             jstring daemon_username, jstring daemon_password) {
+                                             jstring daemon_username, jstring daemon_password, jstring proxy) {
     const char *_daemon_address = env->GetStringUTFChars(daemon_address, nullptr);
     const char *_daemon_username = env->GetStringUTFChars(daemon_username, nullptr);
     const char *_daemon_password = env->GetStringUTFChars(daemon_password, nullptr);
     Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
     bool status = wallet->init(_daemon_address, (uint64_t) upper_transaction_size_limit,
                                _daemon_username,
-                               _daemon_password);
+                               _daemon_password, false, false, "127.0.0.1:9050");
     env->ReleaseStringUTFChars(daemon_address, _daemon_address);
     env->ReleaseStringUTFChars(daemon_username, _daemon_username);
     env->ReleaseStringUTFChars(daemon_password, _daemon_password);

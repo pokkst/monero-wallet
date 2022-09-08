@@ -311,7 +311,18 @@ public class WalletManager {
 
     public native String resolveOpenAlias(String address, boolean dnssec_valid);
 
-    public native boolean setProxy(String address);
+    private String proxy = "";
+
+    public String getProxy() {
+        return proxy;
+    }
+
+    public boolean setProxy(String address) {
+        this.proxy = address;
+        return setProxyJ(address);
+    }
+
+    public native boolean setProxyJ(String address);
 
 //TODO static std::tuple<bool, std::string, std::string, std::string, std::string> checkUpdates(const std::string &software, const std::string &subdir);
 

@@ -219,11 +219,11 @@ public class Wallet {
     public boolean init(long upper_transaction_size_limit) {
         return initJ(WalletManager.getInstance().getDaemonAddress(), upper_transaction_size_limit,
                 WalletManager.getInstance().getDaemonUsername(),
-                WalletManager.getInstance().getDaemonPassword());
+                WalletManager.getInstance().getDaemonPassword(), false, false, WalletManager.getInstance().getProxy());
     }
 
     private native boolean initJ(String daemon_address, long upper_transaction_size_limit,
-                                 String daemon_username, String daemon_password);
+                                 String daemon_username, String daemon_password, boolean useSsl, boolean lightWallet, String proxy);
 
 //    virtual bool createWatchOnly(const std::string &path, const std::string &password, const std::string &language) const = 0;
 //    virtual void setRefreshFromBlockHeight(uint64_t refresh_from_block_height) = 0;
