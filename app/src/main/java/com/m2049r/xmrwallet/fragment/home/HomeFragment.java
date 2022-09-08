@@ -54,17 +54,13 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         super.onViewCreated(view, savedInstanceState);
         MainActivity mainActivity = (MainActivity)getActivity();
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        bindObservers(view);
+        bindListeners(view);
 
-        boolean usesPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
-        if(!usesPassword) {
+        mainActivity.restartEvents.observe(getViewLifecycleOwner(), o -> {
             bindObservers(view);
             bindListeners(view);
-        } else {
-            mainActivity.restartEvents.observe(getViewLifecycleOwner(), o -> {
-                bindObservers(view);
-                bindListeners(view);
-            });
-        }
+        });
     }
 
     private void bindListeners(View view) {
