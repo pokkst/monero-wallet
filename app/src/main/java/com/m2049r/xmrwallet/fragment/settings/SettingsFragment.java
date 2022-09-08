@@ -35,6 +35,8 @@ public class SettingsFragment extends Fragment {
         stringBuilder.append("Seed: " + wallet.getSeed("")+"\n\n");
         stringBuilder.append("Private view-key: " + wallet.getSecretViewKey()+"\n\n");
         stringBuilder.append("Restore height: " + wallet.getRestoreHeight() + "\n\n");
+        stringBuilder.append("Wallet height: " + wallet.getBlockChainHeight() + "\n\n");
+        stringBuilder.append("Daemon height: " + wallet.getDaemonBlockChainHeight() + "\n\n");
         walletInfoTextView.setText(stringBuilder.toString());
     }
 }
