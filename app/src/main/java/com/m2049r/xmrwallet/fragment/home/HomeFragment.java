@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +33,9 @@ import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.HistoryService;
+import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
+import com.m2049r.xmrwallet.util.Constants;
 
 import java.util.Collections;
 
@@ -49,9 +52,19 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity mainActivity = (MainActivity)getActivity();
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        bindObservers(view);
-        bindListeners(view);
+
+        boolean usesPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
+        if(!usesPassword) {
+            bindObservers(view);
+            bindListeners(view);
+        } else {
+            mainActivity.restartEvents.observe(getViewLifecycleOwner(), o -> {
+                bindObservers(view);
+                bindListeners(view);
+            });
+        }
     }
 
     private void bindListeners(View view) {
@@ -79,31 +92,38 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         TextView unlockedBalanceTextView = view.findViewById(R.id.balance_unlocked_textview);
         TextView lockedBalanceTextView = view.findViewById(R.id.balance_locked_textview);
 
-        BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
-            unlockedBalanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
-        });
+        BalanceService balanceService = BalanceService.getInstance();
+        HistoryService historyService = HistoryService.getInstance();
 
-        BalanceService.getInstance().lockedBalance.observe(getViewLifecycleOwner(), lockedBalance -> {
-            if(lockedBalance == 0) {
-                lockedBalanceTextView.setVisibility(View.INVISIBLE);
-            } else {
-                lockedBalanceTextView.setText(getString(R.string.wallet_locked_balance_text, Wallet.getDisplayAmount(lockedBalance)));
-                lockedBalanceTextView.setVisibility(View.VISIBLE);
-            }
-        });
+        if(balanceService != null) {
+            balanceService.balance.observe(getViewLifecycleOwner(), balance -> {
+                unlockedBalanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
+            });
+
+            balanceService.lockedBalance.observe(getViewLifecycleOwner(), lockedBalance -> {
+                if (lockedBalance == 0) {
+                    lockedBalanceTextView.setVisibility(View.INVISIBLE);
+                } else {
+                    lockedBalanceTextView.setText(getString(R.string.wallet_locked_balance_text, Wallet.getDisplayAmount(lockedBalance)));
+                    lockedBalanceTextView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
 
         TransactionInfoAdapter adapter = new TransactionInfoAdapter(this);
         txHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         txHistoryRecyclerView.setAdapter(adapter);
-        HistoryService.getInstance().history.observe(getViewLifecycleOwner(), history -> {
-            if(history.isEmpty()) {
-                txHistoryRecyclerView.setVisibility(View.GONE);
-            } else {
-                Collections.sort(history);
-                adapter.submitList(history);
-                txHistoryRecyclerView.setVisibility(View.VISIBLE);
-            }
-        });
+        if(historyService != null) {
+            historyService.history.observe(getViewLifecycleOwner(), history -> {
+                if (history.isEmpty()) {
+                    txHistoryRecyclerView.setVisibility(View.GONE);
+                } else {
+                    Collections.sort(history);
+                    adapter.submitList(history);
+                    txHistoryRecyclerView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 
     @Override

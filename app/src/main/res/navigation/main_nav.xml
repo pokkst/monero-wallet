@@ -16,11 +16,24 @@
                 android:name="address"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/nav_to_onboarding"
+            app:destination="@id/onboarding_fragment">
+            <argument
+                android:name="address"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.m2049r.xmrwallet.fragment.settings.SettingsFragment"
         android:label="fragment_send_amount"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
+    <fragment
+        android:id="@+id/onboarding_fragment"
+        android:name="com.m2049r.xmrwallet.fragment.onboarding.OnboardingFragment"
+        android:label="fragment_onboarding"
         tools:layout="@layout/fragment_settings">
     </fragment>
 </navigation>

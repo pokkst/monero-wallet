@@ -1,12 +1,12 @@
 package com.m2049r.xmrwallet.fragment.dialog;
 
-import android.content.ClipboardManager;
 import android.os.Bundle;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.TxService;
+import com.m2049r.xmrwallet.util.Helper;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
@@ -42,12 +41,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         Button sendButton = view.findViewById(R.id.send_button);
         TextView sendAllTextView = view.findViewById(R.id.sending_all_textview);
 
-        TxService.getInstance().clearSendEvent.observe(getViewLifecycleOwner(), o -> {
-            dismiss();
-        });
-
         pasteAddressImageButton.setOnClickListener(view1 -> {
-
+            addressEditText.setText(Helper.getClipBoardText(view.getContext()));
         });
 
         sendMaxButton.setOnClickListener(view1 -> {
@@ -68,7 +63,12 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                     return;
                 }
                 sendButton.setEnabled(false);
-                TxService.getInstance().sendTx(address, amount, sendAll);
+                boolean success = TxService.getInstance().sendTx(address, amount, sendAll);
+                if(success) {
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_sending_tx), Toast.LENGTH_SHORT).show();
+                }
             } else if (!validAddress) {
                 Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
             } else {

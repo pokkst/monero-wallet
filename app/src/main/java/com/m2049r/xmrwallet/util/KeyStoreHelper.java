@@ -62,55 +62,6 @@ public class KeyStoreHelper {
         System.loadLibrary("monerujo");
     }
 
-    public static native byte[] slowHash(byte[] data, int brokenVariant);
-
-    static final private String RSA_ALIAS = "MonerujoRSA";
-
-    private static String getCrazyPass(Context context, String password, int brokenVariant) {
-        byte[] data = password.getBytes(StandardCharsets.UTF_8);
-        byte[] sig = null;
-        try {
-            KeyStoreHelper.createKeys(context, RSA_ALIAS);
-            sig = KeyStoreHelper.signData(RSA_ALIAS, data);
-            byte[] hash = slowHash(sig, brokenVariant);
-            if (hash == null) {
-                throw new IllegalStateException("Slow Hash is null!");
-            }
-            return CrazyPassEncoder.encode(hash);
-        } catch (NoSuchProviderException | NoSuchAlgorithmException |
-                InvalidAlgorithmParameterException | KeyStoreException |
-                InvalidKeyException | SignatureException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    public static String getCrazyPass(Context context, String password) {
-        if (Helper.useCrazyPass(context))
-            return getCrazyPass(context, password, 0);
-        else
-            return password;
-    }
-
-    public static String getBrokenCrazyPass(Context context, String password, int brokenVariant) {
-        // due to a link bug in the initial implementation, some crazypasses were built with
-        // prehash & variant == 1
-        // since there are wallets out there, we need to keep this here
-        // yes, it's a mess
-        if (isArm32() && (brokenVariant != 2)) return null;
-        return getCrazyPass(context, password, brokenVariant);
-    }
-
-    private static Boolean isArm32 = null;
-
-    public static boolean isArm32() {
-        if (isArm32 != null) return isArm32;
-        synchronized (KeyStoreException.class) {
-            if (isArm32 != null) return isArm32;
-            isArm32 = Build.SUPPORTED_ABIS[0].equals("armeabi-v7a");
-            return isArm32;
-        }
-    }
-
     public static boolean saveWalletUserPass(@NonNull Context context, String wallet, String password) {
         String walletKeyAlias = SecurityConstants.WALLET_PASS_KEY_PREFIX + wallet;
         byte[] data = password.getBytes(StandardCharsets.UTF_8);
@@ -139,38 +90,6 @@ public class KeyStoreHelper {
         BrokenPasswordStoreException(Throwable cause) {
             super(cause);
         }
-    }
-
-    public static boolean hasStoredPasswords(@NonNull Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(SecurityConstants.WALLET_PASS_PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getAll().size() > 0;
-    }
-
-    public static String loadWalletUserPass(@NonNull Context context, String wallet) throws BrokenPasswordStoreException {
-        String walletKeyAlias = SecurityConstants.WALLET_PASS_KEY_PREFIX + wallet;
-        String encoded = context.getSharedPreferences(SecurityConstants.WALLET_PASS_PREFS_NAME, Context.MODE_PRIVATE)
-                .getString(wallet, "");
-        if (encoded.isEmpty()) throw new BrokenPasswordStoreException();
-        byte[] data = Base64.decode(encoded, Base64.DEFAULT);
-        byte[] decrypted = KeyStoreHelper.decrypt(walletKeyAlias, data);
-        if (decrypted == null) throw new BrokenPasswordStoreException();
-        return new String(decrypted, StandardCharsets.UTF_8);
-    }
-
-    public static void removeWalletUserPass(Context context, String wallet) {
-        String walletKeyAlias = SecurityConstants.WALLET_PASS_KEY_PREFIX + wallet;
-        try {
-            KeyStoreHelper.deleteKeys(walletKeyAlias);
-        } catch (KeyStoreException ex) {
-            Timber.w(ex);
-        }
-        context.getSharedPreferences(SecurityConstants.WALLET_PASS_PREFS_NAME, Context.MODE_PRIVATE).edit()
-                .remove(wallet).apply();
-    }
-
-    public static void copyWalletUserPass(Context context, String srcWallet, String dstWallet) throws BrokenPasswordStoreException {
-        final String pass = loadWalletUserPass(context, srcWallet);
-        saveWalletUserPass(context, dstWallet, pass);
     }
 
     /**

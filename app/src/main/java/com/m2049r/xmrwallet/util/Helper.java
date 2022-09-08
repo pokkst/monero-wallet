@@ -295,111 +295,11 @@ public class Helper {
         return data;
     }
 
-    static public void setMoneroHome(Context context) {
-        try {
-            String home = getStorage(context, MONERO_DIR).getAbsolutePath();
-            Os.setenv("HOME", home, true);
-        } catch (ErrnoException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    static public void initLogger(Context context) {
-        if (BuildConfig.DEBUG) {
-            initLogger(context, WalletManager.LOGLEVEL_DEBUG);
-        }
-        // no logger if not debug
-    }
-
     // TODO make the log levels refer to the  WalletManagerFactory::LogLevel enum ?
     static public void initLogger(Context context, int level) {
         String home = getStorage(context, MONERO_DIR).getAbsolutePath();
         WalletManager.initLogger(home + "/monerujo", "monerujo.log");
         if (level >= WalletManager.LOGLEVEL_SILENT)
             WalletManager.setLogLevel(level);
-    }
-
-    static public boolean useCrazyPass(Context context) {
-        File flagFile = new File(getWalletRoot(context), NOCRAZYPASS_FLAGFILE);
-        return !flagFile.exists();
-    }
-
-    // try to figure out what the real wallet password is given the user password
-    // which could be the actual wallet password or a (maybe malformed) CrAzYpass
-    // or the password used to derive the CrAzYpass for the wallet
-    static public String getWalletPassword(Context context, String walletName, String password) {
-        String walletPath = new File(getWalletRoot(context), walletName + ".keys").getAbsolutePath();
-
-        // try with entered password (which could be a legacy password or a CrAzYpass)
-        if (WalletManager.getInstance().verifyWalletPasswordOnly(walletPath, password)) {
-            return password;
-        }
-
-        // maybe this is a malformed CrAzYpass?
-        String possibleCrazyPass = CrazyPassEncoder.reformat(password);
-        if (possibleCrazyPass != null) { // looks like a CrAzYpass
-            if (WalletManager.getInstance().verifyWalletPasswordOnly(walletPath, possibleCrazyPass)) {
-                return possibleCrazyPass;
-            }
-        }
-
-        // generate & try with CrAzYpass
-        String crazyPass = KeyStoreHelper.getCrazyPass(context, password);
-        if (WalletManager.getInstance().verifyWalletPasswordOnly(walletPath, crazyPass)) {
-            return crazyPass;
-        }
-
-        // or maybe it is a broken CrAzYpass? (of which we have two variants)
-        String brokenCrazyPass2 = KeyStoreHelper.getBrokenCrazyPass(context, password, 2);
-        if ((brokenCrazyPass2 != null)
-                && WalletManager.getInstance().verifyWalletPasswordOnly(walletPath, brokenCrazyPass2)) {
-            return brokenCrazyPass2;
-        }
-        String brokenCrazyPass1 = KeyStoreHelper.getBrokenCrazyPass(context, password, 1);
-        if ((brokenCrazyPass1 != null)
-                && WalletManager.getInstance().verifyWalletPasswordOnly(walletPath, brokenCrazyPass1)) {
-            return brokenCrazyPass1;
-        }
-
-        return null;
-    }
-
-    static AlertDialog openDialog = null; // for preventing opening of multiple dialogs
-    static AsyncTask<Void, Void, Boolean> passwordTask = null;
-
-    public interface PasswordAction {
-        void act(String walletName, String password, boolean fingerprintUsed);
-
-        void fail(String walletName);
-    }
-
-    static private boolean processPasswordEntry(Context context, String walletName, String pass, boolean fingerprintUsed, PasswordAction action) {
-        String walletPassword = Helper.getWalletPassword(context, walletName, pass);
-        if (walletPassword != null) {
-            action.act(walletName, walletPassword, fingerprintUsed);
-            return true;
-        } else {
-            action.fail(walletName);
-            return false;
-        }
-    }
-
-    public interface Action {
-        boolean run();
-    }
-
-    static public boolean runWithNetwork(Action action) {
-        StrictMode.ThreadPolicy currentPolicy = StrictMode.getThreadPolicy();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
-        StrictMode.setThreadPolicy(policy);
-        try {
-            return action.run();
-        } finally {
-            StrictMode.setThreadPolicy(currentPolicy);
-        }
-    }
-
-    static public boolean preventScreenshot() {
-        return !(BuildConfig.DEBUG || BuildConfig.FLAVOR_type.equals("alpha"));
     }
 }

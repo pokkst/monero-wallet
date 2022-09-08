@@ -1,20 +1,30 @@
 package com.m2049r.xmrwallet;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
+import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
+import com.m2049r.xmrwallet.livedata.SingleLiveEvent;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.HistoryService;
 import com.m2049r.xmrwallet.service.MoneroHandlerThread;
+import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
+import com.m2049r.xmrwallet.util.Constants;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity implements MoneroHandlerThread.Listener {
+public class MainActivity extends AppCompatActivity implements MoneroHandlerThread.Listener, PasswordBottomSheetDialog.PasswordListener {
+    public final SingleLiveEvent restartEvents = new SingleLiveEvent();
     private MoneroHandlerThread thread = null;
     private TxService txService = null;
     private BalanceService balanceService = null;
@@ -25,21 +35,39 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+        File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
+        new PrefService(this);
+
+        if(walletFile.exists()) {
+            boolean promptPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
+            if(!promptPassword) {
+                init(walletFile, "");
+            } else {
+                PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
+                passwordDialog.listener = this;
+                passwordDialog.show(getSupportFragmentManager(), null);
+            }
+        } else {
+            navigate(R.id.onboarding_fragment);
+        }
+    }
+
+    private void navigate(int destination) {
+        FragmentActivity activity = this;
+        FragmentManager fm = activity.getSupportFragmentManager();
+        NavHostFragment navHostFragment =
+                (NavHostFragment) fm.findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navHostFragment.getNavController().navigate(destination);
+        }
     }
 
     public MoneroHandlerThread getThread() {
         return thread;
     }
 
-    private void init() {
-        File walletFile = new File(getApplicationInfo().dataDir, "xmr_wallet");
-        Wallet wallet = null;
-        if (walletFile.exists()) {
-            wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), "");
-        } else {
-            wallet = WalletManager.getInstance().createWallet(walletFile, "", "English", 0);
-        }
+    public void init(File walletFile, String password) {
+        Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
         WalletManager.getInstance().setProxy("127.0.0.1:9050");
         thread = new MoneroHandlerThread("WalletService", wallet, this);
         this.txService = new TxService(this, thread);
@@ -54,5 +82,17 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.historyService.refreshHistory();
         this.balanceService.refreshBalance();
         this.addressService.refreshAddress();
+    }
+
+    @Override
+    public void onPasswordSuccess(String password) {
+        File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
+        init(walletFile, password);
+        restartEvents.call();
+    }
+
+    @Override
+    public void onPasswordFail() {
+        Toast.makeText(this, R.string.bad_password, Toast.LENGTH_SHORT).show();
     }
 }

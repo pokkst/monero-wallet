@@ -10,18 +10,12 @@ public class TxService extends ServiceBase {
         return instance;
     }
 
-    private final SingleLiveEvent _clearSendEvent = new SingleLiveEvent();
-    public SingleLiveEvent clearSendEvent = _clearSendEvent;
-
     public TxService(MainActivity mainActivity, MoneroHandlerThread thread) {
         super(mainActivity, thread);
         instance = this;
     }
 
-    public void sendTx(String address, String amount, boolean sendAll) {
-        boolean success = this.getThread().sendTx(address, amount, sendAll);
-        if (success) {
-            _clearSendEvent.call();
-        }
+    public boolean sendTx(String address, String amount, boolean sendAll) {
+        return this.getThread().sendTx(address, amount, sendAll);
     }
 }

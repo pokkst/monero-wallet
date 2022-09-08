@@ -541,4 +541,7 @@
     <string name="send_amount_invalid">Please enter a valid amount</string>
     <string name="send_max">Send Max</string>
     <string name="undo">Undo</string>
+    <string name="error_sending_tx">Error sending tx</string>
+    <string name="create_wallet">Create wallet</string>
+    <string name="invalid_mnemonic_code">Invalid mnemonic</string>
 </resources>
