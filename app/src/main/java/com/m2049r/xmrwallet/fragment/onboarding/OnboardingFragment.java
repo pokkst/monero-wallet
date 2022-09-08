@@ -50,7 +50,7 @@ public class OnboardingFragment extends Fragment {
             File walletFile = new File(getActivity().getApplicationInfo().dataDir, Constants.WALLET_NAME);
             Wallet wallet = null;
             if(walletSeed.isEmpty()) {
-                wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, -1);
+                wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, 1);
             } else {
                 if(!checkMnemonic(walletSeed)) {
                     Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();

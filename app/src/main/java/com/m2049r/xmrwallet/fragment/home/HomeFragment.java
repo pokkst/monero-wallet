@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,10 @@ import com.m2049r.xmrwallet.fragment.dialog.ReceiveBottomSheetDialog;
 import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
 import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.Wallet;
+import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
+import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.HistoryService;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
@@ -90,6 +93,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
 
         BalanceService balanceService = BalanceService.getInstance();
         HistoryService historyService = HistoryService.getInstance();
+        BlockchainService blockchainService = BlockchainService.getInstance();
 
         if(balanceService != null) {
             balanceService.balance.observe(getViewLifecycleOwner(), balance -> {
@@ -102,6 +106,22 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
                 } else {
                     lockedBalanceTextView.setText(getString(R.string.wallet_locked_balance_text, Wallet.getDisplayAmount(lockedBalance)));
                     lockedBalanceTextView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+
+        ProgressBar progressBar = view.findViewById(R.id.sync_progress_bar);
+        if(blockchainService != null) {
+            blockchainService.height.observe(getViewLifecycleOwner(), height -> {
+                long daemonHeight = WalletManager.getInstance().getWallet().getDaemonBlockChainHeight();
+                int syncPct = (int)blockchainService.getSyncPercentage();
+                progressBar.setIndeterminate(height < 1 || daemonHeight <= 0);
+                if(height > 1 && daemonHeight > 1) {
+                    progressBar.setProgress(syncPct);
+
+                    if(WalletManager.getInstance().getWallet().isSynchronized()) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
         }

@@ -15,6 +15,7 @@ import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
+import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.HistoryService;
 import com.m2049r.xmrwallet.service.MoneroHandlerThread;
 import com.m2049r.xmrwallet.service.PrefService;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     private BalanceService balanceService = null;
     private AddressService addressService = null;
     private HistoryService historyService = null;
+    private BlockchainService blockchainService = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
                 init(walletFile, "");
             } else {
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
+                passwordDialog.setCancelable(false);
                 passwordDialog.listener = this;
                 passwordDialog.show(getSupportFragmentManager(), null);
             }
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.balanceService = new BalanceService(this, thread);
         this.addressService = new AddressService(this, thread);
         this.historyService = new HistoryService(this, thread);
+        this.blockchainService = new BlockchainService(this, thread);
         thread.start();
     }
 
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.historyService.refreshHistory();
         this.balanceService.refreshBalance();
         this.addressService.refreshAddress();
+        this.blockchainService.refreshBlockchain();
     }
 
     @Override
