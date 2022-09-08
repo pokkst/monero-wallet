@@ -52,6 +52,10 @@ public class OnboardingFragment extends Fragment {
             if(walletSeed.isEmpty()) {
                 wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, 0);
             } else {
+                if(!checkMnemonic(walletSeed)) {
+                    Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", 0);
             }
             wallet.close();
@@ -74,5 +78,9 @@ public class OnboardingFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private boolean checkMnemonic(String seed) {
+        return (seed.split("\\s").length == 25);
     }
 }
