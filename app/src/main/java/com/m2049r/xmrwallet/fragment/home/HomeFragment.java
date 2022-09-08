@@ -113,13 +113,14 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         ProgressBar progressBar = view.findViewById(R.id.sync_progress_bar);
         if(blockchainService != null) {
             blockchainService.height.observe(getViewLifecycleOwner(), height -> {
-                long daemonHeight = WalletManager.getInstance().getWallet().getDaemonBlockChainHeight();
+                Wallet wallet = WalletManager.getInstance().getWallet();
+                long daemonHeight = wallet.getDaemonBlockChainHeight();
                 int syncPct = (int)blockchainService.getSyncPercentage();
-                progressBar.setIndeterminate(height < 1 || daemonHeight <= 0);
+                progressBar.setIndeterminate(height <= 1 || daemonHeight <= 0);
                 if(height > 1 && daemonHeight > 1) {
                     progressBar.setProgress(syncPct);
 
-                    if(WalletManager.getInstance().getWallet().isSynchronized()) {
+                    if(wallet.isSynchronized()) {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
