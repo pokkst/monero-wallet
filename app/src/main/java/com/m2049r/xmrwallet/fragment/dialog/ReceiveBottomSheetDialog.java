@@ -39,13 +39,9 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
         TextView addressTextView = view.findViewById(R.id.address_textview);
 
-        AddressService.getInstance().address.observe(getViewLifecycleOwner(), addr -> {
-            if (!addr.isEmpty()) {
-                System.out.println(addr);
-                addressTextView.setText(addr);
-                addressImageView.setImageBitmap(generate(addr, 256, 256));
-            }
-        });
+        String addr = AddressService.getInstance().getAddress();
+        addressTextView.setText(addr);
+        addressImageView.setImageBitmap(generate(addr, 256, 256));
     }
 
     public Bitmap generate(String text, int width, int height) {

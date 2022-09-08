@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
     public void init(File walletFile, String password) {
         Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
-        thread = new MoneroHandlerThread("WalletService", wallet, this);
+        thread = new MoneroHandlerThread("WalletService", this, wallet);
         this.txService = new TxService(this, thread);
         this.balanceService = new BalanceService(this, thread);
         this.addressService = new AddressService(this, thread);
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     public void onRefresh() {
         this.historyService.refreshHistory();
         this.balanceService.refreshBalance();
-        this.addressService.refreshAddress();
         this.blockchainService.refreshBlockchain();
     }
 

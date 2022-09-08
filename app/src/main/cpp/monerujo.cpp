@@ -709,13 +709,16 @@ Java_com_m2049r_xmrwallet_model_Wallet_initJ(JNIEnv *env, jobject instance,
     const char *_daemon_address = env->GetStringUTFChars(daemon_address, nullptr);
     const char *_daemon_username = env->GetStringUTFChars(daemon_username, nullptr);
     const char *_daemon_password = env->GetStringUTFChars(daemon_password, nullptr);
+    const char *_daemon_proxy = env->GetStringUTFChars(proxy, nullptr);
     Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
     bool status = wallet->init(_daemon_address, (uint64_t) upper_transaction_size_limit,
                                _daemon_username,
-                               _daemon_password, false, false, "127.0.0.1:9050");
+                               _daemon_password, false, false, _daemon_proxy);
     env->ReleaseStringUTFChars(daemon_address, _daemon_address);
     env->ReleaseStringUTFChars(daemon_username, _daemon_username);
     env->ReleaseStringUTFChars(daemon_password, _daemon_password);
+    env->ReleaseStringUTFChars(proxy, _daemon_proxy);
+
     return static_cast<jboolean>(status);
 }
 

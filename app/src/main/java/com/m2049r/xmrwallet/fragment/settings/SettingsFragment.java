@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
+import com.m2049r.xmrwallet.service.BlockchainService;
 
 public class SettingsFragment extends Fragment {
 
@@ -36,7 +37,7 @@ public class SettingsFragment extends Fragment {
         stringBuilder.append("Private view-key: " + wallet.getSecretViewKey()+"\n\n");
         stringBuilder.append("Restore height: " + wallet.getRestoreHeight() + "\n\n");
         stringBuilder.append("Wallet height: " + wallet.getBlockChainHeight() + "\n\n");
-        stringBuilder.append("Daemon height: " + wallet.getDaemonBlockChainHeight() + "\n\n");
+        stringBuilder.append("Daemon height: " + BlockchainService.getInstance().getDaemonHeight() + "\n\n");
         walletInfoTextView.setText(stringBuilder.toString());
     }
 }

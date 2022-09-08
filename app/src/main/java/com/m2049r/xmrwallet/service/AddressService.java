@@ -13,15 +13,12 @@ public class AddressService extends ServiceBase {
         return instance;
     }
 
-    private final MutableLiveData<String> _address = new MutableLiveData<>("");
-    public LiveData<String> address = _address;
-
     public AddressService(MainActivity mainActivity, MoneroHandlerThread thread) {
         super(mainActivity, thread);
         instance = this;
     }
 
-    public void refreshAddress() {
-        _address.postValue(WalletManager.getInstance().getWallet().getAddress());
+    public String getAddress() {
+        return WalletManager.getInstance().getWallet().getAddress();
     }
 }

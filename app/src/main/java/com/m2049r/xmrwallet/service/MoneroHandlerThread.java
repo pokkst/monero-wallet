@@ -27,6 +27,8 @@ import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletListener;
 import com.m2049r.xmrwallet.model.WalletManager;
 
+import java.io.File;
+
 
 /**
  * Handy class for starting a new thread that has a looper. The looper can then be
@@ -35,14 +37,14 @@ import com.m2049r.xmrwallet.model.WalletManager;
  */
 public class MoneroHandlerThread extends Thread implements WalletListener {
     private Listener listener = null;
-    private Wallet wallet = null;
     // from src/cryptonote_config.h
     static public final long THREAD_STACK_SIZE = 5 * 1024 * 1024;
+    private Wallet wallet;
 
-    public MoneroHandlerThread(String name, Wallet wallet, Listener listener) {
+    public MoneroHandlerThread(String name, Listener listener, Wallet wallet) {
         super(null, null, name, THREAD_STACK_SIZE);
-        this.wallet = wallet;
         this.listener = listener;
+        this.wallet = wallet;
     }
 
     @Override
@@ -53,9 +55,9 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void run() {
-        WalletManager.getInstance().setProxy("127.0.0.1:9050");
-        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.MONERUJO_ONION.getUri()));
+        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
         wallet.init(0);
+        wallet.setProxy("127.0.0.1:9050");
         wallet.setListener(this);
         wallet.startRefresh();
     }
@@ -75,6 +77,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     @Override
     public void newBlock(long height) {
         refresh();
+        BlockchainService.getInstance().setDaemonHeight(wallet.isSynchronized() ? height : 0);
     }
 
     @Override

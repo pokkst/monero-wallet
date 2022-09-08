@@ -13,6 +13,8 @@ public class BlockchainService extends ServiceBase {
         return instance;
     }
 
+    private long daemonHeight = 0;
+    private long lastDaemonHeightUpdateTimeMs = 0;
     private final MutableLiveData<Long> _currentHeight = new MutableLiveData<>(0L);
     public LiveData<Long> height = _currentHeight;
 
@@ -30,6 +32,19 @@ public class BlockchainService extends ServiceBase {
     }
 
     public long getDaemonHeight() {
-        return WalletManager.getInstance().getWallet().getDaemonBlockChainHeight();
+        return this.daemonHeight;
+    }
+
+    public void setDaemonHeight(long height) {
+        long t = System.currentTimeMillis();
+        if(height > 0) {
+            daemonHeight = height;
+            lastDaemonHeightUpdateTimeMs = t;
+        } else {
+            if(t - lastDaemonHeightUpdateTimeMs > 120000) {
+                daemonHeight = WalletManager.getInstance().getWallet().getDaemonBlockChainHeight();
+                lastDaemonHeightUpdateTimeMs = t;
+            }
+        }
     }
 }
