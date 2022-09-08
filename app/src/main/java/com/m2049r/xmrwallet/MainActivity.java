@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
     public void init(File walletFile, String password) {
         Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
-        WalletManager.getInstance().setProxy("127.0.0.1:9050");
         thread = new MoneroHandlerThread("WalletService", wallet, this);
         this.txService = new TxService(this, thread);
         this.balanceService = new BalanceService(this, thread);

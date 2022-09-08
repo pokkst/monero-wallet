@@ -45,6 +45,7 @@ import java.util.Collections;
 public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxInfoAdapterListener {
 
     private HomeViewModel mViewModel;
+    long startHeight = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -114,15 +115,20 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         if(blockchainService != null) {
             blockchainService.height.observe(getViewLifecycleOwner(), height -> {
                 Wallet wallet = WalletManager.getInstance().getWallet();
-                long daemonHeight = wallet.getDaemonBlockChainHeight();
-                int syncPct = (int)blockchainService.getSyncPercentage();
-                progressBar.setIndeterminate(height <= 1 || daemonHeight <= 0);
-                if(height > 1 && daemonHeight > 1) {
-                    progressBar.setProgress(syncPct);
-
-                    if(wallet.isSynchronized()) {
-                        progressBar.setVisibility(View.INVISIBLE);
+                if (!wallet.isSynchronized()) {
+                    if (startHeight == 0 && height != 1) {
+                        startHeight = height;
                     }
+                    long daemonHeight = blockchainService.getDaemonHeight();
+                    long n = daemonHeight - height;
+                    int x = 100 - Math.round(100f * n / (1f * daemonHeight - startHeight));
+                    progressBar.setIndeterminate(height <= 1 || daemonHeight <= 0);
+                    if (height > 1 && daemonHeight > 1) {
+                        if (x == 0) x = 101; // indeterminate
+                        progressBar.setProgress(x);
+                    }
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             });
         }

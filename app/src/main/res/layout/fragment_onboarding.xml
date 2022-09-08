@@ -26,8 +26,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="32dp"
         android:hint="Recovery phrase (optional)"
-        android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/wallet_restore_height_edittext"
+        tools:visibility="visible"/>
+    <EditText
+        android:id="@+id/wallet_restore_height_edittext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="12dp"
+        android:hint="Restore height (optional)"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/create_wallet_button"
@@ -40,6 +52,6 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="32dp"
         android:text="@string/create_wallet"
-        app:layout_constraintTop_toBottomOf="@id/wallet_seed_edittext"
+        app:layout_constraintTop_toBottomOf="@id/wallet_restore_height_edittext"
         app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

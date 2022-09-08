@@ -32,9 +32,4 @@ public class BlockchainService extends ServiceBase {
     public long getDaemonHeight() {
         return WalletManager.getInstance().getWallet().getDaemonBlockChainHeight();
     }
-
-    public double getSyncPercentage() {
-        double percentRaw = (double)getCurrentHeight()/(double)getDaemonHeight();
-        return percentRaw * 100d;
-    }
 }

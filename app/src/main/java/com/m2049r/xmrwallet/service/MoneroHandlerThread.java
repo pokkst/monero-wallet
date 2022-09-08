@@ -53,7 +53,9 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void run() {
+        WalletManager.getInstance().setProxy("127.0.0.1:9050");
         WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
+        wallet.setProxy("127.0.0.1:9050");
         wallet.init(0);
         wallet.setListener(this);
         wallet.startRefresh();
@@ -73,9 +75,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void newBlock(long height) {
-        if (height % 1000 == 0) {
-            refresh();
-        }
+        refresh();
     }
 
     @Override
