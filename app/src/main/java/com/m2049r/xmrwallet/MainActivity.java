@@ -88,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     }
 
     @Override
+    public void onConnectionFail() {
+        System.out.println("CONNECT FAILED");
+    }
+
+    @Override
     public void onPasswordSuccess(String password) {
         File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
         init(walletFile, password);

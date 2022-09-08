@@ -55,9 +55,10 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void run() {
-        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
-        wallet.init(0);
+        WalletManager.getInstance().setProxy("127.0.0.1:9050");
+        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.MONERUJO_ONION.getUri()));
         wallet.setProxy("127.0.0.1:9050");
+        wallet.init(0);
         wallet.setListener(this);
         wallet.startRefresh();
     }
@@ -85,10 +86,23 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         refresh();
     }
 
+    int triesLeft = 5;
+
     @Override
     public void refreshed() {
-        wallet.setSynchronized();
-        refresh();
+        Wallet.ConnectionStatus status = wallet.getFullStatus().getConnectionStatus();
+        if(status == Wallet.ConnectionStatus.ConnectionStatus_Disconnected || status == null) {
+            if(triesLeft > 0) {
+                wallet.startRefresh();
+                triesLeft--;
+            } else {
+                listener.onConnectionFail();
+            }
+        } else {
+            BlockchainService.getInstance().setDaemonHeight(wallet.getDaemonBlockChainHeight());
+            wallet.setSynchronized();
+            refresh();
+        }
     }
 
     private void refresh() {
@@ -105,5 +119,6 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     public interface Listener {
         void onRefresh();
+        void onConnectionFail();
     }
 }
