@@ -56,21 +56,22 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         });
 
         sendButton.setOnClickListener(view1 -> {
+            boolean sendAll = sendingMax.getValue() != null ? sendingMax.getValue() : false;
             String address = addressEditText.getText().toString().trim();
             String amount = amountEditText.getText().toString().trim();
             boolean validAddress = Wallet.isAddressValid(address);
-            if (validAddress && !amount.isEmpty()) {
+            if (validAddress && (!amount.isEmpty() || sendAll)) {
                 long amountRaw = Wallet.getAmountFromString(amount);
                 long balance = BalanceService.getInstance().getUnlockedBalanceRaw();
-                if(amountRaw >= balance || amountRaw <= 0) {
+                if((amountRaw >= balance || amountRaw <= 0) && !sendAll) {
                     Toast.makeText(getActivity(), getString(R.string.send_amount_invalid), Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 sendButton.setEnabled(false);
-                boolean sendAll = sendingMax.getValue() != null ? sendingMax.getValue() : false;
                 TxService.getInstance().sendTx(address, amount, sendAll);
             } else if (!validAddress) {
                 Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
-            } else if (amount.isEmpty()) {
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.send_amount_empty), Toast.LENGTH_SHORT).show();
             }
         });
