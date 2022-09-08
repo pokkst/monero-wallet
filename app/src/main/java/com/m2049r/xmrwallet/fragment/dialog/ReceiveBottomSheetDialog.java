@@ -41,6 +41,7 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
 
         AddressService.getInstance().address.observe(getViewLifecycleOwner(), addr -> {
             if (!addr.isEmpty()) {
+                System.out.println(addr);
                 addressTextView.setText(addr);
                 addressImageView.setImageBitmap(generate(addr, 256, 256));
             }

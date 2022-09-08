@@ -15,6 +15,8 @@ public class BalanceService extends ServiceBase {
 
     private final MutableLiveData<Long> _balance = new MutableLiveData<>(0L);
     public LiveData<Long> balance = _balance;
+    private final MutableLiveData<Long> _lockedBalance = new MutableLiveData<>(0L);
+    public LiveData<Long> lockedBalance = _lockedBalance;
 
     public BalanceService(MainActivity mainActivity, MoneroHandlerThread thread) {
         super(mainActivity, thread);
@@ -22,6 +24,19 @@ public class BalanceService extends ServiceBase {
     }
 
     public void refreshBalance() {
-        _balance.postValue(WalletManager.getInstance().getWallet().getBalance());
+        _balance.postValue(getUnlockedBalanceRaw());
+        _lockedBalance.postValue(getLockedBalanceRaw());
+    }
+
+    public long getUnlockedBalanceRaw() {
+        return WalletManager.getInstance().getWallet().getUnlockedBalance();
+    }
+
+    public long getTotalBalanceRaw() {
+        return WalletManager.getInstance().getWallet().getBalance();
+    }
+
+    public long getLockedBalanceRaw() {
+        return getTotalBalanceRaw() - getUnlockedBalanceRaw();
     }
 }

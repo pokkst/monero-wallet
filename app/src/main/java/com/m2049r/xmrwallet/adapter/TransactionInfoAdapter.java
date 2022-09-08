@@ -86,7 +86,7 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
 
             TextView confirmationsTextView = ((TextView)itemView.findViewById(R.id.tvConfirmations));
             CircularProgressIndicator confirmationsProgressBar = ((CircularProgressIndicator)itemView.findViewById(R.id.pbConfirmations));
-
+            confirmationsProgressBar.setMax(TransactionInfo.CONFIRMATION);
             this.amountTextView = ((TextView)itemView.findViewById(R.id.tx_amount));
             ((TextView)itemView.findViewById(R.id.tx_failed)).setVisibility(View.GONE);
             if(txInfo.isFailed) {
@@ -176,6 +176,7 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
 
     public void submitList(List<TransactionInfo> dataSet) {
         this.localDataSet = dataSet;
+        notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)

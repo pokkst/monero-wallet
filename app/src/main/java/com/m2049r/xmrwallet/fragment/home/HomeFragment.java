@@ -34,6 +34,8 @@ import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.HistoryService;
 import com.m2049r.xmrwallet.service.TxService;
 
+import java.util.Collections;
+
 public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxInfoAdapterListener {
 
     private HomeViewModel mViewModel;
@@ -74,10 +76,20 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
 
     private void bindObservers(View view) {
         RecyclerView txHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerview);
-        TextView balanceTextView = view.findViewById(R.id.balance_textview);
+        TextView unlockedBalanceTextView = view.findViewById(R.id.balance_unlocked_textview);
+        TextView lockedBalanceTextView = view.findViewById(R.id.balance_locked_textview);
 
         BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
-            balanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
+            unlockedBalanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
+        });
+
+        BalanceService.getInstance().lockedBalance.observe(getViewLifecycleOwner(), lockedBalance -> {
+            if(lockedBalance == 0) {
+                lockedBalanceTextView.setVisibility(View.INVISIBLE);
+            } else {
+                lockedBalanceTextView.setText(getString(R.string.wallet_locked_balance_text, Wallet.getDisplayAmount(lockedBalance)));
+                lockedBalanceTextView.setVisibility(View.VISIBLE);
+            }
         });
 
         TransactionInfoAdapter adapter = new TransactionInfoAdapter(this);
@@ -87,6 +99,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
             if(history.isEmpty()) {
                 txHistoryRecyclerView.setVisibility(View.GONE);
             } else {
+                Collections.sort(history);
                 adapter.submitList(history);
                 txHistoryRecyclerView.setVisibility(View.VISIBLE);
             }

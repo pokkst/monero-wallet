@@ -536,5 +536,9 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="wallet_balance_text">%1$s XMR</string>
+    <string name="wallet_locked_balance_text">+ %1$s confirming</string>
     <string name="send_amount_empty">Please enter an amount</string>
+    <string name="send_amount_invalid">Please enter a valid amount</string>
+    <string name="send_max">Send Max</string>
+    <string name="undo">Undo</string>
 </resources>

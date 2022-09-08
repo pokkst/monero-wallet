@@ -18,8 +18,8 @@ public class TxService extends ServiceBase {
         instance = this;
     }
 
-    public void sendTx(String address, String amount) {
-        boolean success = this.getThread().sendTx(address, amount);
+    public void sendTx(String address, String amount, boolean sendAll) {
+        boolean success = this.getThread().sendTx(address, amount, sendAll);
         if (success) {
             _clearSendEvent.call();
         }

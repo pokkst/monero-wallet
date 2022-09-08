@@ -7,6 +7,7 @@ import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.WalletManager;
 
+import java.util.Collections;
 import java.util.List;
 
 public class HistoryService extends ServiceBase {
@@ -25,7 +26,7 @@ public class HistoryService extends ServiceBase {
     }
 
     public void refreshHistory() {
-        _history.postValue(WalletManager.getInstance().getWallet().getHistory().getAll());
+        _history.postValue(getHistory());
     }
 
     public List<TransactionInfo> getHistory() {
