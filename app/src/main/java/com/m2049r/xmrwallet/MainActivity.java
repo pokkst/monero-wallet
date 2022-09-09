@@ -21,6 +21,7 @@ import com.m2049r.xmrwallet.service.MoneroHandlerThread;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
+import com.m2049r.xmrwallet.util.NightmodeHelper;
 
 import java.io.File;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NightmodeHelper.getAndSetPreferredNightmode(this);
         File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
         new PrefService(this);
 

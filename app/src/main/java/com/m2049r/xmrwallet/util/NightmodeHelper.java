@@ -26,17 +26,22 @@ import com.m2049r.xmrwallet.R;
 
 public class NightmodeHelper {
     public static DayNightMode getPreferredNightmode(Context context) {
-        return DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
+        DayNightMode mode = DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.preferred_nightmode), "UNKNOWN"));
+        if(mode == DayNightMode.UNKNOWN) {
+            mode = DayNightMode.NIGHT;
+        }
+        return mode;
     }
 
-    public static void setPreferredNightmode(Context context) {
-        final DayNightMode mode = DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
+    public static void getAndSetPreferredNightmode(Context context) {
+        DayNightMode mode = DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.preferred_nightmode), "UNKNOWN"));
-        if (mode == DayNightMode.UNKNOWN)
-            setAndSavePreferredNightmode(context, DayNightMode.AUTO);
-        else
-            setNightMode(mode);
+        if(mode == DayNightMode.UNKNOWN) {
+            mode = DayNightMode.NIGHT;
+        }
+
+        setNightMode(mode);
     }
 
     public static void setAndSavePreferredNightmode(Context context, DayNightMode mode) {
