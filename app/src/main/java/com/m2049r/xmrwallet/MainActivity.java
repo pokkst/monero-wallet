@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
                 init(walletFile, "");
             } else {
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
-                passwordDialog.setCancelable(false);
                 passwordDialog.listener = this;
-                passwordDialog.show(getSupportFragmentManager(), null);
+                passwordDialog.show(getSupportFragmentManager(), "password_dialog");
             }
         } else {
             navigate(R.id.onboarding_fragment);

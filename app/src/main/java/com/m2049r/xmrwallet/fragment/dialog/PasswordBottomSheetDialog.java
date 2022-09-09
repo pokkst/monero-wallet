@@ -37,6 +37,7 @@ public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setCancelable(false);
         File walletFile = new File(getActivity().getApplicationInfo().dataDir, Constants.WALLET_NAME);
 
         ImageButton pastePasswordImageButton = view.findViewById(R.id.paste_password_imagebutton);
@@ -60,10 +61,7 @@ public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private boolean checkPassword(File walletFile, String password) {
-        Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
-        boolean ok = wallet.getStatus().isOk();
-        wallet.close();
-        return ok;
+        return WalletManager.getInstance().verifyWalletPasswordOnly(walletFile.getAbsolutePath() + ".keys", password);
     }
 
     public interface PasswordListener {

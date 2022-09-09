@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,13 +16,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.fragment.dialog.InformationBottomSheetDialog;
+import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.BlockchainService;
+import com.m2049r.xmrwallet.service.PrefService;
+import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.DayNightMode;
 import com.m2049r.xmrwallet.util.NightmodeHelper;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener {
 
     private SettingsViewModel mViewModel;
 
@@ -36,11 +42,11 @@ public class SettingsFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         Wallet wallet = WalletManager.getInstance().getWallet();
 
+        Button displaySeedButton = view.findViewById(R.id.display_seed_button);
         TextView walletInfoTextView = view.findViewById(R.id.wallet_info_textview);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Seed: " + wallet.getSeed("")+"\n\n");
         stringBuilder.append("Private view-key: " + wallet.getSecretViewKey()+"\n\n");
         stringBuilder.append("Restore height: " + wallet.getRestoreHeight() + "\n\n");
         stringBuilder.append("Wallet height: " + wallet.getBlockChainHeight() + "\n\n");
@@ -55,5 +61,33 @@ public class SettingsFragment extends Fragment {
                 NightmodeHelper.setAndSavePreferredNightmode(getContext(), DayNightMode.DAY);
             }
         });
+
+        displaySeedButton.setOnClickListener(view1 -> {
+            boolean usesPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
+            if(usesPassword) {
+                PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
+                passwordDialog.listener = this;
+                passwordDialog.show(getActivity().getSupportFragmentManager(), "password_dialog");
+            } else {
+                displaySeedDialog();
+            }
+        });
+    }
+
+    private void displaySeedDialog() {
+        InformationBottomSheetDialog informationDialog = new InformationBottomSheetDialog();
+        informationDialog.showCopyButton = true;
+        informationDialog.information = WalletManager.getInstance().getWallet().getSeed("");
+        informationDialog.show(getActivity().getSupportFragmentManager(), "information_seed_dialog");
+    }
+
+    @Override
+    public void onPasswordSuccess(String password) {
+        displaySeedDialog();
+    }
+
+    @Override
+    public void onPasswordFail() {
+        Toast.makeText(getContext(), R.string.bad_password, Toast.LENGTH_SHORT).show();
     }
 }

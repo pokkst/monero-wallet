@@ -544,4 +544,6 @@
     <string name="error_sending_tx">Error sending tx</string>
     <string name="create_wallet">Create wallet</string>
     <string name="invalid_mnemonic_code">Invalid mnemonic</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="night_mode">Night mode</string>
 </resources>

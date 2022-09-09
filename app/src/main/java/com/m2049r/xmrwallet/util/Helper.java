@@ -39,6 +39,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -244,9 +245,12 @@ public class Helper {
     }
 
     static public void clipBoardCopy(Context context, String label, String text) {
-        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(label, text);
-        clipboardManager.setPrimaryClip(clip);
+        if(context != null) {
+            ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(label, text);
+            clipboardManager.setPrimaryClip(clip);
+            Toast.makeText(context, context.getText(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show();
+        }
     }
 
     static public String getClipBoardText(Context context) {
