@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
     @Override
     public void onConnectionFail() {
-        System.out.println("CONNECT FAILED");
+        Toast.makeText(this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
     }
 
     @Override

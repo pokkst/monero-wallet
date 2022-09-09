@@ -20,14 +20,14 @@
         android:id="@+id/display_seed_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Display recovery phrase"
+        android:text="@string/display_recovery_phrase"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/night_mode_label"
+        android:id="@+id/day_night_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/night_mode"
@@ -36,14 +36,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/day_night_switch"/>
 
-    <TextView
-        android:id="@+id/wallet_info_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/day_night_switch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/day_night_switch"
         android:layout_width="wrap_content"
@@ -51,4 +43,29 @@
         app:layout_constraintTop_toBottomOf="@id/display_seed_button"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <TextView
+        android:id="@+id/tor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tor_switch_label"
+        app:layout_constraintTop_toTopOf="@id/tor_switch"
+        app:layout_constraintBottom_toBottomOf="@id/tor_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tor_switch"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/tor_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/day_night_switch"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/wallet_info_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tor_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

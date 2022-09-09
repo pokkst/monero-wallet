@@ -26,6 +26,7 @@ import com.m2049r.xmrwallet.model.PendingTransaction;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletListener;
 import com.m2049r.xmrwallet.model.WalletManager;
+import com.m2049r.xmrwallet.util.Constants;
 
 import java.io.File;
 
@@ -55,9 +56,15 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void run() {
-        WalletManager.getInstance().setProxy("127.0.0.1:9050");
-        WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.MONERUJO_ONION.getUri()));
-        wallet.setProxy("127.0.0.1:9050");
+        boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
+        if(usesTor) {
+            String proxy = "127.0.0.1:9050";
+            WalletManager.getInstance().setProxy(proxy);
+            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.MONERUJO_ONION.getUri()));
+            wallet.setProxy(proxy);
+        } else {
+            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
+        }
         wallet.init(0);
         wallet.setListener(this);
         wallet.startRefresh();

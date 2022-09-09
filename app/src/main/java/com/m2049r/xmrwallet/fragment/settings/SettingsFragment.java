@@ -45,6 +45,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         Button displaySeedButton = view.findViewById(R.id.display_seed_button);
         TextView walletInfoTextView = view.findViewById(R.id.wallet_info_textview);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
+        SwitchCompat torSwitch = view.findViewById(R.id.tor_switch);
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Private view-key: " + wallet.getSecretViewKey()+"\n\n");
@@ -60,6 +61,15 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
             } else {
                 NightmodeHelper.setAndSavePreferredNightmode(getContext(), DayNightMode.DAY);
             }
+        });
+
+        torSwitch.setChecked(PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false));
+        torSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_TOR, b).apply();
+
+            String proxy = b ? "127.0.0.1:9050" : "";
+            WalletManager.getInstance().setProxy(proxy);
+            WalletManager.getInstance().getWallet().setProxy(proxy);
         });
 
         displaySeedButton.setOnClickListener(view1 -> {
