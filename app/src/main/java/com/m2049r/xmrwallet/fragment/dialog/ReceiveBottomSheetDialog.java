@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.data.Subaddress;
 import com.m2049r.xmrwallet.service.AddressService;
+import com.m2049r.xmrwallet.util.Helper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,10 +41,12 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
         TextView addressTextView = view.findViewById(R.id.address_textview);
+        ImageButton copyAddressImageButton = view.findViewById(R.id.copy_address_imagebutton);
 
         Subaddress addr = AddressService.getInstance().getLatestSubaddress();
         addressTextView.setText(addr.getAddress());
         addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
+        copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", addr.getAddress()));
     }
 
     public Bitmap generate(String text, int width, int height) {
