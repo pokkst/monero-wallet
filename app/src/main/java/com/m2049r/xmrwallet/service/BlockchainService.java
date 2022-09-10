@@ -18,8 +18,8 @@ public class BlockchainService extends ServiceBase {
     private final MutableLiveData<Long> _currentHeight = new MutableLiveData<>(0L);
     public LiveData<Long> height = _currentHeight;
 
-    public BlockchainService(MainActivity mainActivity, MoneroHandlerThread thread) {
-        super(mainActivity, thread);
+    public BlockchainService(MoneroHandlerThread thread) {
+        super(thread);
         instance = this;
     }
 

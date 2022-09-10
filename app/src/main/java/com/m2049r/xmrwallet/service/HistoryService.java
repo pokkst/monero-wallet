@@ -20,8 +20,8 @@ public class HistoryService extends ServiceBase {
     private final MutableLiveData<List<TransactionInfo>> _history = new MutableLiveData<>();
     public LiveData<List<TransactionInfo>> history = _history;
 
-    public HistoryService(MainActivity mainActivity, MoneroHandlerThread thread) {
-        super(mainActivity, thread);
+    public HistoryService(MoneroHandlerThread thread) {
+        super(thread);
         instance = this;
     }
 

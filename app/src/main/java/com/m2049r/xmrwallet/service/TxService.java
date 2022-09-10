@@ -10,8 +10,8 @@ public class TxService extends ServiceBase {
         return instance;
     }
 
-    public TxService(MainActivity mainActivity, MoneroHandlerThread thread) {
-        super(mainActivity, thread);
+    public TxService(MoneroHandlerThread thread) {
+        super(thread);
         instance = this;
     }
 

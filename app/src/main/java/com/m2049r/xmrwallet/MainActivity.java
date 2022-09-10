@@ -1,9 +1,12 @@
 package com.m2049r.xmrwallet;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +24,7 @@ import com.m2049r.xmrwallet.service.MoneroHandlerThread;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
+import com.m2049r.xmrwallet.util.DayNightMode;
 import com.m2049r.xmrwallet.util.NightmodeHelper;
 
 import java.io.File;
@@ -28,9 +32,7 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity implements MoneroHandlerThread.Listener, PasswordBottomSheetDialog.PasswordListener {
     public final SingleLiveEvent restartEvents = new SingleLiveEvent();
     private MoneroHandlerThread thread = null;
-    private TxService txService = null;
     private BalanceService balanceService = null;
-    private AddressService addressService = null;
     private HistoryService historyService = null;
     private BlockchainService blockchainService = null;
 
@@ -38,13 +40,10 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NightmodeHelper.getAndSetPreferredNightmode(this);
         File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
-        new PrefService(this);
-
-        if(walletFile.exists()) {
+        if (walletFile.exists()) {
             boolean promptPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
-            if(!promptPassword) {
+            if (!promptPassword) {
                 init(walletFile, "");
             } else {
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
@@ -54,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         } else {
             navigate(R.id.onboarding_fragment);
         }
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
     }
 
     private void navigate(int destination) {
@@ -73,11 +77,11 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     public void init(File walletFile, String password) {
         Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
         thread = new MoneroHandlerThread("WalletService", this, wallet);
-        this.txService = new TxService(this, thread);
-        this.balanceService = new BalanceService(this, thread);
-        this.addressService = new AddressService(this, thread);
-        this.historyService = new HistoryService(this, thread);
-        this.blockchainService = new BlockchainService(this, thread);
+        new TxService(thread);
+        this.balanceService = new BalanceService(thread);
+        new AddressService(thread);
+        this.historyService = new HistoryService(thread);
+        this.blockchainService = new BlockchainService(thread);
         thread.start();
     }
 

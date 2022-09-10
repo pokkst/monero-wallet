@@ -23,30 +23,19 @@ import android.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.service.PrefService;
 
 public class NightmodeHelper {
-    public static DayNightMode getPreferredNightmode(Context context) {
-        DayNightMode mode = DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(context.getString(R.string.preferred_nightmode), "UNKNOWN"));
-        if(mode == DayNightMode.UNKNOWN) {
-            mode = DayNightMode.NIGHT;
-        }
-        return mode;
+    public static DayNightMode getPreferredNightmode() {
+        return DayNightMode.valueOf(PrefService.getInstance().getString(Constants.PREF_NIGHT_MODE, DayNightMode.NIGHT.name()));
     }
 
-    public static void getAndSetPreferredNightmode(Context context) {
-        DayNightMode mode = DayNightMode.valueOf(PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(context.getString(R.string.preferred_nightmode), "UNKNOWN"));
-        if(mode == DayNightMode.UNKNOWN) {
-            mode = DayNightMode.NIGHT;
-        }
-
-        setNightMode(mode);
+    public static void getAndSetPreferredNightmode() {
+        setNightMode(getPreferredNightmode());
     }
 
-    public static void setAndSavePreferredNightmode(Context context, DayNightMode mode) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
-                .putString(context.getString(R.string.preferred_nightmode), mode.name()).apply();
+    public static void setAndSavePreferredNightmode(DayNightMode mode) {
+        PrefService.getInstance().edit().putString(Constants.PREF_NIGHT_MODE, mode.name()).apply();
         setNightMode(mode);
     }
 

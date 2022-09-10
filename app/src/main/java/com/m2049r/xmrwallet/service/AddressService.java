@@ -13,8 +13,8 @@ public class AddressService extends ServiceBase {
         return instance;
     }
 
-    public AddressService(MainActivity mainActivity, MoneroHandlerThread thread) {
-        super(mainActivity, thread);
+    public AddressService(MoneroHandlerThread thread) {
+        super(thread);
         instance = this;
     }
 

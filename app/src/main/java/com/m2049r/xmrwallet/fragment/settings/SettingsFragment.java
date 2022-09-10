@@ -54,12 +54,12 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         stringBuilder.append("Daemon height: " + BlockchainService.getInstance().getDaemonHeight() + "\n\n");
         walletInfoTextView.setText(stringBuilder.toString());
 
-        nightModeSwitch.setChecked(NightmodeHelper.getPreferredNightmode(getContext()) == DayNightMode.NIGHT);
+        nightModeSwitch.setChecked(NightmodeHelper.getPreferredNightmode() == DayNightMode.NIGHT);
         nightModeSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if(b) {
-                NightmodeHelper.setAndSavePreferredNightmode(getContext(), DayNightMode.NIGHT);
+                NightmodeHelper.setAndSavePreferredNightmode(DayNightMode.NIGHT);
             } else {
-                NightmodeHelper.setAndSavePreferredNightmode(getContext(), DayNightMode.DAY);
+                NightmodeHelper.setAndSavePreferredNightmode(DayNightMode.DAY);
             }
         });
 
