@@ -6,13 +6,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
-import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
 import com.m2049r.xmrwallet.livedata.SingleLiveEvent;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
@@ -24,8 +22,6 @@ import com.m2049r.xmrwallet.service.MoneroHandlerThread;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
-import com.m2049r.xmrwallet.util.DayNightMode;
-import com.m2049r.xmrwallet.util.NightmodeHelper;
 
 import java.io.File;
 
@@ -33,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     public final SingleLiveEvent restartEvents = new SingleLiveEvent();
     private MoneroHandlerThread thread = null;
     private BalanceService balanceService = null;
+    private AddressService addressService = null;
     private HistoryService historyService = null;
     private BlockchainService blockchainService = null;
 
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         thread = new MoneroHandlerThread("WalletService", this, wallet);
         new TxService(thread);
         this.balanceService = new BalanceService(thread);
-        new AddressService(thread);
+        this.addressService = new AddressService(thread);
         this.historyService = new HistoryService(thread);
         this.blockchainService = new BlockchainService(thread);
         thread.start();
@@ -90,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.historyService.refreshHistory();
         this.balanceService.refreshBalance();
         this.blockchainService.refreshBlockchain();
+        this.addressService.refreshAddresses();
     }
 
     @Override

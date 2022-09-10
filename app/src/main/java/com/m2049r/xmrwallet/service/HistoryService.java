@@ -2,12 +2,8 @@ package com.m2049r.xmrwallet.service;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
-import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.WalletManager;
-
-import java.util.Collections;
 import java.util.List;
 
 public class HistoryService extends ServiceBase {

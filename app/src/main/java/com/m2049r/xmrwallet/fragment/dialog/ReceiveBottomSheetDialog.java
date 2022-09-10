@@ -19,6 +19,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.data.Subaddress;
 import com.m2049r.xmrwallet.service.AddressService;
 
 import java.util.HashMap;
@@ -39,9 +40,9 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
         TextView addressTextView = view.findViewById(R.id.address_textview);
 
-        String addr = AddressService.getInstance().getAddress();
-        addressTextView.setText(addr);
-        addressImageView.setImageBitmap(generate(addr, 256, 256));
+        Subaddress addr = AddressService.getInstance().getLatestSubaddress();
+        addressTextView.setText(addr.getAddress());
+        addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
     }
 
     public Bitmap generate(String text, int width, int height) {
