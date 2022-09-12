@@ -24,8 +24,8 @@ public class AddressService extends ServiceBase {
 
     public void refreshAddresses() {
         for (TransactionInfo info : HistoryService.getInstance().getHistory()) {
-            if(info.addressIndex > latestAddressIndex) {
-                latestAddressIndex = info.addressIndex;
+            if(info.addressIndex >= latestAddressIndex) {
+                latestAddressIndex = info.addressIndex + 1;
             }
         }
     }
