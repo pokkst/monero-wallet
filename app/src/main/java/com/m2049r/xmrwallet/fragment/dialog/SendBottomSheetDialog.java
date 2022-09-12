@@ -91,7 +91,10 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
             if(ctx != null) {
-                pasteAddress(Helper.getClipBoardText(getContext()));
+                String clipboard = Helper.getClipBoardText(ctx);
+                if(clipboard != null) {
+                    pasteAddress(clipboard);
+                }
             }
         });
 
