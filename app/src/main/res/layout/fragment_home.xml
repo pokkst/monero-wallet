@@ -9,11 +9,14 @@
     <ProgressBar
         android:id="@+id/sync_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:indeterminate="true"
+        android:layout_width="0dp"
         android:layout_height="4dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/oled_colorSecondary"
         android:progressDrawable="@drawable/sync_progress_bar_drawable"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/balance_unlocked_textview"
@@ -58,6 +61,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/button_bg"
         android:text="Receive"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/send_button"
@@ -70,6 +74,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/button_bg"
         android:text="Send"
         app:layout_constraintStart_toEndOf="@id/receive_button"
         app:layout_constraintEnd_toEndOf="parent"

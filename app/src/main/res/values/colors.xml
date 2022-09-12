@@ -28,6 +28,7 @@
     <color name="oled_colorOnSecondary">@color/oled_colorOnBackground</color>
     <color name="oled_colorError">@color/oled_negativeColor</color>
     <color name="oled_colorOnError">@color/oled_colorBackground</color>
+    <color name="edittext_bg_color">#CCCCCC</color>
 
     <!-- CLASSIC -->
     <color name="classic_textColorPrimary">#0C080C</color>

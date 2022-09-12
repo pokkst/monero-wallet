@@ -13,33 +13,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/address_edittext"
+        <TextView
+            android:id="@+id/send_monero_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/send_monero"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="32dp"
-            android:hint="Address"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/address_edittext"/>
+
+        <EditText
+            android:id="@+id/address_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/edittext_bg"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:hint="@string/address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/send_monero_textview"
+            app:layout_constraintEnd_toStartOf="@id/paste_address_imagebutton"
             app:layout_constraintBottom_toTopOf="@id/amount_edittext"/>
+
         <ImageButton
             android:id="@+id/paste_address_imagebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
             android:background="@android:color/transparent"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:padding="8dp"
             android:src="@drawable/ic_content_paste_24dp"
-            app:layout_constraintTop_toTopOf="@id/address_edittext"
             app:layout_constraintBottom_toBottomOf="@id/address_edittext"
-            app:layout_constraintEnd_toEndOf="@id/address_edittext"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/address_edittext"
+            app:layout_constraintTop_toTopOf="@id/address_edittext"
+            tools:ignore="SpeakableTextPresentCheck" />
         <EditText
             android:id="@+id/amount_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="12dp"
-            android:hint="Amount"
+            android:background="@drawable/edittext_bg"
+            android:hint="@string/amount"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
@@ -51,18 +77,21 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="12dp"
-            android:text="SENDING ALL"
+            android:padding="12dp"
+            android:text="@string/sending_all"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/amount_edittext"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
-            app:layout_constraintBottom_toBottomOf="@id/amount_edittext"/>
+            app:layout_constraintBottom_toBottomOf="@id/amount_edittext"
+            tools:visibility="visible"/>
         <Button
             android:id="@+id/send_max_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:background="@drawable/button_bg"
             android:text="@string/send_max"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/amount_edittext"
@@ -75,7 +104,8 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginTop="32dp"
-            android:text="Send"
+            android:background="@drawable/button_bg"
+            android:text="@string/send"
             app:layout_constraintTop_toBottomOf="@id/amount_edittext"
             app:layout_constraintStart_toStartOf="parent"/>
 
