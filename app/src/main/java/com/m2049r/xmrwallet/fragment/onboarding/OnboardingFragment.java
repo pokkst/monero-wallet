@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -45,6 +48,11 @@ public class OnboardingFragment extends Fragment {
         EditText walletSeedEditText = view.findViewById(R.id.wallet_seed_edittext);
         EditText walletRestoreHeightEditText = view.findViewById(R.id.wallet_restore_height_edittext);
         Button createWalletButton = view.findViewById(R.id.create_wallet_button);
+        TextView moreOptionsDropdownTextView = view.findViewById(R.id.advanced_settings_dropdown_textview);
+        ImageView moreOptionsChevronImageView = view.findViewById(R.id.advanced_settings_chevron_imageview);
+
+        moreOptionsDropdownTextView.setOnClickListener(view12 -> mViewModel.onMoreOptionsClicked());
+
         createWalletButton.setOnClickListener(view1 -> {
             String walletPassword = walletPasswordEditText.getText().toString();
             if(!walletPassword.isEmpty()) {
@@ -89,6 +97,18 @@ public class OnboardingFragment extends Fragment {
                 } else {
                     createWalletButton.setText(R.string.menu_restore);
                 }
+            }
+        });
+
+        mViewModel.showMoreOptions.observe(getViewLifecycleOwner(), show -> {
+            if(show) {
+                moreOptionsChevronImageView.setImageResource(R.drawable.ic_keyboard_arrow_up);
+                walletSeedEditText.setVisibility(View.VISIBLE);
+                walletRestoreHeightEditText.setVisibility(View.VISIBLE);
+            } else {
+                moreOptionsChevronImageView.setImageResource(R.drawable.ic_keyboard_arrow_down);
+                walletSeedEditText.setVisibility(View.GONE);
+                walletRestoreHeightEditText.setVisibility(View.GONE);
             }
         });
     }
