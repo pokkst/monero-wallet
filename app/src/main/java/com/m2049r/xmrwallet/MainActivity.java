@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
-        if (walletFile.exists()) {
+        File walletKeysFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME + ".keys");
+        if (walletKeysFile.exists()) {
             boolean promptPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
             if (!promptPassword) {
                 init(walletFile, "");

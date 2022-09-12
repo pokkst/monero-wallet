@@ -141,7 +141,11 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
                     txHistoryRecyclerView.setVisibility(View.GONE);
                 } else {
                     Collections.sort(history);
-                    adapter.submitList(history);
+                    if(history.size() > 100) {
+                        adapter.submitList(history.subList(0, 99));
+                    } else {
+                        adapter.submitList(history);
+                    }
                     txHistoryRecyclerView.setVisibility(View.VISIBLE);
                 }
             });
