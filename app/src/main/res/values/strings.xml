@@ -571,4 +571,5 @@
     <string name="creating_tx">Creating transaction…</string>
     <string name="sending_tx">Sending transaction…</string>
     <string name="sent_tx">Sent transaction!</string>
+    <string name="no_camera_permission">No camera permission</string>
 </resources>

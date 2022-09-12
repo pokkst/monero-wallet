@@ -108,8 +108,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     namespace 'com.m2049r.xmrwallet'
     buildFeatures {
@@ -135,7 +135,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.6.0'
 
-    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
     implementation "io.github.rburgst:okhttp-digest:2.6"
     implementation "com.jakewharton.timber:timber:5.0.1"

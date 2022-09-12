@@ -1,9 +1,14 @@
 package com.m2049r.xmrwallet.fragment.dialog;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.zxing.client.android.Intents;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.model.PendingTransaction;
 import com.m2049r.xmrwallet.model.Wallet;
@@ -20,12 +25,32 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
+
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
+            result -> {
+                if(result.getContents() != null) {
+                    pasteAddress(result.getContents());
+                }
+            });
+
+    private final ActivityResultLauncher<String> cameraPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+            granted -> {
+                if(granted) {
+                    onScan();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.no_camera_permission), Toast.LENGTH_SHORT).show();
+                }
+            });
+
     private MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
     public LiveData<Boolean> sendingMax = _sendingMax;
     private MutableLiveData<PendingTransaction> _pendingTransaction = new MutableLiveData<>(null);
@@ -41,6 +66,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private Button sendButton;
     private Button sendMaxButton;
     private ImageButton pasteAddressImageButton;
+    private ImageButton scanAddressImageButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +77,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pasteAddressImageButton = view.findViewById(R.id.paste_address_imagebutton);
+        scanAddressImageButton = view.findViewById(R.id.scan_address_imagebutton);
         sendMaxButton = view.findViewById(R.id.send_max_button);
         addressEditText = view.findViewById(R.id.address_edittext);
         amountEditText = view.findViewById(R.id.amount_edittext);
@@ -62,7 +89,14 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         amountTextView = view.findViewById(R.id.amount_pending_textview);
 
         pasteAddressImageButton.setOnClickListener(view1 -> {
-            addressEditText.setText(Helper.getClipBoardText(view.getContext()));
+            Context ctx = getContext();
+            if(ctx != null) {
+                pasteAddress(Helper.getClipBoardText(getContext()));
+            }
+        });
+
+        scanAddressImageButton.setOnClickListener(view1 -> {
+            onScan();
         });
 
         sendMaxButton.setOnClickListener(view1 -> {
@@ -127,6 +161,17 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         });
     }
 
+    private void onScan() {
+        if (Helper.getCameraPermission(getActivity(), cameraPermissionsLauncher)) {
+            ScanOptions options = new ScanOptions();
+            options.setBeepEnabled(false);
+            options.setOrientationLocked(true);
+            options.setDesiredBarcodeFormats(List.of(Intents.Scan.QR_CODE_MODE));
+            options.addExtra(Intents.Scan.SCAN_TYPE, Intents.Scan.MIXED_SCAN);
+            barcodeLauncher.launch(options);
+        }
+    }
+
     private void sendTx(PendingTransaction pendingTx) {
         AsyncTask.execute(() -> {
             boolean success = TxService.getInstance().sendTx(pendingTx);
@@ -171,6 +216,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             createButton.setVisibility(View.GONE);
             sendMaxButton.setVisibility(View.GONE);
             pasteAddressImageButton.setVisibility(View.GONE);
+            scanAddressImageButton.setVisibility(View.GONE);
             feeTextView.setVisibility(View.VISIBLE);
             addressTextView.setVisibility(View.VISIBLE);
             amountTextView.setVisibility(View.VISIBLE);
@@ -182,9 +228,20 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             createButton.setVisibility(View.VISIBLE);
             sendMaxButton.setVisibility(View.VISIBLE);
             pasteAddressImageButton.setVisibility(View.VISIBLE);
+            scanAddressImageButton.setVisibility(View.VISIBLE);
             feeTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
             amountTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void pasteAddress(String address) {
+        String modifiedAddress = address.replace("monero:", "").split("\\?")[0];
+        boolean isValid = Wallet.isAddressValid(modifiedAddress);
+        if(isValid) {
+            addressEditText.setText(modifiedAddress);
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
         }
     }
 }

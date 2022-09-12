@@ -1,32 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.m2049r.xmrwallet">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <queries>
-        <intent>
-            <action android:name="org.torproject.android.intent.action.START" />
-        </intent>
-        <intent>
-            <action android:name="org.torproject.android.intent.action.STATUS" />
-        </intent>
-        <intent>
-            <action android:name="org.torproject.android.REQUEST_HS_PORT" />
-        </intent>
-        <intent>
-            <action android:name="org.torproject.android.REQUEST_V3_ONION_SERVICE" />
-        </intent>
-
-        <package android:name="org.torproject.android" />
-    </queries>
 
     <application
         android:name=".MoneroApplication"
@@ -46,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="android:screenOrientation"
+            android:stateNotNeeded="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
