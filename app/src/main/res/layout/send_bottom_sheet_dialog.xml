@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+        <!-- CREATE LAYOUT -->
         <TextView
             android:id="@+id/send_monero_textview"
             android:layout_width="match_parent"
@@ -41,7 +41,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/send_monero_textview"
             app:layout_constraintEnd_toStartOf="@id/paste_address_imagebutton"
-            app:layout_constraintBottom_toTopOf="@id/amount_edittext"/>
+            app:layout_constraintBottom_toTopOf="@id/amount_edittext"
+            tools:visibility="gone" />
 
         <ImageButton
             android:id="@+id/paste_address_imagebutton"
@@ -57,7 +58,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/address_edittext"
             app:layout_constraintTop_toTopOf="@id/address_edittext"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck"
+            tools:visibility="gone" />
         <EditText
             android:id="@+id/amount_edittext"
             android:layout_width="0dp"
@@ -69,8 +71,8 @@
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
-            app:layout_constraintBottom_toTopOf="@id/send_button"
-            tools:visibility="visible"/>
+            app:layout_constraintBottom_toTopOf="@id/create_tx_button"
+            tools:visibility="gone"/>
         <TextView
             android:id="@+id/sending_all_textview"
             android:layout_width="0dp"
@@ -85,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
             app:layout_constraintBottom_toBottomOf="@id/amount_edittext"
-            tools:visibility="visible"/>
+            tools:visibility="gone"/>
         <Button
             android:id="@+id/send_max_button"
             android:layout_width="wrap_content"
@@ -96,9 +98,79 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/amount_edittext"
             app:layout_constraintBottom_toBottomOf="@id/amount_edittext"
-            app:layout_constraintStart_toEndOf="@id/amount_edittext"/>
+            app:layout_constraintStart_toEndOf="@id/amount_edittext"
+            tools:visibility="gone"/>
         <Button
-            android:id="@+id/send_button"
+            android:id="@+id/create_tx_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/create"
+            app:layout_constraintTop_toBottomOf="@id/amount_edittext"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone"/>
+
+
+
+
+
+        <!-- SEND LAYOUT -->
+        <TextView
+            android:id="@+id/address_pending_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tx_address_text"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/send_monero_textview"
+            app:layout_constraintBottom_toTopOf="@id/amount_pending_textview"
+            tools:visibility="visible"/>
+        <TextView
+            android:id="@+id/amount_pending_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tx_amount_text"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_pending_textview"
+            app:layout_constraintBottom_toTopOf="@id/fee_textview"
+            tools:visibility="visible"/>
+        <TextView
+            android:id="@+id/fee_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tx_fee_text"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amount_pending_textview"
+            app:layout_constraintBottom_toTopOf="@id/send_tx_button"
+            tools:visibility="visible"/>
+
+        <Button
+            android:id="@+id/send_tx_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -106,9 +178,10 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/button_bg"
             android:text="@string/send"
-            app:layout_constraintTop_toBottomOf="@id/amount_edittext"
-            app:layout_constraintStart_toStartOf="parent"/>
-
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/fee_textview"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

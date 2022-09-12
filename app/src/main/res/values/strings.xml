@@ -542,6 +542,7 @@
     <string name="send_max">Send Max</string>
     <string name="undo">Undo</string>
     <string name="error_sending_tx">Error sending tx</string>
+    <string name="error_creating_tx">Error creating tx</string>
     <string name="create_wallet">Create wallet</string>
     <string name="invalid_mnemonic_code">Invalid mnemonic</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
@@ -553,6 +554,7 @@
     <string name="amount">0.00</string>
     <string name="sending_all">SENDING ALL</string>
     <string name="send">Send</string>
+    <string name="create">Create</string>
     <string name="send_monero">Send Monero</string>
     <string name="recv_monero">Receive Monero</string>
     <string name="more_options">More options</string>
@@ -562,4 +564,11 @@
     <string name="password">Password</string>
     <string name="unlock">Unlock</string>
     <string name="enter_password">Enter password</string>
+    <string name="tx_address_text">Address: %1$s</string>
+    <string name="tx_amount_text">Amount: %1$s XMR</string>
+    <string name="tx_fee_text">Fee: %1$s XMR</string>
+    <string name="receive">Receive</string>
+    <string name="creating_tx">Creating transaction…</string>
+    <string name="sending_tx">Sending transaction…</string>
+    <string name="sent_tx">Sent transaction!</string>
 </resources>

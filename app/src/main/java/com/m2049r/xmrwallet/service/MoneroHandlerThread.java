@@ -60,7 +60,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         if(usesTor) {
             String proxy = "127.0.0.1:9050";
             WalletManager.getInstance().setProxy(proxy);
-            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.MONERUJO_ONION.getUri()));
+            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.boldsuck.getUri()));
             wallet.setProxy(proxy);
         } else {
             WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
@@ -118,9 +118,12 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         listener.onRefresh();
     }
 
-    public boolean sendTx(String address, String amountStr, boolean sendAll) {
+    public PendingTransaction createTx(String address, String amountStr, boolean sendAll) {
         long amount = sendAll ? SWEEP_ALL : Wallet.getAmountFromString(amountStr);
-        PendingTransaction pendingTx = wallet.createTransaction(new TxData(address, amount, 0, PendingTransaction.Priority.Priority_Default));
+        return wallet.createTransaction(new TxData(address, amount, 0, PendingTransaction.Priority.Priority_Default));
+    }
+
+    public boolean sendTx(PendingTransaction pendingTx) {
         return pendingTx.commit("", true);
     }
 
