@@ -118,9 +118,9 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         listener.onRefresh();
     }
 
-    public PendingTransaction createTx(String address, String amountStr, boolean sendAll) {
+    public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority) {
         long amount = sendAll ? SWEEP_ALL : Wallet.getAmountFromString(amountStr);
-        return wallet.createTransaction(new TxData(address, amount, 0, PendingTransaction.Priority.Priority_Default));
+        return wallet.createTransaction(new TxData(address, amount, 0, feePriority));
     }
 
     public boolean sendTx(PendingTransaction pendingTx) {
