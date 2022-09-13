@@ -22,7 +22,9 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.data.Subaddress;
 import com.m2049r.xmrwallet.service.AddressService;
+import com.m2049r.xmrwallet.util.DayNightMode;
 import com.m2049r.xmrwallet.util.Helper;
+import com.m2049r.xmrwallet.util.NightmodeHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,10 +61,11 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
             int[] pixels = new int[width * height];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
+                    boolean night = NightmodeHelper.getPreferredNightmode() == DayNightMode.NIGHT;
                     if (bitMatrix.get(j, i)) {
-                        pixels[i * width + j] = 0x00000000;
+                        pixels[i * width + j] = night ? 0xffffffff : 0x00000000;
                     } else {
-                        pixels[i * height + j] = 0xffffffff;
+                        pixels[i * height + j] = night ? getResources().getColor(R.color.oled_colorBackground) : 0xffffffff;
                     }
                 }
             }
