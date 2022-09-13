@@ -572,4 +572,5 @@
     <string name="sending_tx">Sending transaction…</string>
     <string name="sent_tx">Sent transaction!</string>
     <string name="no_camera_permission">No camera permission</string>
+    <string name="settings">Settings</string>
 </resources>
