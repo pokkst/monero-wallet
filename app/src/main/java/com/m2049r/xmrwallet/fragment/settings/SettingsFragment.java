@@ -40,19 +40,9 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-        Wallet wallet = WalletManager.getInstance().getWallet();
-
         Button displaySeedButton = view.findViewById(R.id.display_seed_button);
-        TextView walletInfoTextView = view.findViewById(R.id.wallet_info_textview);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
         SwitchCompat torSwitch = view.findViewById(R.id.tor_switch);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Private view-key: " + wallet.getSecretViewKey()+"\n\n");
-        stringBuilder.append("Restore height: " + wallet.getRestoreHeight() + "\n\n");
-        stringBuilder.append("Wallet height: " + wallet.getBlockChainHeight() + "\n\n");
-        stringBuilder.append("Daemon height: " + BlockchainService.getInstance().getDaemonHeight() + "\n\n");
-        walletInfoTextView.setText(stringBuilder.toString());
 
         nightModeSwitch.setChecked(NightmodeHelper.getPreferredNightmode() == DayNightMode.NIGHT);
         nightModeSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -67,6 +57,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         torSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_TOR, b).apply();
 
+            // TODO display "Advanced" settings mode when enabled to configure specific proxy address and port
             String proxy = b ? "127.0.0.1:9050" : "";
             WalletManager.getInstance().setProxy(proxy);
             WalletManager.getInstance().getWallet().setProxy(proxy);

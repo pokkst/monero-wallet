@@ -548,7 +548,7 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="night_mode">Night mode</string>
     <string name="display_recovery_phrase">Display recovery phrase</string>
-    <string name="tor_switch_label">Enable Tor (requires Orbot or similar app)</string>
+    <string name="tor_switch_label">Enable proxy</string>
     <string name="connection_failed">Connection failed</string>
     <string name="address">87MRtZPrWUCVUgcFHdsVb5MoZUcLtqfD3FvQVGwftFb8eSdMnE39JhAJcbuSW8X2vRaRsB9RQfuCpFciybJFHaz3QYPhCLw</string>
     <string name="amount">0.00</string>
@@ -573,4 +573,7 @@
     <string name="sent_tx">Sent transaction!</string>
     <string name="no_camera_permission">No camera permission</string>
     <string name="settings">Settings</string>
+    <string name="wallet">Wallet</string>
+    <string name="appearance">Appearance</string>
+    <string name="network">Network</string>
 </resources>

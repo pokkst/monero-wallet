@@ -36,6 +36,7 @@
         <item name="android:textColorPrimary">@color/oled_textColorPrimary</item>
         <item name="android:textColorSecondary">@color/oled_textColorSecondary</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog_Rounded</item>
+        <item name="colorControlActivated">@color/oled_colorSecondary</item>
     </style>
 
     <!-- BottomSheet Dialog-->
