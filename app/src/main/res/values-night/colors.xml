@@ -12,7 +12,7 @@
     <color name="oled_favouriteColor">@color/oled_negativeColor</color>
     <color name="oled_softFavouriteColor">#FF104E</color>
     <color name="oled_positiveColor">#3FF3A5</color>
-    <color name="oled_negativeColor">#FF104E</color>
+    <color name="oled_negativeColor">#cb5a2e</color>
     <color name="oled_neutralColor">#838383</color>
     <color name="oled_noticeColor">#7E37F1</color>
     <color name="oled_navigationBarColor">@color/oled_colorBackground</color>
