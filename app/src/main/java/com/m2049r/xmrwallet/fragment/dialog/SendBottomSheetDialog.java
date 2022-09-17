@@ -29,8 +29,10 @@ import com.m2049r.xmrwallet.model.PendingTransaction;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.TxService;
+import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.Helper;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
@@ -234,14 +236,30 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void pasteAddress(String address) {
-        String modifiedAddress = address.replace("monero:", "").split("\\?")[0];
-        boolean isValid = Wallet.isAddressValid(modifiedAddress);
+        HashMap<String, String> params = new HashMap<>();
+        String[] uriParts = address.replace(Constants.URI_PREFIX, "").split("\\?");
+        String finalAddress = uriParts[0];
+        String queryParams = "";
+        if(uriParts.length > 1) {
+            queryParams = uriParts[1];
+            String[] queryParts = queryParams.split("&");
+            for (String param : queryParts) {
+                String[] paramParts = param.split("=");
+                String variable = paramParts[0];
+                String value = paramParts[1];
+                params.put(variable, value);
+            }
+        }
+        boolean isValid = Wallet.isAddressValid(finalAddress);
         if (isValid) {
-            addressEditText.setText(modifiedAddress);
+            addressEditText.setText(finalAddress);
+            if(!params.isEmpty()) {
+                if(params.containsKey(Constants.URI_ARG_AMOUNT)) {
+                    amountEditText.setText(params.get(Constants.URI_ARG_AMOUNT));
+                }
+            }
         } else {
             Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
