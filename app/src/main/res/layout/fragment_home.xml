@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.home.HomeFragment">
+    tools:context="net.mynero.wallet.fragment.home.HomeFragment">
 
     <ProgressBar
         android:id="@+id/sync_progress_bar"

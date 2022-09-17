@@ -6,7 +6,7 @@ android {
     buildToolsVersion '30.0.3'
     ndkVersion '17.2.4988734'
     defaultConfig {
-        applicationId "com.m2049r.xmrwallet"
+        applicationId "net.mynero.wallet"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 3002
@@ -112,7 +112,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_9
         targetCompatibility JavaVersion.VERSION_1_9
     }
-    namespace 'com.m2049r.xmrwallet'
+    namespace 'net.mynero.wallet'
     buildFeatures {
         viewBinding true
     }

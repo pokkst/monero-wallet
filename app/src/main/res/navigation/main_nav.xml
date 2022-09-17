@@ -6,7 +6,7 @@
     app:startDestination="@id/main_fragment">
     <fragment
         android:id="@+id/main_fragment"
-        android:name="com.m2049r.xmrwallet.fragment.home.HomeFragment"
+        android:name="net.mynero.wallet.fragment.home.HomeFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_home">
         <action
@@ -22,23 +22,23 @@
             app:destination="@id/transaction_fragment">
             <argument
                 android:name="nav_arg_txinfo"
-                app:argType="com.m2049r.xmrwallet.model.TransactionInfo"
+                app:argType="net.mynero.wallet.model.TransactionInfo"
                 app:nullable="true"/>
         </action>
     </fragment>
     <fragment
         android:id="@+id/settings_fragment"
-        android:name="com.m2049r.xmrwallet.fragment.settings.SettingsFragment"
+        android:name="net.mynero.wallet.fragment.settings.SettingsFragment"
         android:label="fragment_send_amount"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/onboarding_fragment"
-        android:name="com.m2049r.xmrwallet.fragment.onboarding.OnboardingFragment"
+        android:name="net.mynero.wallet.fragment.onboarding.OnboardingFragment"
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/transaction_fragment"
-        android:name="com.m2049r.xmrwallet.fragment.transaction.TransactionFragment"
+        android:name="net.mynero.wallet.fragment.transaction.TransactionFragment"
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_settings" />
 </navigation>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    tools:context=".fragment.settings.SettingsFragment">
+    tools:context="net.mynero.wallet.fragment.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/create_wallet_textview"
