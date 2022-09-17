@@ -1,5 +1,7 @@
 package com.m2049r.xmrwallet;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.widget.Toast;
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
+import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
 import com.m2049r.xmrwallet.livedata.SingleLiveEvent;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
@@ -22,6 +25,7 @@ import com.m2049r.xmrwallet.service.MoneroHandlerThread;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
+import com.m2049r.xmrwallet.util.UriData;
 
 import java.io.File;
 
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     private AddressService addressService = null;
     private HistoryService historyService = null;
     private BlockchainService blockchainService = null;
+
+    private boolean proceedToSend = false;
+    private UriData uriData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
                 passwordDialog.listener = this;
                 passwordDialog.show(getSupportFragmentManager(), "password_dialog");
+            }
+
+            Intent intent = getIntent();
+            Uri uri = intent.getData();
+            if(uri != null) {
+                uriData = UriData.parse(uri.toString());
+                if (uriData != null) {
+                    proceedToSend = true;
+                }
             }
         } else {
             navigate(R.id.onboarding_fragment);
@@ -101,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         File walletFile = new File(getApplicationInfo().dataDir, Constants.WALLET_NAME);
         init(walletFile, password);
         restartEvents.call();
+
+        if(proceedToSend) {
+            SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.uriData = uriData;
+            sendDialog.show(getSupportFragmentManager(), null);
+        }
     }
 
     @Override

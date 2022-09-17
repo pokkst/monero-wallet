@@ -1,5 +1,7 @@
 package com.m2049r.xmrwallet.fragment.home;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.HistoryService;
+import com.m2049r.xmrwallet.util.UriData;
 
 import java.util.Collections;
 

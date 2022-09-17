@@ -31,6 +31,7 @@ import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.Helper;
+import com.m2049r.xmrwallet.util.UriData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +66,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private ImageButton pasteAddressImageButton;
     private ImageButton scanAddressImageButton;
 
+    public UriData uriData = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.send_bottom_sheet_dialog, null);
@@ -84,6 +87,13 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         feeTextView = view.findViewById(R.id.fee_textview);
         addressTextView = view.findViewById(R.id.address_pending_textview);
         amountTextView = view.findViewById(R.id.amount_pending_textview);
+
+        if (uriData != null) {
+            addressEditText.setText(uriData.getAddress());
+            if(uriData.hasAmount()) {
+                amountEditText.setText(uriData.getAmount());
+            }
+        }
 
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
@@ -236,27 +246,11 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void pasteAddress(String address) {
-        HashMap<String, String> params = new HashMap<>();
-        String[] uriParts = address.replace(Constants.URI_PREFIX, "").split("\\?");
-        String finalAddress = uriParts[0];
-        String queryParams = "";
-        if(uriParts.length > 1) {
-            queryParams = uriParts[1];
-            String[] queryParts = queryParams.split("&");
-            for (String param : queryParts) {
-                String[] paramParts = param.split("=");
-                String variable = paramParts[0];
-                String value = paramParts[1];
-                params.put(variable, value);
-            }
-        }
-        boolean isValid = Wallet.isAddressValid(finalAddress);
-        if (isValid) {
-            addressEditText.setText(finalAddress);
-            if(!params.isEmpty()) {
-                if(params.containsKey(Constants.URI_ARG_AMOUNT)) {
-                    amountEditText.setText(params.get(Constants.URI_ARG_AMOUNT));
-                }
+        UriData uriData = UriData.parse(address);
+        if (uriData != null) {
+            addressEditText.setText(uriData.getAddress());
+            if(uriData.hasAmount()) {
+                amountEditText.setText(uriData.getAmount());
             }
         } else {
             Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
