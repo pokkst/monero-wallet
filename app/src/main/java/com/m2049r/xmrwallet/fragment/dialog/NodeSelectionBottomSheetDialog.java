@@ -58,21 +58,23 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
             dismiss();
         });
 
-        for(DefaultNodes defaultNode : DefaultNodes.values()) {
-            nodes.add(Node.fromString(defaultNode.getUri()));
-        }
         try {
             String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
             JSONArray jsonArray = new JSONArray(nodesArray);
             for(int i = 0; i < jsonArray.length(); i++) {
                 String nodeString = jsonArray.getString(i);
                 Node node = Node.fromString(nodeString);
-                nodes.add(node);
+                if(node != null) {
+                    nodes.add(node);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        for(DefaultNodes defaultNode : DefaultNodes.values()) {
+            nodes.add(Node.fromString(defaultNode.getUri()));
+        }
         adapter.submitList(nodes);
     }
 
