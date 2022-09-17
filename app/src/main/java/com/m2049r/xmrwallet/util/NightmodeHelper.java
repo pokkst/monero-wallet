@@ -17,12 +17,9 @@
 package com.m2049r.xmrwallet.util;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.service.PrefService;
 
 public class NightmodeHelper {

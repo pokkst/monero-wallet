@@ -31,15 +31,15 @@ public enum DayNightMode {
         this.nightMode = nightMode;
     }
 
-    public int getNightMode() {
-        return nightMode;
-    }
-
     static public DayNightMode getValue(int nightMode) {
         for (DayNightMode mode : DayNightMode.values()) {
             if (mode.nightMode == nightMode)
                 return mode;
         }
         return UNKNOWN;
+    }
+
+    public int getNightMode() {
+        return nightMode;
     }
 }

@@ -28,8 +28,6 @@ import com.m2049r.xmrwallet.model.WalletListener;
 import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.util.Constants;
 
-import java.io.File;
-
 
 /**
  * Handy class for starting a new thread that has a looper. The looper can then be
@@ -37,10 +35,11 @@ import java.io.File;
  * The started Thread has a stck size of STACK_SIZE (=5MB)
  */
 public class MoneroHandlerThread extends Thread implements WalletListener {
-    private Listener listener = null;
     // from src/cryptonote_config.h
     static public final long THREAD_STACK_SIZE = 5 * 1024 * 1024;
-    private Wallet wallet;
+    int triesLeft = 5;
+    private Listener listener = null;
+    private final Wallet wallet;
 
     public MoneroHandlerThread(String name, Listener listener, Wallet wallet) {
         super(null, null, name, THREAD_STACK_SIZE);
@@ -57,7 +56,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     @Override
     public void run() {
         boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-        if(usesTor) {
+        if (usesTor) {
             String proxy = "127.0.0.1:9050";
             WalletManager.getInstance().setProxy(proxy);
             WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.boldsuck.getUri()));
@@ -93,13 +92,11 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         refresh();
     }
 
-    int triesLeft = 5;
-
     @Override
     public void refreshed() {
         Wallet.ConnectionStatus status = wallet.getFullStatus().getConnectionStatus();
-        if(status == Wallet.ConnectionStatus.ConnectionStatus_Disconnected || status == null) {
-            if(triesLeft > 0) {
+        if (status == Wallet.ConnectionStatus.ConnectionStatus_Disconnected || status == null) {
+            if (triesLeft > 0) {
                 wallet.startRefresh();
                 triesLeft--;
             } else {
@@ -129,6 +126,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     public interface Listener {
         void onRefresh();
+
         void onConnectionFail();
     }
 }

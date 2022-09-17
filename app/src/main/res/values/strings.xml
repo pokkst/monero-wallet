@@ -22,8 +22,6 @@
     <string name="node_updated_hours">Last Block: %1$d hours ago</string>
     <string name="node_updated_days">Last Block: %1$d days ago</string>
 
-    <!-- order must be the same as in com.m2049r.xmrwallet.data.Crypto-->
-
     <string name="tx_details_notes" translatable="false">&lt;span style=\"background-color: #%1$s; color: #%2$s;\"&gt;&nbsp;%3$s&nbsp;&lt;/span&gt;%4$s</string>
 
     <string name="menu_restore">Import wallet</string>

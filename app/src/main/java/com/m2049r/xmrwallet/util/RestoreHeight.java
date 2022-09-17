@@ -29,18 +29,6 @@ public class RestoreHeight {
     static final int DIFFICULTY_TARGET = 120; // seconds
 
     static private RestoreHeight Singleton = null;
-
-    static public RestoreHeight getInstance() {
-        if (Singleton == null) {
-            synchronized (RestoreHeight.class) {
-                if (Singleton == null) {
-                    Singleton = new RestoreHeight();
-                }
-            }
-        }
-        return Singleton;
-    }
-
     private final Map<String, Long> blockheight = new HashMap<>();
 
     RestoreHeight() {
@@ -139,6 +127,17 @@ public class RestoreHeight {
         blockheight.put("2022-01-01", 2527316L);
         blockheight.put("2022-02-01", 2549605L);
         blockheight.put("2022-03-01", 2569711L);
+    }
+
+    static public RestoreHeight getInstance() {
+        if (Singleton == null) {
+            synchronized (RestoreHeight.class) {
+                if (Singleton == null) {
+                    Singleton = new RestoreHeight();
+                }
+            }
+        }
+        return Singleton;
     }
 
     public long getHeight(String date) {

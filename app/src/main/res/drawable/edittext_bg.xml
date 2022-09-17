@@ -6,8 +6,6 @@
         android:left="12dp"
         android:right="12dp"
         android:top="12dp" />
-    <solid
-        android:color="@color/edittext_bg_color"/>
-    <corners
-        android:radius="8dp"/>
+    <solid android:color="@color/edittext_bg_color" />
+    <corners android:radius="8dp" />
 </shape>

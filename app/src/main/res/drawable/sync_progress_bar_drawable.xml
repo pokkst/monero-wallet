@@ -2,17 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid
-                android:color="@android:color/white" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
 
-    <item
-        android:id="@android:id/progress">
+    <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid
-                    android:color="@color/oled_colorSecondary" />
+                <solid android:color="@color/oled_colorSecondary" />
             </shape>
         </clip>
     </item>

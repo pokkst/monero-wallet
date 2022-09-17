@@ -4,20 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.settings.SettingsFragment"
-    android:padding="24dp">
+    android:padding="24dp"
+    tools:context=".fragment.settings.SettingsFragment">
+
     <TextView
         android:id="@+id/create_wallet_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_wallet"
         android:layout_marginBottom="32dp"
+        android:text="@string/create_wallet"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/wallet_password_edittext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/wallet_password_edittext"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/wallet_password_edittext"
         android:layout_width="0dp"
@@ -26,31 +28,34 @@
         android:background="@drawable/edittext_bg"
         android:hint="@string/password_optional"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/create_wallet_textview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/advanced_settings_dropdown_textview"
-        tools:visibility="visible"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/create_wallet_textview"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/advanced_settings_dropdown_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/more_options"
         android:layout_marginBottom="8dp"
+        android:text="@string/more_options"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/wallet_seed_edittext"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallet_password_edittext"
-        app:layout_constraintBottom_toTopOf="@id/wallet_seed_edittext"/>
+        app:layout_constraintTop_toBottomOf="@id/wallet_password_edittext" />
+
     <ImageView
         android:id="@+id/advanced_settings_chevron_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_keyboard_arrow_down"
+        app:layout_constraintBottom_toBottomOf="@id/advanced_settings_dropdown_textview"
         app:layout_constraintStart_toEndOf="@id/advanced_settings_dropdown_textview"
-        app:layout_constraintTop_toTopOf="@id/advanced_settings_dropdown_textview"
-        app:layout_constraintBottom_toBottomOf="@id/advanced_settings_dropdown_textview"/>
+        app:layout_constraintTop_toTopOf="@id/advanced_settings_dropdown_textview" />
+
     <EditText
         android:id="@+id/wallet_seed_edittext"
         android:layout_width="0dp"
@@ -59,24 +64,26 @@
         android:background="@drawable/edittext_bg"
         android:hint="@string/recovery_phrase_optional"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/advanced_settings_dropdown_textview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/wallet_restore_height_edittext"
-        tools:visibility="visible"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/advanced_settings_dropdown_textview"
+        tools:visibility="visible" />
+
     <EditText
         android:id="@+id/wallet_restore_height_edittext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/restore_height_optional"
         android:background="@drawable/edittext_bg"
+        android:hint="@string/restore_height_optional"
         android:inputType="number"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/wallet_seed_edittext"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/create_wallet_button"
-        tools:visibility="visible"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallet_seed_edittext"
+        tools:visibility="visible" />
+
     <Button
         android:id="@+id/create_wallet_button"
         android:layout_width="match_parent"
@@ -85,6 +92,6 @@
         android:background="@drawable/button_bg"
         android:text="@string/create_wallet"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallet_restore_height_edittext"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallet_restore_height_edittext" />
 </androidx.constraintlayout.widget.ConstraintLayout>

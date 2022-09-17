@@ -30,10 +30,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
-import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.system.ErrnoException;
-import android.system.Os;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -42,12 +38,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
-import com.m2049r.xmrwallet.BuildConfig;
 import com.m2049r.xmrwallet.R;
-import com.m2049r.xmrwallet.data.Crypto;
 import com.m2049r.xmrwallet.model.WalletManager;
 
 import java.io.File;
@@ -67,17 +60,18 @@ import timber.log.Timber;
 public class Helper {
     static public final String NOCRAZYPASS_FLAGFILE = ".nocrazypass";
 
-    static public final String BASE_CRYPTO = Crypto.XMR.getSymbol();
     static public final int XMR_DECIMALS = 12;
     static public final long ONE_XMR = Math.round(Math.pow(10, Helper.XMR_DECIMALS));
 
     static public final boolean SHOW_EXCHANGERATES = true;
-    static public boolean ALLOW_SHIFT = false;
-
+    static public final int PERMISSIONS_REQUEST_CAMERA = 7;
+    static final int HTTP_TIMEOUT = 5000;
     static private final String WALLET_DIR = "wallets";
     static private final String MONERO_DIR = "monero";
-
+    private final static char[] HexArray = "0123456789ABCDEF".toCharArray();
+    static public boolean ALLOW_SHIFT = false;
     static public int DISPLAY_DIGITS_INFO = 5;
+    static private Animation ShakeAnimation;
 
     static public File getWalletRoot(Context context) {
         return getStorage(context, WALLET_DIR);
@@ -96,8 +90,6 @@ public class Helper {
         }
         return dir;
     }
-
-    static public final int PERMISSIONS_REQUEST_CAMERA = 7;
 
     static public boolean getCameraPermission(Activity context) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -227,8 +219,6 @@ public class Helper {
         return bitmap;
     }
 
-    static final int HTTP_TIMEOUT = 5000;
-
     static public String getUrl(String httpsUrl) {
         HttpsURLConnection urlConnection = null;
         try {
@@ -261,7 +251,7 @@ public class Helper {
     }
 
     static public void clipBoardCopy(Context context, String label, String text) {
-        if(context != null) {
+        if (context != null) {
             ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText(label, text);
             clipboardManager.setPrimaryClip(clip);
@@ -284,8 +274,6 @@ public class Helper {
         return null;
     }
 
-    static private Animation ShakeAnimation;
-
     static public Animation getShakeAnimation(Context context) {
         if (ShakeAnimation == null) {
             synchronized (Helper.class) {
@@ -296,8 +284,6 @@ public class Helper {
         }
         return ShakeAnimation;
     }
-
-    private final static char[] HexArray = "0123456789ABCDEF".toCharArray();
 
     public static String bytesToHex(byte[] data) {
         if ((data != null) && (data.length > 0))

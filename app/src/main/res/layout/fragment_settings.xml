@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.settings.SettingsFragment"
-    android:padding="24dp">
+    android:padding="24dp"
+    tools:context=".fragment.settings.SettingsFragment">
+
     <TextView
         android:id="@+id/settings_textview"
         android:layout_width="match_parent"
@@ -13,49 +14,49 @@
         android:text="@string/settings"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/wallet_settings_textview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/wallet_settings_textview"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/wallet_settings_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/wallet"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/display_seed_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_textview"
-        app:layout_constraintBottom_toTopOf="@id/display_seed_button"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_textview" />
 
     <Button
         android:id="@+id/display_seed_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/display_recovery_phrase"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_bg"
+        android:text="@string/display_recovery_phrase"
+        app:layout_constraintBottom_toTopOf="@id/appearance_settings_textview"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/appearance_settings_textview"
         app:layout_constraintTop_toBottomOf="@id/wallet_settings_textview" />
 
     <TextView
         android:id="@+id/appearance_settings_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/appearance"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/day_night_switch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/display_seed_button"
-        app:layout_constraintBottom_toTopOf="@id/day_night_switch"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/display_seed_button" />
 
     <TextView
         android:id="@+id/day_night_textview"
@@ -63,10 +64,10 @@
         android:layout_height="wrap_content"
         android:text="@string/night_mode"
         android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="@id/day_night_switch"
         app:layout_constraintBottom_toBottomOf="@id/day_night_switch"
+        app:layout_constraintEnd_toStartOf="@id/day_night_switch"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/day_night_switch"/>
+        app:layout_constraintTop_toTopOf="@id/day_night_switch" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/day_night_switch"
@@ -74,21 +75,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/network_settings_textview"
-        app:layout_constraintTop_toBottomOf="@id/appearance_settings_textview"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appearance_settings_textview" />
 
     <TextView
         android:id="@+id/network_settings_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/network"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tor_switch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_night_switch"
-        app:layout_constraintBottom_toTopOf="@id/tor_switch"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day_night_switch" />
 
     <TextView
         android:id="@+id/tor_textview"
@@ -96,16 +97,16 @@
         android:layout_height="wrap_content"
         android:text="@string/tor_switch_label"
         android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="@id/tor_switch"
         app:layout_constraintBottom_toBottomOf="@id/tor_switch"
+        app:layout_constraintEnd_toStartOf="@id/tor_switch"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tor_switch"/>
+        app:layout_constraintTop_toTopOf="@id/tor_switch" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/tor_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/network_settings_textview"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/network_settings_textview" />
 </androidx.constraintlayout.widget.ConstraintLayout>

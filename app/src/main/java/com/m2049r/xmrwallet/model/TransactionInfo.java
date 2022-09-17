@@ -30,26 +30,15 @@ import lombok.RequiredArgsConstructor;
 // this is a POJO for the TransactionInfoAdapter
 public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> {
     public static final int CONFIRMATION = 10; // blocks
-
-    @RequiredArgsConstructor
-    public enum Direction {
-        Direction_In(0),
-        Direction_Out(1);
-
-        public static Direction fromInteger(int n) {
-            switch (n) {
-                case 0:
-                    return Direction_In;
-                case 1:
-                    return Direction_Out;
-            }
-            return null;
+    public static final Parcelable.Creator<TransactionInfo> CREATOR = new Parcelable.Creator<TransactionInfo>() {
+        public TransactionInfo createFromParcel(Parcel in) {
+            return new TransactionInfo(in);
         }
 
-        @Getter
-        private final int value;
-    }
-
+        public TransactionInfo[] newArray(int size) {
+            return new TransactionInfo[size];
+        }
+    };
     public Direction direction;
     public boolean isPending;
     public boolean isFailed;
@@ -100,6 +89,26 @@ public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> 
         this.transfers = transfers;
     }
 
+    private TransactionInfo(Parcel in) {
+        direction = Direction.fromInteger(in.readInt());
+        isPending = in.readByte() != 0;
+        isFailed = in.readByte() != 0;
+        amount = in.readLong();
+        fee = in.readLong();
+        blockheight = in.readLong();
+        hash = in.readString();
+        timestamp = in.readLong();
+        paymentId = in.readString();
+        accountIndex = in.readInt();
+        addressIndex = in.readInt();
+        confirmations = in.readLong();
+        subaddressLabel = in.readString();
+        transfers = in.readArrayList(Transfer.class.getClassLoader());
+        txKey = in.readString();
+        notes = in.readString();
+        address = in.readString();
+    }
+
     public boolean isConfirmed() {
         return confirmations >= CONFIRMATION;
     }
@@ -136,36 +145,6 @@ public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> 
         out.writeString(address);
     }
 
-    public static final Parcelable.Creator<TransactionInfo> CREATOR = new Parcelable.Creator<TransactionInfo>() {
-        public TransactionInfo createFromParcel(Parcel in) {
-            return new TransactionInfo(in);
-        }
-
-        public TransactionInfo[] newArray(int size) {
-            return new TransactionInfo[size];
-        }
-    };
-
-    private TransactionInfo(Parcel in) {
-        direction = Direction.fromInteger(in.readInt());
-        isPending = in.readByte() != 0;
-        isFailed = in.readByte() != 0;
-        amount = in.readLong();
-        fee = in.readLong();
-        blockheight = in.readLong();
-        hash = in.readString();
-        timestamp = in.readLong();
-        paymentId = in.readString();
-        accountIndex = in.readInt();
-        addressIndex = in.readInt();
-        confirmations = in.readLong();
-        subaddressLabel = in.readString();
-        transfers = in.readArrayList(Transfer.class.getClassLoader());
-        txKey = in.readString();
-        notes = in.readString();
-        address = in.readString();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,6 +160,25 @@ public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> 
             return 1;
         } else {
             return this.hash.compareTo(another.hash);
+        }
+    }
+
+    @RequiredArgsConstructor
+    public enum Direction {
+        Direction_In(0),
+        Direction_Out(1);
+
+        @Getter
+        private final int value;
+
+        public static Direction fromInteger(int n) {
+            switch (n) {
+                case 0:
+                    return Direction_In;
+                case 1:
+                    return Direction_Out;
+            }
+            return null;
         }
     }
 }

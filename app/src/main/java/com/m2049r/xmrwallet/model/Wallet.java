@@ -33,53 +33,47 @@ import timber.log.Timber;
 
 public class Wallet {
     final static public long SWEEP_ALL = Long.MAX_VALUE;
+    private static final String NEW_ACCOUNT_NAME = "Untitled account"; // src/wallet/wallet2.cpp:941
 
     static {
         System.loadLibrary("monerujo");
     }
 
-    static public class Status {
-        Status(int status, String errorString) {
-            this.status = StatusEnum.values()[status];
-            this.errorString = errorString;
-        }
+    boolean synced = false;
+    private int accountIndex = 0;
+    private long handle = 0;
+    private long listenerHandle = 0;
+    private PendingTransaction pendingTransaction = null;
+    private TransactionHistory history = null;
 
-        final private StatusEnum status;
-        final private String errorString;
-        @Nullable
-        private ConnectionStatus connectionStatus; // optional
-
-        public StatusEnum getStatus() {
-            return status;
-        }
-
-        public String getErrorString() {
-            return errorString;
-        }
-
-        public void setConnectionStatus(@Nullable ConnectionStatus connectionStatus) {
-            this.connectionStatus = connectionStatus;
-        }
-
-        @Nullable
-        public ConnectionStatus getConnectionStatus() {
-            return connectionStatus;
-        }
-
-        public boolean isOk() {
-            return (getStatus() == StatusEnum.Status_Ok)
-                    && ((getConnectionStatus() == null) ||
-                    (getConnectionStatus() == ConnectionStatus.ConnectionStatus_Connected));
-        }
-
-        @Override
-        @NonNull
-        public String toString() {
-            return "Wallet.Status: " + status + "/" + errorString + "/" + connectionStatus;
-        }
+    Wallet(long handle) {
+        this.handle = handle;
     }
 
-    private int accountIndex = 0;
+    Wallet(long handle, int accountIndex) {
+        this.handle = handle;
+        this.accountIndex = accountIndex;
+    }
+
+    public static native String getDisplayAmount(long amount);
+
+    public static native long getAmountFromString(String amount);
+
+    public static native long getAmountFromDouble(double amount);
+
+    public static native String generatePaymentId();
+
+    public static native boolean isPaymentIdValid(String payment_id);
+
+    public static boolean isAddressValid(String address) {
+        return isAddressValid(address, WalletManager.getInstance().getNetworkType().getValue());
+    }
+
+    public static native boolean isAddressValid(String address, int networkType);
+
+    public static native String getPaymentIdFromAddress(String address, int networkType);
+
+    public static native long getMaximumAllowedAmount();
 
     public int getAccountIndex() {
         return accountIndex;
@@ -93,40 +87,6 @@ public class Wallet {
 
     public String getName() {
         return new File(getPath()).getName();
-    }
-
-    private long handle = 0;
-    private long listenerHandle = 0;
-
-    Wallet(long handle) {
-        this.handle = handle;
-    }
-
-    Wallet(long handle, int accountIndex) {
-        this.handle = handle;
-        this.accountIndex = accountIndex;
-    }
-
-    @RequiredArgsConstructor
-    @Getter
-    public enum Device {
-        Device_Undefined(0, 0),
-        Device_Software(50, 200),
-        Device_Ledger(5, 20);
-        private final int accountLookahead;
-        private final int subaddressLookahead;
-    }
-
-    public enum StatusEnum {
-        Status_Ok,
-        Status_Error,
-        Status_Critical
-    }
-
-    public enum ConnectionStatus {
-        ConnectionStatus_Disconnected,
-        ConnectionStatus_Connected,
-        ConnectionStatus_WrongVersion
     }
 
     public native String getSeed(String offset);
@@ -152,6 +112,9 @@ public class Wallet {
     public String getAddress() {
         return getAddress(accountIndex);
     }
+
+//TODO virtual void hardForkInfo(uint8_t &version, uint64_t &earliest_height) const = 0;
+//TODO virtual bool useForkRules(uint8_t version, int64_t early_blocks) const = 0;
 
     public String getAddress(int accountIndex) {
         return getAddressJ(accountIndex, 0);
@@ -193,18 +156,24 @@ public class Wallet {
 
     public native int nettype();
 
-//TODO virtual void hardForkInfo(uint8_t &version, uint64_t &earliest_height) const = 0;
-//TODO virtual bool useForkRules(uint8_t version, int64_t early_blocks) const = 0;
+//    virtual bool createWatchOnly(const std::string &path, const std::string &password, const std::string &language) const = 0;
+//    virtual void setRefreshFromBlockHeight(uint64_t refresh_from_block_height) = 0;
 
     public native String getIntegratedAddress(String payment_id);
 
     public native String getSecretViewKey();
+
+    //    virtual void setRecoveringFromSeed(bool recoveringFromSeed) = 0;
+//    virtual bool connectToDaemon() = 0;
 
     public native String getSecretSpendKey();
 
     public boolean store() {
         return store("");
     }
+
+//TODO virtual void setTrustedDaemon(bool arg) = 0;
+//TODO virtual bool trustedDaemon() const = 0;
 
     public native synchronized boolean store(String path);
 
@@ -225,15 +194,9 @@ public class Wallet {
     private native boolean initJ(String daemon_address, long upper_transaction_size_limit,
                                  String daemon_username, String daemon_password, String proxy);
 
-//    virtual bool createWatchOnly(const std::string &path, const std::string &password, const std::string &language) const = 0;
-//    virtual void setRefreshFromBlockHeight(uint64_t refresh_from_block_height) = 0;
-
-    public native void setRestoreHeight(long height);
-
     public native long getRestoreHeight();
 
-    //    virtual void setRecoveringFromSeed(bool recoveringFromSeed) = 0;
-//    virtual bool connectToDaemon() = 0;
+    public native void setRestoreHeight(long height);
 
     public ConnectionStatus getConnectionStatus() {
         int s = getConnectionStatusJ();
@@ -241,9 +204,6 @@ public class Wallet {
     }
 
     private native int getConnectionStatusJ();
-
-//TODO virtual void setTrustedDaemon(bool arg) = 0;
-//TODO virtual bool trustedDaemon() const = 0;
 
     public native boolean setProxy(String address);
 
@@ -273,8 +233,6 @@ public class Wallet {
 
     public native long getDaemonBlockChainTargetHeight();
 
-    boolean synced = false;
-
     public boolean isSynchronized() {
         return synced;
     }
@@ -282,26 +240,6 @@ public class Wallet {
     public void setSynchronized() {
         this.synced = true;
     }
-
-    public static native String getDisplayAmount(long amount);
-
-    public static native long getAmountFromString(String amount);
-
-    public static native long getAmountFromDouble(double amount);
-
-    public static native String generatePaymentId();
-
-    public static native boolean isPaymentIdValid(String payment_id);
-
-    public static boolean isAddressValid(String address) {
-        return isAddressValid(address, WalletManager.getInstance().getNetworkType().getValue());
-    }
-
-    public static native boolean isAddressValid(String address, int networkType);
-
-    public static native String getPaymentIdFromAddress(String address, int networkType);
-
-    public static native long getMaximumAllowedAmount();
 
     public native void startRefresh();
 
@@ -318,15 +256,12 @@ public class Wallet {
         rescanBlockchainAsyncJ();
     }
 
-//TODO virtual void setAutoRefreshInterval(int millis) = 0;
-//TODO virtual int autoRefreshInterval() const = 0;
-
-
-    private PendingTransaction pendingTransaction = null;
-
     public PendingTransaction getPendingTransaction() {
         return pendingTransaction;
     }
+
+//TODO virtual void setAutoRefreshInterval(int millis) = 0;
+//TODO virtual int autoRefreshInterval() const = 0;
 
     public void disposePendingTransaction() {
         if (pendingTransaction != null) {
@@ -366,7 +301,6 @@ public class Wallet {
                                                int mixin_count,
                                                int priority, int accountIndex);
 
-
     public PendingTransaction createSweepUnmixableTransaction() {
         disposePendingTransaction();
         long txHandle = createSweepUnmixableTransactionJ();
@@ -376,18 +310,7 @@ public class Wallet {
 
     private native long createSweepUnmixableTransactionJ();
 
-//virtual UnsignedTransaction * loadUnsignedTx(const std::string &unsigned_filename) = 0;
-//virtual bool submitTransaction(const std::string &fileName) = 0;
-
     public native void disposeTransaction(PendingTransaction pendingTransaction);
-
-//virtual bool exportKeyImages(const std::string &filename) = 0;
-//virtual bool importKeyImages(const std::string &filename) = 0;
-
-
-//virtual TransactionHistory * history() const = 0;
-
-    private TransactionHistory history = null;
 
     public TransactionHistory getHistory() {
         if (history == null) {
@@ -396,14 +319,20 @@ public class Wallet {
         return history;
     }
 
+//virtual UnsignedTransaction * loadUnsignedTx(const std::string &unsigned_filename) = 0;
+//virtual bool submitTransaction(const std::string &fileName) = 0;
+
     private native long getHistoryJ();
+
+//virtual bool exportKeyImages(const std::string &filename) = 0;
+//virtual bool importKeyImages(const std::string &filename) = 0;
+
+
+//virtual TransactionHistory * history() const = 0;
 
     public void refreshHistory() {
         getHistory().refreshWithNotes(this);
     }
-
-//virtual AddressBook * addressBook() const = 0;
-//virtual void setListener(WalletListener *) = 0;
 
     private native long setListenerJ(WalletListener listener);
 
@@ -413,6 +342,9 @@ public class Wallet {
 
     public native int getDefaultMixin();
 
+//virtual AddressBook * addressBook() const = 0;
+//virtual void setListener(WalletListener *) = 0;
+
     public native void setDefaultMixin(int mixin);
 
     public native boolean setUserNote(String txid, String note);
@@ -420,14 +352,6 @@ public class Wallet {
     public native String getUserNote(String txid);
 
     public native String getTxKey(String txid);
-
-//virtual std::string signMessage(const std::string &message) = 0;
-//virtual bool verifySignedMessage(const std::string &message, const std::string &addres, const std::string &signature) const = 0;
-
-//virtual bool parse_uri(const std::string &uri, std::string &address, std::string &payment_id, uint64_t &tvAmount, std::string &tx_description, std::string &recipient_name, std::vector<std::string> &unknown_parameters, std::string &error) = 0;
-//virtual bool rescanSpent() = 0;
-
-    private static final String NEW_ACCOUNT_NAME = "Untitled account"; // src/wallet/wallet2.cpp:941
 
     public void addAccount() {
         addAccount(NEW_ACCOUNT_NAME);
@@ -437,6 +361,16 @@ public class Wallet {
 
     public String getAccountLabel() {
         return getAccountLabel(accountIndex);
+    }
+
+//virtual std::string signMessage(const std::string &message) = 0;
+//virtual bool verifySignedMessage(const std::string &message, const std::string &addres, const std::string &signature) const = 0;
+
+//virtual bool parse_uri(const std::string &uri, std::string &address, std::string &payment_id, uint64_t &tvAmount, std::string &tx_description, std::string &recipient_name, std::vector<std::string> &unknown_parameters, std::string &error) = 0;
+//virtual bool rescanSpent() = 0;
+
+    public void setAccountLabel(String label) {
+        setAccountLabel(accountIndex, label);
     }
 
     public String getAccountLabel(int accountIndex) {
@@ -455,10 +389,6 @@ public class Wallet {
     }
 
     public native String getSubaddressLabel(int accountIndex, int addressIndex);
-
-    public void setAccountLabel(String label) {
-        setAccountLabel(accountIndex, label);
-    }
 
     public void setAccountLabel(int accountIndex, String label) {
         setSubaddressLabel(accountIndex, 0, label);
@@ -503,5 +433,67 @@ public class Wallet {
     }
 
     private native int getDeviceTypeJ();
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum Device {
+        Device_Undefined(0, 0),
+        Device_Software(50, 200),
+        Device_Ledger(5, 20);
+        private final int accountLookahead;
+        private final int subaddressLookahead;
+    }
+
+    public enum StatusEnum {
+        Status_Ok,
+        Status_Error,
+        Status_Critical
+    }
+
+    public enum ConnectionStatus {
+        ConnectionStatus_Disconnected,
+        ConnectionStatus_Connected,
+        ConnectionStatus_WrongVersion
+    }
+
+    static public class Status {
+        final private StatusEnum status;
+        final private String errorString;
+        @Nullable
+        private ConnectionStatus connectionStatus; // optional
+        Status(int status, String errorString) {
+            this.status = StatusEnum.values()[status];
+            this.errorString = errorString;
+        }
+
+        public StatusEnum getStatus() {
+            return status;
+        }
+
+        public String getErrorString() {
+            return errorString;
+        }
+
+        @Nullable
+        public ConnectionStatus getConnectionStatus() {
+            return connectionStatus;
+        }
+
+        public void setConnectionStatus(@Nullable ConnectionStatus connectionStatus) {
+            this.connectionStatus = connectionStatus;
+        }
+
+        public boolean isOk() {
+            return (getStatus() == StatusEnum.Status_Ok)
+                    && ((getConnectionStatus() == null) ||
+                    (getConnectionStatus() == ConnectionStatus.ConnectionStatus_Connected));
+        }
+
+        @Override
+        @NonNull
+        public String toString() {
+            return "Wallet.Status: " + status + "/" + errorString + "/" + connectionStatus;
+        }
+    }
 
 }

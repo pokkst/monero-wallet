@@ -60,8 +60,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
             jenv->FindClass("com/m2049r/xmrwallet/model/Transfer")));
     class_WalletListener = static_cast<jclass>(jenv->NewGlobalRef(
             jenv->FindClass("com/m2049r/xmrwallet/model/WalletListener")));
-    class_Ledger = static_cast<jclass>(jenv->NewGlobalRef(
-            jenv->FindClass("com/m2049r/xmrwallet/ledger/Ledger")));
     class_WalletStatus = static_cast<jclass>(jenv->NewGlobalRef(
             jenv->FindClass("com/m2049r/xmrwallet/model/Wallet$Status")));
     return JNI_VERSION_1_6;
@@ -510,8 +508,8 @@ Java_com_m2049r_xmrwallet_model_WalletManager_startMining(JNIEnv *env, jobject i
     const char *_address = env->GetStringUTFChars(address, nullptr);
     bool success =
             Monero::WalletManagerFactory::getWalletManager()->startMining(std::string(_address),
-                                                                             background_mining,
-                                                                             ignore_battery);
+                                                                          background_mining,
+                                                                          ignore_battery);
     env->ReleaseStringUTFChars(address, _address);
     return static_cast<jboolean>(success);
 }
@@ -537,7 +535,7 @@ Java_com_m2049r_xmrwallet_model_WalletManager_resolveOpenAlias(JNIEnv *env, jobj
 
 JNIEXPORT jboolean JNICALL
 Java_com_m2049r_xmrwallet_model_WalletManager_setProxyJ(JNIEnv *env, jobject instance,
-                                                       jstring address) {
+                                                        jstring address) {
     const char *_address = env->GetStringUTFChars(address, nullptr);
     bool rc =
             Monero::WalletManagerFactory::getWalletManager()->setProxy(std::string(_address));
@@ -553,7 +551,7 @@ Java_com_m2049r_xmrwallet_model_WalletManager_closeJ(JNIEnv *env, jobject instan
                                                      jobject walletInstance) {
     Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, walletInstance);
     bool closeSuccess = Monero::WalletManagerFactory::getWalletManager()->closeWallet(wallet,
-                                                                                         false);
+                                                                                      false);
     if (closeSuccess) {
         MyWalletListener *walletListener = getHandle<MyWalletListener>(env, walletInstance,
                                                                        "listenerHandle");
@@ -705,7 +703,8 @@ JNIEXPORT jboolean JNICALL
 Java_com_m2049r_xmrwallet_model_Wallet_initJ(JNIEnv *env, jobject instance,
                                              jstring daemon_address,
                                              jlong upper_transaction_size_limit,
-                                             jstring daemon_username, jstring daemon_password, jstring proxy) {
+                                             jstring daemon_username, jstring daemon_password,
+                                             jstring proxy) {
     const char *_daemon_address = env->GetStringUTFChars(daemon_address, nullptr);
     const char *_daemon_username = env->GetStringUTFChars(daemon_username, nullptr);
     const char *_daemon_password = env->GetStringUTFChars(daemon_password, nullptr);
@@ -968,9 +967,9 @@ Java_com_m2049r_xmrwallet_model_Wallet_createTransactionJ(JNIEnv *env, jobject i
     Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
 
     Monero::PendingTransaction *tx = wallet->createTransaction(_dst_addr, _payment_id,
-                                                                  amount, (uint32_t) mixin_count,
-                                                                  _priority,
-                                                                  (uint32_t) accountIndex);
+                                                               amount, (uint32_t) mixin_count,
+                                                               _priority,
+                                                               (uint32_t) accountIndex);
 
     env->ReleaseStringUTFChars(dst_addr, _dst_addr);
     env->ReleaseStringUTFChars(payment_id, _payment_id);
@@ -993,9 +992,9 @@ Java_com_m2049r_xmrwallet_model_Wallet_createSweepTransaction(JNIEnv *env, jobje
     Monero::optional<uint64_t> empty;
 
     Monero::PendingTransaction *tx = wallet->createTransaction(_dst_addr, _payment_id,
-                                                                  empty, (uint32_t) mixin_count,
-                                                                  _priority,
-                                                                  (uint32_t) accountIndex);
+                                                               empty, (uint32_t) mixin_count,
+                                                               _priority,
+                                                               (uint32_t) accountIndex);
 
     env->ReleaseStringUTFChars(dst_addr, _dst_addr);
     env->ReleaseStringUTFChars(payment_id, _payment_id);
@@ -1205,7 +1204,7 @@ Java_com_m2049r_xmrwallet_model_Wallet_getLastSubaddress(JNIEnv *env, jobject in
 JNIEXPORT jint JNICALL
 Java_com_m2049r_xmrwallet_model_TransactionHistory_getCount(JNIEnv *env, jobject instance) {
     Monero::TransactionHistory *history = getHandle<Monero::TransactionHistory>(env,
-                                                                                      instance);
+                                                                                instance);
     return history->count();
 }
 
@@ -1291,7 +1290,7 @@ jobject cpp2java(JNIEnv *env, const std::vector<Monero::TransactionInfo *> &vect
 JNIEXPORT jobject JNICALL
 Java_com_m2049r_xmrwallet_model_TransactionHistory_refreshJ(JNIEnv *env, jobject instance) {
     Monero::TransactionHistory *history = getHandle<Monero::TransactionHistory>(env,
-                                                                                      instance);
+                                                                                instance);
     history->refresh();
     return cpp2java(env, history->getAll());
 }

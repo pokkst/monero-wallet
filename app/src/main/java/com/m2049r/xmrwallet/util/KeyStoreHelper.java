@@ -82,16 +82,6 @@ public class KeyStoreHelper {
         }
     }
 
-    static public class BrokenPasswordStoreException extends Exception {
-        BrokenPasswordStoreException() {
-            super();
-        }
-
-        BrokenPasswordStoreException(Throwable cause) {
-            super(cause);
-        }
-    }
-
     /**
      * Creates a public and private key and stores it using the Android Key
      * Store, so that only this application will be able to access the keys.
@@ -266,5 +256,15 @@ public class KeyStoreHelper {
         String CIPHER_RSA_ECB_PKCS1 = "RSA/ECB/PKCS1Padding";
         String WALLET_PASS_PREFS_NAME = "wallet";
         String WALLET_PASS_KEY_PREFIX = "walletKey-";
+    }
+
+    static public class BrokenPasswordStoreException extends Exception {
+        BrokenPasswordStoreException() {
+            super();
+        }
+
+        BrokenPasswordStoreException(Throwable cause) {
+            super(cause);
+        }
     }
 }

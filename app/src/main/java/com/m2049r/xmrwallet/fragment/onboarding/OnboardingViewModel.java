@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class OnboardingViewModel extends ViewModel {
-    private MutableLiveData<Boolean> _showMoreOptions = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> _showMoreOptions = new MutableLiveData<>(false);
     public LiveData<Boolean> showMoreOptions = _showMoreOptions;
 
     public void onMoreOptionsClicked() {

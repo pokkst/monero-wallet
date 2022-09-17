@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,12 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.m2049r.xmrwallet.R;
-import com.m2049r.xmrwallet.model.Wallet;
-import com.m2049r.xmrwallet.model.WalletManager;
-import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.Helper;
-
-import java.io.File;
 
 public class InformationBottomSheetDialog extends BottomSheetDialogFragment {
     public boolean showCopyButton = false;
@@ -34,7 +27,7 @@ public class InformationBottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ImageButton copyInformationImageButton = view.findViewById(R.id.copy_information_imagebutton);
-        if(showCopyButton) {
+        if (showCopyButton) {
             copyInformationImageButton.setVisibility(View.VISIBLE);
         } else {
             copyInformationImageButton.setVisibility(View.INVISIBLE);

@@ -2,20 +2,8 @@ package com.m2049r.xmrwallet.fragment.dialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.zxing.client.android.Intents;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
-import com.m2049r.xmrwallet.R;
-import com.m2049r.xmrwallet.model.PendingTransaction;
-import com.m2049r.xmrwallet.model.Wallet;
-import com.m2049r.xmrwallet.service.BalanceService;
-import com.m2049r.xmrwallet.service.TxService;
-import com.m2049r.xmrwallet.util.Helper;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,31 +20,38 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.zxing.client.android.Intents;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
+import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.model.PendingTransaction;
+import com.m2049r.xmrwallet.model.Wallet;
+import com.m2049r.xmrwallet.service.BalanceService;
+import com.m2049r.xmrwallet.service.TxService;
+import com.m2049r.xmrwallet.util.Helper;
+
 import java.util.List;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
-    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
-            result -> {
-                if(result.getContents() != null) {
-                    pasteAddress(result.getContents());
-                }
-            });
-
-    private final ActivityResultLauncher<String> cameraPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+    private final MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
+    public LiveData<Boolean> sendingMax = _sendingMax;    private final ActivityResultLauncher<String> cameraPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
             granted -> {
-                if(granted) {
+                if (granted) {
                     onScan();
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.no_camera_permission), Toast.LENGTH_SHORT).show();
                 }
             });
-
-    private MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
-    public LiveData<Boolean> sendingMax = _sendingMax;
-    private MutableLiveData<PendingTransaction> _pendingTransaction = new MutableLiveData<>(null);
+    private final MutableLiveData<PendingTransaction> _pendingTransaction = new MutableLiveData<>(null);
     public LiveData<PendingTransaction> pendingTransaction = _pendingTransaction;
-
     private EditText addressEditText;
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
+            result -> {
+                if (result.getContents() != null) {
+                    pasteAddress(result.getContents());
+                }
+            });
     private EditText amountEditText;
     private TextView sendAllTextView;
     private TextView feeTextView;
@@ -90,9 +85,9 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
-            if(ctx != null) {
+            if (ctx != null) {
                 String clipboard = Helper.getClipBoardText(ctx);
-                if(clipboard != null) {
+                if (clipboard != null) {
                     pasteAddress(clipboard);
                 }
             }
@@ -115,7 +110,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             if (validAddress && (!amount.isEmpty() || sendAll)) {
                 long amountRaw = Wallet.getAmountFromString(amount);
                 long balance = BalanceService.getInstance().getUnlockedBalanceRaw();
-                if((amountRaw >= balance || amountRaw <= 0) && !sendAll) {
+                if ((amountRaw >= balance || amountRaw <= 0) && !sendAll) {
                     Toast.makeText(getActivity(), getString(R.string.send_amount_invalid), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -131,7 +126,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
         sendButton.setOnClickListener(view1 -> {
             PendingTransaction pendingTx = pendingTransaction.getValue();
-            if(pendingTx != null) {
+            if (pendingTx != null) {
                 Toast.makeText(getActivity(), getString(R.string.sending_tx), Toast.LENGTH_SHORT).show();
                 sendButton.setEnabled(false);
                 sendTx(pendingTx);
@@ -139,7 +134,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         });
 
         sendingMax.observe(getViewLifecycleOwner(), sendingMax -> {
-            if(pendingTransaction.getValue() == null) {
+            if (pendingTransaction.getValue() == null) {
                 if (sendingMax) {
                     amountEditText.setVisibility(View.INVISIBLE);
                     sendAllTextView.setVisibility(View.VISIBLE);
@@ -155,7 +150,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         pendingTransaction.observe(getViewLifecycleOwner(), pendingTx -> {
             showConfirmationLayout(pendingTx != null);
 
-            if(pendingTx != null) {
+            if (pendingTx != null) {
                 String address = addressEditText.getText().toString();
                 addressTextView.setText(getString(R.string.tx_address_text, address));
                 amountTextView.setText(getString(R.string.tx_amount_text, Helper.getDisplayAmount(pendingTx.getAmount())));
@@ -179,7 +174,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         AsyncTask.execute(() -> {
             boolean success = TxService.getInstance().sendTx(pendingTx);
             Activity activity = getActivity();
-            if(activity != null) {
+            if (activity != null) {
                 activity.runOnUiThread(() -> {
                     if (success) {
                         Toast.makeText(getActivity(), getString(R.string.sent_tx), Toast.LENGTH_SHORT).show();
@@ -196,11 +191,11 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private void createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority) {
         AsyncTask.execute(() -> {
             PendingTransaction pendingTx = TxService.getInstance().createTx(address, amount, sendAll, feePriority);
-            if(pendingTx != null) {
+            if (pendingTx != null) {
                 _pendingTransaction.postValue(pendingTx);
             } else {
                 Activity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         createButton.setEnabled(true);
                         Toast.makeText(getActivity(), getString(R.string.error_creating_tx), Toast.LENGTH_SHORT).show();
@@ -211,7 +206,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void showConfirmationLayout(boolean show) {
-        if(show) {
+        if (show) {
             sendButton.setVisibility(View.VISIBLE);
             addressEditText.setVisibility(View.GONE);
             amountEditText.setVisibility(View.GONE);
@@ -241,10 +236,12 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private void pasteAddress(String address) {
         String modifiedAddress = address.replace("monero:", "").split("\\?")[0];
         boolean isValid = Wallet.isAddressValid(modifiedAddress);
-        if(isValid) {
+        if (isValid) {
             addressEditText.setText(modifiedAddress);
         } else {
             Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

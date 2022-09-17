@@ -18,153 +18,32 @@ package com.m2049r.xmrwallet.adapter;
 
 import static com.m2049r.xmrwallet.util.DateHelper.DATETIME_FORMATTER;
 
-import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.leanback.widget.DiffCallback;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.m2049r.xmrwallet.R;
-import com.m2049r.xmrwallet.data.Crypto;
 import com.m2049r.xmrwallet.data.UserNotes;
 import com.m2049r.xmrwallet.model.TransactionInfo;
-import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.util.Helper;
 import com.m2049r.xmrwallet.util.ThemeHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
-
-import timber.log.Timber;
 
 public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfoAdapter.ViewHolder> {
 
     private List<TransactionInfo> localDataSet;
     private TxInfoAdapterListener listener = null;
-
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final int outboundColour;
-        private final int inboundColour;
-        private final int pendingColour;
-        private final int failedColour;
-        private TxInfoAdapterListener listener = null;
-        private TextView amountTextView = null;
-        public ViewHolder(TxInfoAdapterListener listener, View view) {
-            super(view);
-            inboundColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.positiveColor);
-            outboundColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.negativeColor);
-            pendingColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.neutralColor);
-            failedColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.neutralColor);
-            this.listener = listener;
-            Calendar cal = Calendar.getInstance();
-            TimeZone tz = cal.getTimeZone(); //get the local time zone.
-            DATETIME_FORMATTER.setTimeZone(tz);
-        }
-
-        public void bind(TransactionInfo txInfo) {
-            String displayAmount = Helper.getDisplayAmount(txInfo.amount, Helper.DISPLAY_DIGITS_INFO);
-
-            TextView confirmationsTextView = ((TextView)itemView.findViewById(R.id.tvConfirmations));
-            CircularProgressIndicator confirmationsProgressBar = ((CircularProgressIndicator)itemView.findViewById(R.id.pbConfirmations));
-            confirmationsProgressBar.setMax(TransactionInfo.CONFIRMATION);
-            this.amountTextView = ((TextView)itemView.findViewById(R.id.tx_amount));
-            ((TextView)itemView.findViewById(R.id.tx_failed)).setVisibility(View.GONE);
-            if(txInfo.isFailed) {
-                ((TextView)itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_negative, displayAmount));
-                ((TextView)itemView.findViewById(R.id.tx_failed)).setVisibility(View.VISIBLE);
-                setTxColour(failedColour);
-                confirmationsTextView.setVisibility(View.GONE);
-                confirmationsProgressBar.setVisibility(View.GONE);
-            } else if(txInfo.isPending) {
-                setTxColour(pendingColour);
-                confirmationsProgressBar.setVisibility(View.GONE);
-                confirmationsProgressBar.setIndeterminate(true);
-                confirmationsProgressBar.setVisibility(View.VISIBLE);
-                confirmationsTextView.setVisibility(View.GONE);
-            } else if (txInfo.direction == TransactionInfo.Direction.Direction_In) {
-                setTxColour(inboundColour);
-                if (!txInfo.isConfirmed()) {
-                    confirmationsProgressBar.setVisibility(View.VISIBLE);
-                    final int confirmations = (int) txInfo.confirmations;
-                    confirmationsProgressBar.setProgressCompat(confirmations, true);
-                    final String confCount = Integer.toString(confirmations);
-                    confirmationsTextView.setText(confCount);
-                    if (confCount.length() == 1) // we only have space for character in the progress circle
-                        confirmationsTextView.setVisibility(View.VISIBLE);
-                    else
-                        confirmationsTextView.setVisibility(View.GONE);
-                } else {
-                    confirmationsProgressBar.setVisibility(View.GONE);
-                    confirmationsTextView.setVisibility(View.GONE);
-                }
-            } else {
-                setTxColour(outboundColour);
-                confirmationsProgressBar.setVisibility(View.GONE);
-                confirmationsTextView.setVisibility(View.GONE);
-            }
-
-            if (txInfo.direction == TransactionInfo.Direction.Direction_Out) {
-                ((TextView)itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_negative, displayAmount));
-            } else {
-                ((TextView)itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_positive, displayAmount));
-            }
-
-            TextView paymentIdTextView = ((TextView)itemView.findViewById(R.id.tx_paymentid));
-            String tag = null;
-            String info = "";
-            UserNotes userNotes = new UserNotes(txInfo.notes);
-            if ((txInfo.addressIndex != 0) && (txInfo.direction == TransactionInfo.Direction.Direction_In))
-                tag = txInfo.getDisplayLabel();
-            if ((userNotes.note.isEmpty())) {
-                if (!txInfo.paymentId.equals("0000000000000000")) {
-                    info = txInfo.paymentId;
-                }
-            } else {
-                info = userNotes.note;
-            }
-            if (tag == null) {
-                paymentIdTextView.setText(info);
-            } else {
-                Spanned label = Html.fromHtml(itemView.getContext().getString(R.string.tx_details_notes,
-                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), R.attr.positiveColor) & 0xFFFFFF),
-                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), android.R.attr.colorBackground) & 0xFFFFFF),
-                        tag, info.isEmpty() ? "" : ("&nbsp; " + info)));
-                paymentIdTextView.setText(label);
-            }
-            ((TextView)itemView.findViewById(R.id.tx_datetime)).setText(getDateTime(txInfo.timestamp));
-            itemView.setOnClickListener(view -> {
-                listener.onClickTransaction(txInfo);
-            });
-        }
-
-        private void setTxColour(int clr) {
-            amountTextView.setTextColor(clr);
-        }
-
-        private String getDateTime(long time) {
-            return DATETIME_FORMATTER.format(new Date(time * 1000));
-        }
-    }
 
     /**
      * Initialize the dataset of the Adapter.
@@ -204,6 +83,115 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
 
     public interface TxInfoAdapterListener {
         void onClickTransaction(TransactionInfo txInfo);
+    }
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final int outboundColour;
+        private final int inboundColour;
+        private final int pendingColour;
+        private final int failedColour;
+        private TxInfoAdapterListener listener = null;
+        private TextView amountTextView = null;
+
+        public ViewHolder(TxInfoAdapterListener listener, View view) {
+            super(view);
+            inboundColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.positiveColor);
+            outboundColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.negativeColor);
+            pendingColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.neutralColor);
+            failedColour = ThemeHelper.getThemedColor(view.getContext(), R.attr.neutralColor);
+            this.listener = listener;
+            Calendar cal = Calendar.getInstance();
+            TimeZone tz = cal.getTimeZone(); //get the local time zone.
+            DATETIME_FORMATTER.setTimeZone(tz);
+        }
+
+        public void bind(TransactionInfo txInfo) {
+            String displayAmount = Helper.getDisplayAmount(txInfo.amount, Helper.DISPLAY_DIGITS_INFO);
+
+            TextView confirmationsTextView = ((TextView) itemView.findViewById(R.id.tvConfirmations));
+            CircularProgressIndicator confirmationsProgressBar = ((CircularProgressIndicator) itemView.findViewById(R.id.pbConfirmations));
+            confirmationsProgressBar.setMax(TransactionInfo.CONFIRMATION);
+            this.amountTextView = ((TextView) itemView.findViewById(R.id.tx_amount));
+            ((TextView) itemView.findViewById(R.id.tx_failed)).setVisibility(View.GONE);
+            if (txInfo.isFailed) {
+                ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_negative, displayAmount));
+                ((TextView) itemView.findViewById(R.id.tx_failed)).setVisibility(View.VISIBLE);
+                setTxColour(failedColour);
+                confirmationsTextView.setVisibility(View.GONE);
+                confirmationsProgressBar.setVisibility(View.GONE);
+            } else if (txInfo.isPending) {
+                setTxColour(pendingColour);
+                confirmationsProgressBar.setVisibility(View.GONE);
+                confirmationsProgressBar.setIndeterminate(true);
+                confirmationsProgressBar.setVisibility(View.VISIBLE);
+                confirmationsTextView.setVisibility(View.GONE);
+            } else if (txInfo.direction == TransactionInfo.Direction.Direction_In) {
+                setTxColour(inboundColour);
+                if (!txInfo.isConfirmed()) {
+                    confirmationsProgressBar.setVisibility(View.VISIBLE);
+                    final int confirmations = (int) txInfo.confirmations;
+                    confirmationsProgressBar.setProgressCompat(confirmations, true);
+                    final String confCount = Integer.toString(confirmations);
+                    confirmationsTextView.setText(confCount);
+                    if (confCount.length() == 1) // we only have space for character in the progress circle
+                        confirmationsTextView.setVisibility(View.VISIBLE);
+                    else
+                        confirmationsTextView.setVisibility(View.GONE);
+                } else {
+                    confirmationsProgressBar.setVisibility(View.GONE);
+                    confirmationsTextView.setVisibility(View.GONE);
+                }
+            } else {
+                setTxColour(outboundColour);
+                confirmationsProgressBar.setVisibility(View.GONE);
+                confirmationsTextView.setVisibility(View.GONE);
+            }
+
+            if (txInfo.direction == TransactionInfo.Direction.Direction_Out) {
+                ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_negative, displayAmount));
+            } else {
+                ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_positive, displayAmount));
+            }
+
+            TextView paymentIdTextView = ((TextView) itemView.findViewById(R.id.tx_paymentid));
+            String tag = null;
+            String info = "";
+            UserNotes userNotes = new UserNotes(txInfo.notes);
+            if ((txInfo.addressIndex != 0) && (txInfo.direction == TransactionInfo.Direction.Direction_In))
+                tag = txInfo.getDisplayLabel();
+            if ((userNotes.note.isEmpty())) {
+                if (!txInfo.paymentId.equals("0000000000000000")) {
+                    info = txInfo.paymentId;
+                }
+            } else {
+                info = userNotes.note;
+            }
+            if (tag == null) {
+                paymentIdTextView.setText(info);
+            } else {
+                Spanned label = Html.fromHtml(itemView.getContext().getString(R.string.tx_details_notes,
+                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), R.attr.positiveColor) & 0xFFFFFF),
+                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), android.R.attr.colorBackground) & 0xFFFFFF),
+                        tag, info.isEmpty() ? "" : ("&nbsp; " + info)));
+                paymentIdTextView.setText(label);
+            }
+            ((TextView) itemView.findViewById(R.id.tx_datetime)).setText(getDateTime(txInfo.timestamp));
+            itemView.setOnClickListener(view -> {
+                listener.onClickTransaction(txInfo);
+            });
+        }
+
+        private void setTxColour(int clr) {
+            amountTextView.setTextColor(clr);
+        }
+
+        private String getDateTime(long time) {
+            return DATETIME_FORMATTER.format(new Date(time * 1000));
+        }
     }
 }
 

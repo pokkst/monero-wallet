@@ -27,46 +27,6 @@ public class PendingTransaction {
         this.handle = handle;
     }
 
-    public enum Status {
-        Status_Ok,
-        Status_Error,
-        Status_Critical
-    }
-
-    public enum Priority {
-        Priority_Default(0),
-        Priority_Low(1),
-        Priority_Medium(2),
-        Priority_High(3),
-        Priority_Last(4);
-
-        public static Priority fromInteger(int n) {
-            switch (n) {
-                case 0:
-                    return Priority_Default;
-                case 1:
-                    return Priority_Low;
-                case 2:
-                    return Priority_Medium;
-                case 3:
-                    return Priority_High;
-            }
-            return null;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        private final int value;
-
-        Priority(int value) {
-            this.value = value;
-        }
-
-
-    }
-
     public Status getStatus() {
         return Status.values()[getStatusJ()];
     }
@@ -94,5 +54,45 @@ public class PendingTransaction {
     public native String getFirstTxIdJ();
 
     public native long getTxCount();
+
+    public enum Status {
+        Status_Ok,
+        Status_Error,
+        Status_Critical
+    }
+
+    public enum Priority {
+        Priority_Default(0),
+        Priority_Low(1),
+        Priority_Medium(2),
+        Priority_High(3),
+        Priority_Last(4);
+
+        private final int value;
+
+        Priority(int value) {
+            this.value = value;
+        }
+
+        public static Priority fromInteger(int n) {
+            switch (n) {
+                case 0:
+                    return Priority_Default;
+                case 1:
+                    return Priority_Low;
+                case 2:
+                    return Priority_Medium;
+                case 3:
+                    return Priority_High;
+            }
+            return null;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+
+    }
 
 }

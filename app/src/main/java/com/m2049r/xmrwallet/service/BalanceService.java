@@ -3,24 +3,21 @@ package com.m2049r.xmrwallet.service;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.model.WalletManager;
 
 public class BalanceService extends ServiceBase {
     public static BalanceService instance = null;
-
-    public static BalanceService getInstance() {
-        return instance;
-    }
-
     private final MutableLiveData<Long> _balance = new MutableLiveData<>(0L);
-    public LiveData<Long> balance = _balance;
     private final MutableLiveData<Long> _lockedBalance = new MutableLiveData<>(0L);
+    public LiveData<Long> balance = _balance;
     public LiveData<Long> lockedBalance = _lockedBalance;
-
     public BalanceService(MoneroHandlerThread thread) {
         super(thread);
         instance = this;
+    }
+
+    public static BalanceService getInstance() {
+        return instance;
     }
 
     public void refreshBalance() {

@@ -7,20 +7,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.m2049r.xmrwallet.R;
-import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
-import com.m2049r.xmrwallet.service.BalanceService;
-import com.m2049r.xmrwallet.service.TxService;
 import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.Helper;
 
@@ -51,7 +44,7 @@ public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
         unlockWalletButton.setOnClickListener(view1 -> {
             String password = passwordEditText.getText().toString();
             boolean success = checkPassword(walletFile, password);
-            if(success) {
+            if (success) {
                 listener.onPasswordSuccess(password);
                 dismiss();
             } else {
@@ -66,6 +59,7 @@ public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
 
     public interface PasswordListener {
         void onPasswordSuccess(String password);
+
         void onPasswordFail();
     }
 }

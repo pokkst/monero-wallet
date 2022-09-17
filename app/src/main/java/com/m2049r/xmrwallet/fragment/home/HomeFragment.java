@@ -5,25 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.m2049r.xmrwallet.MainActivity;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.adapter.TransactionInfoAdapter;
@@ -32,20 +27,16 @@ import com.m2049r.xmrwallet.fragment.dialog.SendBottomSheetDialog;
 import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
-import com.m2049r.xmrwallet.service.AddressService;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.HistoryService;
-import com.m2049r.xmrwallet.service.PrefService;
-import com.m2049r.xmrwallet.service.TxService;
-import com.m2049r.xmrwallet.util.Constants;
 
 import java.util.Collections;
 
 public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxInfoAdapterListener {
 
-    private HomeViewModel mViewModel;
     long startHeight = 0;
+    private HomeViewModel mViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,7 +47,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MainActivity mainActivity = (MainActivity)getActivity();
+        MainActivity mainActivity = (MainActivity) getActivity();
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         bindObservers(view);
         bindListeners(view);
@@ -96,7 +87,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         HistoryService historyService = HistoryService.getInstance();
         BlockchainService blockchainService = BlockchainService.getInstance();
 
-        if(balanceService != null) {
+        if (balanceService != null) {
             balanceService.balance.observe(getViewLifecycleOwner(), balance -> {
                 unlockedBalanceTextView.setText(getString(R.string.wallet_balance_text, Wallet.getDisplayAmount(balance)));
             });
@@ -112,7 +103,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         }
 
         ProgressBar progressBar = view.findViewById(R.id.sync_progress_bar);
-        if(blockchainService != null) {
+        if (blockchainService != null) {
             blockchainService.height.observe(getViewLifecycleOwner(), height -> {
                 Wallet wallet = WalletManager.getInstance().getWallet();
                 if (!wallet.isSynchronized()) {
@@ -135,13 +126,13 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         TransactionInfoAdapter adapter = new TransactionInfoAdapter(this);
         txHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         txHistoryRecyclerView.setAdapter(adapter);
-        if(historyService != null) {
+        if (historyService != null) {
             historyService.history.observe(getViewLifecycleOwner(), history -> {
                 if (history.isEmpty()) {
                     txHistoryRecyclerView.setVisibility(View.GONE);
                 } else {
                     Collections.sort(history);
-                    if(history.size() > 100) {
+                    if (history.size() > 100) {
                         adapter.submitList(history.subList(0, 99));
                     } else {
                         adapter.submitList(history);

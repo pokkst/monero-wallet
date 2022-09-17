@@ -21,6 +21,12 @@ public enum NetworkType {
     NetworkType_Testnet(1),
     NetworkType_Stagenet(2);
 
+    private final int value;
+
+    NetworkType(int value) {
+        this.value = value;
+    }
+
     public static NetworkType fromInteger(int n) {
         switch (n) {
             case 0:
@@ -35,11 +41,5 @@ public enum NetworkType {
 
     public int getValue() {
         return value;
-    }
-
-    private final int value;
-
-    NetworkType(int value) {
-        this.value = value;
     }
 }

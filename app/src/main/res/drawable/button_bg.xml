@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Color when the row is selected -->
-    <item android:state_enabled="true" android:drawable="@drawable/button_bg_enabled" />
+    <item android:drawable="@drawable/button_bg_enabled" android:state_enabled="true" />
     <!-- Standard background color -->
     <item android:drawable="@drawable/button_bg_disabled" />
 </selector>

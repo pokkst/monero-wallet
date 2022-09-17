@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -55,7 +54,7 @@ public class OnboardingFragment extends Fragment {
 
         createWalletButton.setOnClickListener(view1 -> {
             String walletPassword = walletPasswordEditText.getText().toString();
-            if(!walletPassword.isEmpty()) {
+            if (!walletPassword.isEmpty()) {
                 PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_PASSWORD, true).apply();
             }
             String walletSeed = walletSeedEditText.getText().toString().trim();
@@ -63,14 +62,14 @@ public class OnboardingFragment extends Fragment {
             long restoreHeight = -1;
             File walletFile = new File(getActivity().getApplicationInfo().dataDir, Constants.WALLET_NAME);
             Wallet wallet = null;
-            if(walletSeed.isEmpty()) {
+            if (walletSeed.isEmpty()) {
                 wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, restoreHeight);
             } else {
-                if(!checkMnemonic(walletSeed)) {
+                if (!checkMnemonic(walletSeed)) {
                     Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!restoreHeightText.isEmpty()) {
+                if (!restoreHeightText.isEmpty()) {
                     restoreHeight = Long.parseLong(restoreHeightText);
                 }
                 wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", restoreHeight);
@@ -78,21 +77,24 @@ public class OnboardingFragment extends Fragment {
             boolean ok = wallet.getStatus().isOk();
             walletFile.delete(); // cache is broken for some reason when recovering wallets. delete the file here. this happens in monerujo too.
 
-            if(ok) {
-                ((MainActivity)getActivity()).init(walletFile, walletPassword);
+            if (ok) {
+                ((MainActivity) getActivity()).init(walletFile, walletPassword);
                 getActivity().onBackPressed();
             }
         });
         walletSeedEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = editable.toString();
-                if(text.isEmpty()) {
+                if (text.isEmpty()) {
                     createWalletButton.setText(R.string.create_wallet);
                 } else {
                     createWalletButton.setText(R.string.menu_restore);
@@ -101,7 +103,7 @@ public class OnboardingFragment extends Fragment {
         });
 
         mViewModel.showMoreOptions.observe(getViewLifecycleOwner(), show -> {
-            if(show) {
+            if (show) {
                 moreOptionsChevronImageView.setImageResource(R.drawable.ic_keyboard_arrow_up);
                 walletSeedEditText.setVisibility(View.VISIBLE);
                 walletRestoreHeightEditText.setVisibility(View.VISIBLE);

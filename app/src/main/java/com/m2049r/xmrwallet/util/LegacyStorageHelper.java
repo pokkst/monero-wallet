@@ -24,6 +24,8 @@ import timber.log.Timber;
 
 @RequiredArgsConstructor
 public class LegacyStorageHelper {
+    private static final Pattern WALLET_PATTERN = Pattern.compile("^(.+) \\(([0-9]+)\\).keys$");
+    private static final String MIGRATED_KEY = "migrated_legacy_storage";
     final private File srcDir;
     final private File dstDir;
 
@@ -47,6 +49,70 @@ public class LegacyStorageHelper {
             Timber.d(ex);
             // nothing we can do here
         }
+    }
+
+    private static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private static File getWalletRoot() {
+        if (!isExternalStorageWritable())
+            throw new IllegalStateException();
+
+        // wallet folder for legacy (pre-Q) installations
+        final String FLAVOR_SUFFIX =
+                (BuildConfig.FLAVOR.startsWith("prod") ? "" : "." + BuildConfig.FLAVOR)
+                        + (BuildConfig.DEBUG ? "-debug" : "");
+        final String WALLET_DIR = "monerujo" + FLAVOR_SUFFIX;
+
+        File dir = new File(Environment.getExternalStorageDirectory(), WALLET_DIR);
+        if (!dir.exists() || !dir.isDirectory())
+            throw new IllegalStateException();
+        return dir;
+    }
+
+    private static boolean hasReadPermission(Context context) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED;
+        } else {
+            return true;
+        }
+    }
+
+    private static String getUniqueName(File root, String name) {
+        if (!(new File(root, name + ".keys")).exists()) // <name> does not exist => it's ok to use
+            return name;
+
+        File[] wallets = root.listFiles(
+                (dir, filename) -> {
+                    Matcher m = WALLET_PATTERN.matcher(filename);
+                    if (m.find())
+                        return m.group(1).equals(name);
+                    else return false;
+                });
+        if (wallets.length == 0) return name + " (1)";
+        int maxIndex = 0;
+        for (File wallet : wallets) {
+            try {
+                final Matcher m = WALLET_PATTERN.matcher(wallet.getName());
+                if (!m.find())
+                    throw new IllegalStateException("this must match as it did before");
+                final int index = Integer.parseInt(m.group(2));
+                if (index > maxIndex) maxIndex = index;
+            } catch (NumberFormatException ex) {
+                // this cannot happen & we can ignore it if it does
+            }
+        }
+        return name + " (" + (maxIndex + 1) + ")";
+    }
+
+    public static boolean isStorageMigrated(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(MIGRATED_KEY, false);
+    }
+
+    public static void setStorageMigrated(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(MIGRATED_KEY, true).apply();
     }
 
     public void migrate() {
@@ -98,73 +164,5 @@ public class LegacyStorageHelper {
              FileChannel outChannel = new FileOutputStream(dst).getChannel()) {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         }
-    }
-
-    private static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    private static File getWalletRoot() {
-        if (!isExternalStorageWritable())
-            throw new IllegalStateException();
-
-        // wallet folder for legacy (pre-Q) installations
-        final String FLAVOR_SUFFIX =
-                (BuildConfig.FLAVOR.startsWith("prod") ? "" : "." + BuildConfig.FLAVOR)
-                        + (BuildConfig.DEBUG ? "-debug" : "");
-        final String WALLET_DIR = "monerujo" + FLAVOR_SUFFIX;
-
-        File dir = new File(Environment.getExternalStorageDirectory(), WALLET_DIR);
-        if (!dir.exists() || !dir.isDirectory())
-            throw new IllegalStateException();
-        return dir;
-    }
-
-    private static boolean hasReadPermission(Context context) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            return context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED;
-        } else {
-            return true;
-        }
-    }
-
-    private static final Pattern WALLET_PATTERN = Pattern.compile("^(.+) \\(([0-9]+)\\).keys$");
-
-    private static String getUniqueName(File root, String name) {
-        if (!(new File(root, name + ".keys")).exists()) // <name> does not exist => it's ok to use
-            return name;
-
-        File[] wallets = root.listFiles(
-                (dir, filename) -> {
-                    Matcher m = WALLET_PATTERN.matcher(filename);
-                    if (m.find())
-                        return m.group(1).equals(name);
-                    else return false;
-                });
-        if (wallets.length == 0) return name + " (1)";
-        int maxIndex = 0;
-        for (File wallet : wallets) {
-            try {
-                final Matcher m = WALLET_PATTERN.matcher(wallet.getName());
-                if (!m.find())
-                    throw new IllegalStateException("this must match as it did before");
-                final int index = Integer.parseInt(m.group(2));
-                if (index > maxIndex) maxIndex = index;
-            } catch (NumberFormatException ex) {
-                // this cannot happen & we can ignore it if it does
-            }
-        }
-        return name + " (" + (maxIndex + 1) + ")";
-    }
-
-    private static final String MIGRATED_KEY = "migrated_legacy_storage";
-
-    public static boolean isStorageMigrated(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(MIGRATED_KEY, false);
-    }
-
-    public static void setStorageMigrated(Context context) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(MIGRATED_KEY, true).apply();
     }
 }

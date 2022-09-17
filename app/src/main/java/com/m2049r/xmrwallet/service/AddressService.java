@@ -5,16 +5,8 @@ import com.m2049r.xmrwallet.model.TransactionInfo;
 import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class AddressService extends ServiceBase {
     public static AddressService instance = null;
-
-    public static AddressService getInstance() {
-        return instance;
-    }
-
     private int latestAddressIndex = 1;
 
     public AddressService(MoneroHandlerThread thread) {
@@ -22,9 +14,13 @@ public class AddressService extends ServiceBase {
         instance = this;
     }
 
+    public static AddressService getInstance() {
+        return instance;
+    }
+
     public void refreshAddresses() {
         for (TransactionInfo info : HistoryService.getInstance().getHistory()) {
-            if(info.addressIndex >= latestAddressIndex) {
+            if (info.addressIndex >= latestAddressIndex) {
                 latestAddressIndex = info.addressIndex + 1;
             }
         }

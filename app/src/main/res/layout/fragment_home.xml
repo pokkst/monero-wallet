@@ -23,14 +23,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        tools:text="100.000000000000 XMR"
         app:layout_constraintEnd_toStartOf="@id/settings_imageview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="100.000000000000 XMR" />
 
     <TextView
         android:id="@+id/balance_locked_textview"
@@ -38,79 +38,80 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        tools:text="+ 100.000000000000 confirming"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_imageview" />
+        app:layout_constraintTop_toBottomOf="@id/settings_imageview"
+        tools:text="+ 100.000000000000 confirming" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/transaction_history_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:clipToPadding="false"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:paddingBottom="128dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/balance_locked_textview"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/balance_locked_textview"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:src="@drawable/gradient_bottom"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/receive_send_buttons_layout"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/receive_send_buttons_layout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/receive_send_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="24dp"
+        android:paddingTop="128dp"
         android:paddingEnd="24dp"
         android:paddingBottom="16dp"
-        android:paddingTop="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/receive_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"
             android:layout_marginEnd="4dp"
+            android:background="@drawable/button_bg"
             android:text="@string/receive"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_button"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/send_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"
             android:layout_marginStart="4dp"
+            android:background="@drawable/button_bg"
             android:text="@string/send"
-            app:layout_constraintStart_toEndOf="@id/receive_button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/receive_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/settings_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_settings"
         android:layout_marginEnd="24dp"
-        android:padding="8dp"
-        android:minHeight="24dp"
         android:minWidth="24dp"
-        app:layout_constraintTop_toTopOf="@id/balance_unlocked_textview"
+        android:minHeight="24dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_settings"
         app:layout_constraintBottom_toBottomOf="@id/balance_unlocked_textview"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/balance_unlocked_textview" />
 </androidx.constraintlayout.widget.ConstraintLayout>

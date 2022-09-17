@@ -30,6 +30,12 @@ public class TransactionHistory {
     private final long handle;
 
     int accountIndex;
+    private List<TransactionInfo> transactions = new ArrayList<>();
+
+    public TransactionHistory(long handle, int accountIndex) {
+        this.handle = handle;
+        this.accountIndex = accountIndex;
+    }
 
     public void setAccountFor(Wallet wallet) {
         if (accountIndex != wallet.getAccountIndex()) {
@@ -38,28 +44,21 @@ public class TransactionHistory {
         }
     }
 
-    public TransactionHistory(long handle, int accountIndex) {
-        this.handle = handle;
-        this.accountIndex = accountIndex;
-    }
-
     private void loadNotes(Wallet wallet) {
         for (TransactionInfo info : transactions) {
             info.notes = wallet.getUserNote(info.hash);
         }
     }
 
-    public native int getCount(); // over all accounts/subaddresses
-
     //private native long getTransactionByIndexJ(int i);
 
     //private native long getTransactionByIdJ(String id);
 
+    public native int getCount(); // over all accounts/subaddresses
+
     public List<TransactionInfo> getAll() {
         return transactions;
     }
-
-    private List<TransactionInfo> transactions = new ArrayList<>();
 
     void refreshWithNotes(Wallet wallet) {
         refresh();

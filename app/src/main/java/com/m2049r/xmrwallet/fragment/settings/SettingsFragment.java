@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,9 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.fragment.dialog.InformationBottomSheetDialog;
 import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
-import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
-import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.DayNightMode;
@@ -46,7 +42,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
         nightModeSwitch.setChecked(NightmodeHelper.getPreferredNightmode() == DayNightMode.NIGHT);
         nightModeSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(b) {
+            if (b) {
                 NightmodeHelper.setAndSavePreferredNightmode(DayNightMode.NIGHT);
             } else {
                 NightmodeHelper.setAndSavePreferredNightmode(DayNightMode.DAY);
@@ -65,7 +61,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
         displaySeedButton.setOnClickListener(view1 -> {
             boolean usesPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
-            if(usesPassword) {
+            if (usesPassword) {
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
                 passwordDialog.listener = this;
                 passwordDialog.show(getActivity().getSupportFragmentManager(), "password_dialog");

@@ -17,7 +17,6 @@
 package com.m2049r.xmrwallet.model;
 
 import com.m2049r.xmrwallet.data.Node;
-import com.m2049r.xmrwallet.ledger.Ledger;
 import com.m2049r.xmrwallet.util.RestoreHeight;
 
 import java.io.File;
@@ -31,12 +30,26 @@ import timber.log.Timber;
 
 public class WalletManager {
 
+    //TODO: maybe put these in an enum like in monero core - but why?
+    static public int LOGLEVEL_SILENT = -1;
+    static public int LOGLEVEL_WARN = 0;
+    static public int LOGLEVEL_INFO = 1;
+    static public int LOGLEVEL_DEBUG = 2;
+    static public int LOGLEVEL_TRACE = 3;
+    static public int LOGLEVEL_MAX = 4;
+    // no need to keep a reference to the REAL WalletManager (we get it every tvTime we need it)
+    private static WalletManager Instance = null;
+
     static {
         System.loadLibrary("monerujo");
     }
 
-    // no need to keep a reference to the REAL WalletManager (we get it every tvTime we need it)
-    private static WalletManager Instance = null;
+    private final NetworkType networkType = NetworkType.NetworkType_Mainnet;
+    private Wallet managedWallet = null;
+    private String daemonAddress = null;
+    private String daemonUsername = "";
+    private String daemonPassword = "";
+    private String proxy = "";
 
     public static synchronized WalletManager getInstance() {
         if (WalletManager.Instance == null) {
@@ -44,10 +57,6 @@ public class WalletManager {
         }
 
         return WalletManager.Instance;
-    }
-
-    public String addressPrefix() {
-        return addressPrefix(getNetworkType());
     }
 
     static public String addressPrefix(NetworkType networkType) {
@@ -63,7 +72,23 @@ public class WalletManager {
         }
     }
 
-    private Wallet managedWallet = null;
+    static public native void initLogger(String argv0, String defaultLogBaseName);
+
+    static public native void setLogLevel(int level);
+
+    static public native void logDebug(String category, String message);
+
+    static public native void logInfo(String category, String message);
+
+    static public native void logWarning(String category, String message);
+
+    static public native void logError(String category, String message);
+
+    static public native String moneroVersion();
+
+    public String addressPrefix() {
+        return addressPrefix(getNetworkType());
+    }
 
     public Wallet getWallet() {
         return managedWallet;
@@ -108,6 +133,8 @@ public class WalletManager {
         return wallet;
     }
 
+    //public native List<String> findWallets(String path); // this does not work - some error in boost
+
     private native long createWalletJ(String path, String password, String language, int networkType);
 
     public Wallet openAccount(String path, int accountIndex, String password) {
@@ -116,6 +143,8 @@ public class WalletManager {
         manageWallet(wallet);
         return wallet;
     }
+
+//TODO virtual bool checkPayment(const std::string &address, const std::string &txid, const std::string &txkey, const std::string &daemon_address, uint64_t &received, uint64_t &height, std::string &error) const = 0;
 
     public Wallet openWallet(String path, String password) {
         long walletHandle = openWalletJ(path, password, getNetworkType().getValue());
@@ -163,7 +192,7 @@ public class WalletManager {
                                          String deviceName) {
         long walletHandle = createWalletFromDeviceJ(aFile.getAbsolutePath(), password,
                 getNetworkType().getValue(), deviceName, restoreHeight,
-                Ledger.SUBADDRESS_LOOKAHEAD);
+                "5:20");
         Wallet wallet = new Wallet(walletHandle);
         manageWallet(wallet);
         return wallet;
@@ -174,7 +203,6 @@ public class WalletManager {
                                                 String deviceName,
                                                 long restoreHeight,
                                                 String subaddressLookahead);
-
 
     public native boolean closeJ(Wallet wallet);
 
@@ -208,25 +236,6 @@ public class WalletManager {
 
     private native int queryWalletDeviceJ(String keys_file_name, String password);
 
-    //public native List<String> findWallets(String path); // this does not work - some error in boost
-
-    public class WalletInfo implements Comparable<WalletInfo> {
-        @Getter
-        final private File path;
-        @Getter
-        final private String name;
-
-        public WalletInfo(File wallet) {
-            path = wallet.getParentFile();
-            name = wallet.getName();
-        }
-
-        @Override
-        public int compareTo(WalletInfo another) {
-            return name.toLowerCase().compareTo(another.name.toLowerCase());
-        }
-    }
-
     public List<WalletInfo> findWallets(File path) {
         List<WalletInfo> wallets = new ArrayList<>();
         Timber.d("Scanning: %s", path.getAbsolutePath());
@@ -242,11 +251,6 @@ public class WalletManager {
         }
         return wallets;
     }
-
-//TODO virtual bool checkPayment(const std::string &address, const std::string &txid, const std::string &txkey, const std::string &daemon_address, uint64_t &received, uint64_t &height, std::string &error) const = 0;
-
-    private String daemonAddress = null;
-    private final NetworkType networkType = NetworkType.NetworkType_Mainnet;
 
     public NetworkType getNetworkType() {
         return networkType;
@@ -279,19 +283,17 @@ public class WalletManager {
 
     private native void setDaemonAddressJ(String address);
 
-    private String daemonUsername = "";
-
     public String getDaemonUsername() {
         return daemonUsername;
     }
-
-    private String daemonPassword = "";
 
     public String getDaemonPassword() {
         return daemonPassword;
     }
 
     public native int getDaemonVersion();
+
+//TODO static std::tuple<bool, std::string, std::string, std::string, std::string> checkUpdates(const std::string &software, const std::string &subdir);
 
     public native long getBlockchainHeight();
 
@@ -311,8 +313,6 @@ public class WalletManager {
 
     public native String resolveOpenAlias(String address, boolean dnssec_valid);
 
-    private String proxy = "";
-
     public String getProxy() {
         return proxy;
     }
@@ -324,27 +324,20 @@ public class WalletManager {
 
     public native boolean setProxyJ(String address);
 
-//TODO static std::tuple<bool, std::string, std::string, std::string, std::string> checkUpdates(const std::string &software, const std::string &subdir);
+    public class WalletInfo implements Comparable<WalletInfo> {
+        @Getter
+        final private File path;
+        @Getter
+        final private String name;
 
-    static public native void initLogger(String argv0, String defaultLogBaseName);
+        public WalletInfo(File wallet) {
+            path = wallet.getParentFile();
+            name = wallet.getName();
+        }
 
-    //TODO: maybe put these in an enum like in monero core - but why?
-    static public int LOGLEVEL_SILENT = -1;
-    static public int LOGLEVEL_WARN = 0;
-    static public int LOGLEVEL_INFO = 1;
-    static public int LOGLEVEL_DEBUG = 2;
-    static public int LOGLEVEL_TRACE = 3;
-    static public int LOGLEVEL_MAX = 4;
-
-    static public native void setLogLevel(int level);
-
-    static public native void logDebug(String category, String message);
-
-    static public native void logInfo(String category, String message);
-
-    static public native void logWarning(String category, String message);
-
-    static public native void logError(String category, String message);
-
-    static public native String moneroVersion();
+        @Override
+        public int compareTo(WalletInfo another) {
+            return name.toLowerCase().compareTo(another.name.toLowerCase());
+        }
+    }
 }
