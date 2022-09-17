@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModel;
 
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.data.DefaultNodes;
 import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.service.TxService;
@@ -20,7 +21,10 @@ public class SettingsViewModel extends ViewModel {
     public void updateProxy() {
         AsyncTask.execute(() -> {
             boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-            if(!usesProxy) {
+            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
+            boolean isNodeLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");
+
+            if(!usesProxy || isNodeLocalIp) {
                 WalletManager.getInstance().setProxy("");
                 WalletManager.getInstance().getWallet().setProxy("");
                 return;
@@ -29,6 +33,7 @@ public class SettingsViewModel extends ViewModel {
             if(proxyAddress.isEmpty()) proxyAddress = "127.0.0.1";
             if(proxyPort.isEmpty()) proxyPort = "9050";
             boolean validIpAddress = Patterns.IP_ADDRESS.matcher(proxyAddress).matches();
+
             if(validIpAddress) {
                 String proxy = proxyAddress + ":" + proxyPort;
                 PrefService.getInstance().edit().putString(Constants.PREF_PROXY, proxy).apply();

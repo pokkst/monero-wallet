@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,18 +17,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.m2049r.xmrwallet.R;
+import com.m2049r.xmrwallet.data.DefaultNodes;
+import com.m2049r.xmrwallet.data.Node;
+import com.m2049r.xmrwallet.fragment.dialog.AddNodeBottomSheetDialog;
 import com.m2049r.xmrwallet.fragment.dialog.InformationBottomSheetDialog;
+import com.m2049r.xmrwallet.fragment.dialog.NodeSelectionBottomSheetDialog;
 import com.m2049r.xmrwallet.fragment.dialog.PasswordBottomSheetDialog;
+import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
+import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.util.Constants;
 import com.m2049r.xmrwallet.util.DayNightMode;
 import com.m2049r.xmrwallet.util.NightmodeHelper;
 
-public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener {
+public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener, NodeSelectionBottomSheetDialog.NodeSelectionDialogListener, AddNodeBottomSheetDialog.AddNodeListener {
 
     private SettingsViewModel mViewModel;
     TextWatcher proxyAddressListener = new TextWatcher() {
@@ -64,6 +72,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         Button displaySeedButton = view.findViewById(R.id.display_seed_button);
+        Button selectNodeButton = view.findViewById(R.id.select_node_button);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
         SwitchCompat torSwitch = view.findViewById(R.id.tor_switch);
         ConstraintLayout proxySettingsLayout = view.findViewById(R.id.wallet_proxy_settings_layout);
@@ -126,6 +135,24 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
                 displaySeedDialog();
             }
         });
+
+        TextView statusTextView = view.findViewById(R.id.status_textview);
+        BlockchainService.getInstance().connectionStatus.observe(getViewLifecycleOwner(), connectionStatus -> {
+            if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Connected) {
+                statusTextView.setText(getResources().getText(R.string.connected));
+            } else if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Disconnected) {
+                statusTextView.setText(getResources().getText(R.string.disconnected));
+            } else if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_WrongVersion) {
+                statusTextView.setText(getResources().getText(R.string.version_mismatch));
+            }
+        });
+        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress()));
+        selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
+        selectNodeButton.setOnClickListener(view1 -> {
+            NodeSelectionBottomSheetDialog dialog = new NodeSelectionBottomSheetDialog();
+            dialog.listener = this;
+            dialog.show(getActivity().getSupportFragmentManager(), "node_selection_dialog");
+        });
     }
 
     private void displaySeedDialog() {
@@ -163,5 +190,19 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     private void addProxyTextListeners() {
         walletProxyAddressEditText.addTextChangedListener(proxyAddressListener);
         walletProxyPortEditText.addTextChangedListener(proxyPortListener);
+    }
+
+    @Override
+    public void onClickedAddNode() {
+        AddNodeBottomSheetDialog addNodeDialog = new AddNodeBottomSheetDialog();
+        addNodeDialog.listener = this;
+        addNodeDialog.show(getActivity().getSupportFragmentManager(), "add_node_dialog");
+    }
+
+    @Override
+    public void onNodeAdded() {
+        NodeSelectionBottomSheetDialog dialog = new NodeSelectionBottomSheetDialog();
+        dialog.listener = this;
+        dialog.show(getActivity().getSupportFragmentManager(), "node_selection_dialog");
     }
 }

@@ -55,15 +55,16 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void run() {
+        String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
+        Node selectedNode = Node.fromString(currentNodeString);
         boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-        if (usesTor) {
+        boolean isLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");
+        if (usesTor && !isLocalIp) {
             String proxy = PrefService.getInstance().getString(Constants.PREF_PROXY, "");
             WalletManager.getInstance().setProxy(proxy);
-            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.SAMOURAI.getUri()));
             wallet.setProxy(proxy);
-        } else {
-            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));
         }
+        WalletManager.getInstance().setDaemon(selectedNode);
         wallet.init(0);
         wallet.setListener(this);
         wallet.startRefresh();
@@ -108,6 +109,8 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
             wallet.store();
             refresh();
         }
+
+        BlockchainService.getInstance().setConnectionStatus(status);
     }
 
     private void refresh() {

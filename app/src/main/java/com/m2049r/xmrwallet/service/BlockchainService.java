@@ -3,12 +3,15 @@ package com.m2049r.xmrwallet.service;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.m2049r.xmrwallet.model.Wallet;
 import com.m2049r.xmrwallet.model.WalletManager;
 
 public class BlockchainService extends ServiceBase {
     public static BlockchainService instance = null;
     private final MutableLiveData<Long> _currentHeight = new MutableLiveData<>(0L);
     public LiveData<Long> height = _currentHeight;
+    private final MutableLiveData<Wallet.ConnectionStatus> _connectionStatus = new MutableLiveData<>(Wallet.ConnectionStatus.ConnectionStatus_Disconnected);
+    public LiveData<Wallet.ConnectionStatus> connectionStatus = _connectionStatus;
     private long daemonHeight = 0;
     private long lastDaemonHeightUpdateTimeMs = 0;
     public BlockchainService(MoneroHandlerThread thread) {
@@ -43,5 +46,9 @@ public class BlockchainService extends ServiceBase {
                 lastDaemonHeightUpdateTimeMs = t;
             }
         }
+    }
+
+    public void setConnectionStatus(Wallet.ConnectionStatus status) {
+        _connectionStatus.postValue(status);
     }
 }

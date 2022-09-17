@@ -42,7 +42,6 @@ public class Node {
     @Getter
     @Setter
     private final boolean selected = false;
-    Address hostAddress;
     @Getter
     @Setter
     int rpcPort = 0;
@@ -151,7 +150,6 @@ public class Node {
     // constructor used for created nodes from retrieved peer lists
     public Node(InetSocketAddress socketAddress) {
         this();
-        this.hostAddress = Address.of(socketAddress.getAddress());
         this.host = socketAddress.getHostString();
         this.rpcPort = 0; // unknown
         this.levinPort = socketAddress.getPort();
@@ -213,7 +211,7 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return hostAddress.hashCode();
+        return host.hashCode();
     }
 
     // Nodes are equal if they are the same host address:port & are on the same network
@@ -221,13 +219,14 @@ public class Node {
     public boolean equals(Object other) {
         if (!(other instanceof Node)) return false;
         final Node anotherNode = (Node) other;
-        return (hostAddress.equals(anotherNode.hostAddress)
+        return (host.equals(anotherNode.host)
+                && (getAddress().equals(anotherNode.getAddress()))
                 && (rpcPort == anotherNode.rpcPort)
                 && (networkType == anotherNode.networkType));
     }
 
     public boolean isOnion() {
-        return hostAddress.isOnion();
+        return OnionHelper.isOnionHost(host);
     }
 
     public String toNodeString() {
@@ -263,49 +262,23 @@ public class Node {
     }
 
     public String getAddress() {
-        return getHostAddress() + ":" + rpcPort;
+        return getHost() + ":" + rpcPort;
     }
 
-    public String getHostAddress() {
-        return hostAddress.getHostAddress();
+    public String getHost() {
+        return host;
     }
 
     public void setHost(String host) throws UnknownHostException {
         if ((host == null) || (host.isEmpty()))
             throw new UnknownHostException("loopback not supported (yet?)");
         this.host = host;
-        this.hostAddress = Address.of(host);
-    }
-
-    public void setDefaultName() {
-        if (name != null) return;
-        String nodeName = hostAddress.getHostName();
-        if (hostAddress.isOnion()) {
-            nodeName = nodeName.substring(0, nodeName.length() - ".onion".length());
-            if (nodeName.length() > 16) {
-                nodeName = nodeName.substring(0, 8) + "…" + nodeName.substring(nodeName.length() - 6);
-            }
-            nodeName = nodeName + ".onion";
-        }
-        this.name = nodeName;
-    }
-
-    public void setName(String name) {
-        if ((name == null) || (name.isEmpty()))
-            setDefaultName();
-        else
-            this.name = name;
-    }
-
-    public void toggleFavourite() {
-        favourite = !favourite;
     }
 
     public void overwriteWith(Node anotherNode) {
         if (networkType != anotherNode.networkType)
             throw new IllegalStateException("network types do not match");
         name = anotherNode.name;
-        hostAddress = anotherNode.hostAddress;
         host = anotherNode.host;
         rpcPort = anotherNode.rpcPort;
         levinPort = anotherNode.levinPort;

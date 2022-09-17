@@ -76,9 +76,17 @@
     <string name="wallet">Wallet</string>
     <string name="appearance">Appearance</string>
     <string name="network">Network</string>
+    <string name="add_node">Add Node</string>
+    <string name="nodes">Nodes</string>
+    <string name="node_name_hint">My Monero Node</string>
+    <string name="node_address_hint">127.0.0.1:18081</string>
 
     <string name="wallet_proxy_address_hint">127.0.0.1</string>
     <string name="wallet_proxy_port_hint">9050</string>
     <string name="invalid_ip">Invalid IP address</string>
     <string name="no_history_nget_some_monero_in_here">No history!\nGet some Monero in here!</string>
+    <string name="node_button_text">Node: %1$s</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="version_mismatch">Version mismatch</string>
 </resources>
