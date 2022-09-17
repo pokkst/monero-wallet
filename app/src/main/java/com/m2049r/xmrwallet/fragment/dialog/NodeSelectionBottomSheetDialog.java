@@ -2,6 +2,7 @@ package com.m2049r.xmrwallet.fragment.dialog;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,9 +84,11 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
         PrefService.getInstance().edit().putString(Constants.PREF_NODE, node.getAddress()).apply();
         WalletManager.getInstance().setDaemon(node);
         adapter.updateSelectedNode();
+        listener.onNodeSelected();
     }
 
     public interface NodeSelectionDialogListener {
+        void onNodeSelected();
         void onClickedAddNode();
     }
 }

@@ -60,6 +60,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     };
     private EditText walletProxyAddressEditText;
     private EditText walletProxyPortEditText;
+    private Button selectNodeButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -72,7 +73,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         Button displaySeedButton = view.findViewById(R.id.display_seed_button);
-        Button selectNodeButton = view.findViewById(R.id.select_node_button);
+        selectNodeButton = view.findViewById(R.id.select_node_button);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
         SwitchCompat torSwitch = view.findViewById(R.id.tor_switch);
         ConstraintLayout proxySettingsLayout = view.findViewById(R.id.wallet_proxy_settings_layout);
@@ -190,6 +191,14 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     private void addProxyTextListeners() {
         walletProxyAddressEditText.addTextChangedListener(proxyAddressListener);
         walletProxyPortEditText.addTextChangedListener(proxyPortListener);
+    }
+
+    @Override
+    public void onNodeSelected() {
+        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress()));
+        selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
+        mViewModel.updateProxy();
+        WalletManager.getInstance().getWallet().startRefresh();
     }
 
     @Override
