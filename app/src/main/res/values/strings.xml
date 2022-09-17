@@ -80,6 +80,7 @@
     <string name="nodes">Nodes</string>
     <string name="node_name_hint">My Monero Node</string>
     <string name="node_address_hint">127.0.0.1:18081</string>
+    <string name="transaction">Transaction</string>
 
     <string name="wallet_proxy_address_hint">127.0.0.1</string>
     <string name="wallet_proxy_port_hint">9050</string>
@@ -89,4 +90,8 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="version_mismatch">Version mismatch</string>
+    <string name="transaction_hash">Transaction Hash</string>
+    <string name="transaction_destination">Destination</string>
+    <string name="confirmations">Confirmations</string>
+    <string name="date">Date</string>
 </resources>

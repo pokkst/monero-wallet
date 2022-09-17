@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    tools:context=".fragment.settings.SettingsFragment">
+
+    <TextView
+        android:id="@+id/transaction_title_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/transaction"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/transaction_hash_label_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/transaction_hash_label_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transaction_hash"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_title_textview"/>
+
+    <TextView
+        android:id="@+id/transaction_hash_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/transaction_hash"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/copy_txhash_imagebutton"
+        app:layout_constraintTop_toTopOf="@id/copy_txhash_imagebutton"
+        app:layout_constraintBottom_toBottomOf="@id/copy_txhash_imagebutton"/>
+
+    <ImageButton
+        android:id="@+id/copy_txhash_imagebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:minWidth="24dp"
+        android:minHeight="24dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_content_copy_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/transaction_hash_textview"
+        app:layout_constraintTop_toBottomOf="@id/transaction_hash_label_textview" />
+
+    <TextView
+        android:id="@+id/transaction_conf_label_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirmations"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/copy_txhash_imagebutton"/>
+
+    <TextView
+        android:id="@+id/transaction_conf_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_conf_label_textview"/>
+
+    <TextView
+        android:id="@+id/transaction_address_label_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transaction_destination"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_conf_textview"/>
+
+    <TextView
+        android:id="@+id/transaction_address_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/transaction_hash"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/copy_txaddress_imagebutton"
+        app:layout_constraintTop_toTopOf="@id/copy_txaddress_imagebutton"
+        app:layout_constraintBottom_toBottomOf="@id/copy_txaddress_imagebutton"/>
+
+    <ImageButton
+        android:id="@+id/copy_txaddress_imagebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:minWidth="24dp"
+        android:minHeight="24dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_content_copy_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/transaction_address_textview"
+        app:layout_constraintTop_toBottomOf="@id/transaction_address_label_textview" />
+
+    <TextView
+        android:id="@+id/transaction_date_label_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/copy_txaddress_imagebutton"/>
+
+    <TextView
+        android:id="@+id/transaction_date_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_date_label_textview"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

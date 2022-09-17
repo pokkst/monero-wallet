@@ -1,7 +1,5 @@
 package com.m2049r.xmrwallet.fragment.home;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +32,6 @@ import com.m2049r.xmrwallet.model.WalletManager;
 import com.m2049r.xmrwallet.service.BalanceService;
 import com.m2049r.xmrwallet.service.BlockchainService;
 import com.m2049r.xmrwallet.service.HistoryService;
-import com.m2049r.xmrwallet.util.UriData;
 
 import java.util.Collections;
 
@@ -68,7 +66,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         Button receiveButton = view.findViewById(R.id.receive_button);
 
         settingsImageView.setOnClickListener(view12 -> {
-            navigate(R.id.settings_fragment);
+            navigate(HomeFragmentDirections.navToSettings());
         });
 
         sendButton.setOnClickListener(view1 -> {
@@ -152,10 +150,11 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
 
     @Override
     public void onClickTransaction(TransactionInfo txInfo) {
-        System.out.println(txInfo.hash);
+        NavDirections directions = HomeFragmentDirections.navToTransaction(txInfo);
+        navigate(directions);
     }
 
-    private void navigate(int destination) {
+    private void navigate(NavDirections destination) {
         FragmentActivity activity = getActivity();
         if (activity != null) {
             FragmentManager fm = activity.getSupportFragmentManager();

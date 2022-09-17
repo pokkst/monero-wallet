@@ -12,26 +12,33 @@
         <action
             android:id="@+id/nav_to_settings"
             app:destination="@id/settings_fragment">
-            <argument
-                android:name="address"
-                app:argType="string" />
         </action>
         <action
             android:id="@+id/nav_to_onboarding"
             app:destination="@id/onboarding_fragment">
+        </action>
+        <action
+            android:id="@+id/nav_to_transaction"
+            app:destination="@id/transaction_fragment">
             <argument
-                android:name="address"
-                app:argType="string" />
+                android:name="nav_arg_txinfo"
+                app:argType="com.m2049r.xmrwallet.model.TransactionInfo"
+                app:nullable="true"/>
         </action>
     </fragment>
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.m2049r.xmrwallet.fragment.settings.SettingsFragment"
         android:label="fragment_send_amount"
-        tools:layout="@layout/fragment_settings"></fragment>
+        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/onboarding_fragment"
         android:name="com.m2049r.xmrwallet.fragment.onboarding.OnboardingFragment"
         android:label="fragment_onboarding"
-        tools:layout="@layout/fragment_settings"></fragment>
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/transaction_fragment"
+        android:name="com.m2049r.xmrwallet.fragment.transaction.TransactionFragment"
+        android:label="fragment_onboarding"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateHelper {
-    public static final SimpleDateFormat DATETIME_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    public static final SimpleDateFormat DATETIME_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Date parse(String dateString) throws ParseException {
         return DATETIME_FORMATTER.parse(dateString.replaceAll("Z$", "+0000"));

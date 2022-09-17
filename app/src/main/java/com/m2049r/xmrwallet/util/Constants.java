@@ -12,4 +12,5 @@ public class Constants {
 
     public static final String URI_PREFIX = "monero:";
     public static final String URI_ARG_AMOUNT = "tx_amount";
+    public static final String NAV_ARG_TXINFO = "nav_arg_txinfo";
 }
