@@ -81,6 +81,8 @@
     <string name="node_name_hint">My Monero Node</string>
     <string name="node_address_hint">127.0.0.1:18081</string>
     <string name="transaction">Transaction</string>
+    <string name="amount_label">Amount</string>
+    <string name="tx_amount_no_prefix">%1$s XMR</string>
 
     <string name="wallet_proxy_address_hint">127.0.0.1</string>
     <string name="wallet_proxy_port_hint">9050</string>

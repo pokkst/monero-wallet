@@ -94,11 +94,13 @@ public class TransactionFragment extends Fragment {
         TextView txAddressTextView = view.findViewById(R.id.transaction_address_textview);
         ImageButton copyTxAddressImageButton = view.findViewById(R.id.copy_txaddress_imagebutton);
         TextView txDateTextView = view.findViewById(R.id.transaction_date_textview);
+        TextView txAmountTextView = view.findViewById(R.id.transaction_amount_textview);
 
         mViewModel.transaction.observe(getViewLifecycleOwner(), transactionInfo -> {
             txHashTextView.setText(transactionInfo.hash);
             txConfTextView.setText(""+transactionInfo.confirmations);
             txDateTextView.setText(getDateTime(transactionInfo.timestamp));
+            txAmountTextView.setText(getResources().getString(R.string.tx_amount_no_prefix, Helper.getDisplayAmount(transactionInfo.amount)));
         });
 
         mViewModel.destination.observe(getViewLifecycleOwner(), s -> {
