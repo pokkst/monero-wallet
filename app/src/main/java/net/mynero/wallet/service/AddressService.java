@@ -5,6 +5,10 @@ import net.mynero.wallet.model.TransactionInfo;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class AddressService extends ServiceBase {
     public static AddressService instance = null;
     private int latestAddressIndex = 1;
@@ -19,7 +23,8 @@ public class AddressService extends ServiceBase {
     }
 
     public void refreshAddresses() {
-        for (TransactionInfo info : HistoryService.getInstance().getHistory()) {
+        List<TransactionInfo> localTransactionList = new ArrayList<>(HistoryService.getInstance().getHistory());
+        for (TransactionInfo info : localTransactionList) {
             if (info.addressIndex >= latestAddressIndex) {
                 latestAddressIndex = info.addressIndex + 1;
             }
