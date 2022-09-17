@@ -80,4 +80,5 @@
     <string name="wallet_proxy_address_hint">127.0.0.1</string>
     <string name="wallet_proxy_port_hint">9050</string>
     <string name="invalid_ip">Invalid IP address</string>
+    <string name="no_history_nget_some_monero_in_here">No history!\nGet some Monero in here!</string>
 </resources>

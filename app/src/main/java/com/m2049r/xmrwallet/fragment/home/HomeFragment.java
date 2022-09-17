@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -85,6 +86,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
         RecyclerView txHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerview);
         TextView unlockedBalanceTextView = view.findViewById(R.id.balance_unlocked_textview);
         TextView lockedBalanceTextView = view.findViewById(R.id.balance_locked_textview);
+        ConstraintLayout noHistoryLayout = view.findViewById(R.id.no_history_layout);
 
         BalanceService balanceService = BalanceService.getInstance();
         HistoryService historyService = HistoryService.getInstance();
@@ -133,6 +135,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
             historyService.history.observe(getViewLifecycleOwner(), history -> {
                 if (history.isEmpty()) {
                     txHistoryRecyclerView.setVisibility(View.GONE);
+                    noHistoryLayout.setVisibility(View.VISIBLE);
                 } else {
                     Collections.sort(history);
                     if (history.size() > 100) {
@@ -141,6 +144,7 @@ public class HomeFragment extends Fragment implements TransactionInfoAdapter.TxI
                         adapter.submitList(history);
                     }
                     txHistoryRecyclerView.setVisibility(View.VISIBLE);
+                    noHistoryLayout.setVisibility(View.GONE);
                 }
             });
         }

@@ -58,6 +58,34 @@
         app:layout_constraintTop_toBottomOf="@id/balance_locked_textview"
         app:layout_constraintVertical_bias="0.0" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/no_history_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/balance_locked_textview"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/monerochan_imageview"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
+            android:src="@drawable/xmrchan_png"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/empty_tx_textview"/>
+        <TextView
+            android:id="@+id/empty_tx_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_history_nget_some_monero_in_here"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/monerochan_imageview"
+            app:layout_constraintTop_toTopOf="@id/monerochan_imageview"
+            app:layout_constraintBottom_toBottomOf="@id/monerochan_imageview"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
