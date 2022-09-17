@@ -51,6 +51,7 @@ public class OnboardingFragment extends Fragment {
         ImageView moreOptionsChevronImageView = view.findViewById(R.id.advanced_settings_chevron_imageview);
 
         moreOptionsDropdownTextView.setOnClickListener(view12 -> mViewModel.onMoreOptionsClicked());
+        moreOptionsChevronImageView.setOnClickListener(view12 -> mViewModel.onMoreOptionsClicked());
 
         createWalletButton.setOnClickListener(view1 -> {
             String walletPassword = walletPasswordEditText.getText().toString();

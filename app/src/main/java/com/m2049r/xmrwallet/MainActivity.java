@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
     @Override
     public void onConnectionFail() {
-        Toast.makeText(this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> Toast.makeText(getApplication(), R.string.connection_failed, Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -105,6 +105,6 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
     @Override
     public void onPasswordFail() {
-        Toast.makeText(this, R.string.bad_password, Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> Toast.makeText(getApplication(), R.string.bad_password, Toast.LENGTH_SHORT).show());
     }
 }

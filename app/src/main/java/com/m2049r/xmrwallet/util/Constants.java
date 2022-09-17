@@ -6,4 +6,5 @@ public class Constants {
     public static final String PREF_USES_PASSWORD = "pref_uses_password";
     public static final String PREF_USES_TOR = "pref_uses_tor";
     public static final String PREF_NIGHT_MODE = "pref_night_mode";
+    public static final String PREF_PROXY = "pref_proxy";
 }

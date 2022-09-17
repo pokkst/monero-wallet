@@ -57,9 +57,9 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     public void run() {
         boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
         if (usesTor) {
-            String proxy = "127.0.0.1:9050";
+            String proxy = PrefService.getInstance().getString(Constants.PREF_PROXY, "");
             WalletManager.getInstance().setProxy(proxy);
-            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.boldsuck.getUri()));
+            WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.SAMOURAI.getUri()));
             wallet.setProxy(proxy);
         } else {
             WalletManager.getInstance().setDaemon(Node.fromString(DefaultNodes.XMRTW.getUri()));

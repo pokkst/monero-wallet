@@ -76,4 +76,8 @@
     <string name="wallet">Wallet</string>
     <string name="appearance">Appearance</string>
     <string name="network">Network</string>
+
+    <string name="wallet_proxy_address_hint">127.0.0.1</string>
+    <string name="wallet_proxy_port_hint">9050</string>
+    <string name="invalid_ip">Invalid IP address</string>
 </resources>
