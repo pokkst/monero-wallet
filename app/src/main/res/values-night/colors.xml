@@ -31,33 +31,6 @@
     <color name="edittext_bg_color">#202020</color>
 
     <!-- CLASSIC -->
-    <color name="classic_textColorPrimary">#ffffff</color>
-    <color name="classic_textColorSecondary">#FFF6EF</color>
-    <color name="classic_statusBarColor">@color/classic_gradientTopColor</color>
-    <color name="classic_gradientTopColor">@color/classic_colorBackground</color>
-    <color name="classic_gradientBottomColor">#430078</color>
-    <color name="classic_streetColorA">#4E018A</color>
-    <color name="classic_streetColorB">#87009F</color>
-    <color name="classic_toolbarTextColor">#ffffff</color>
-    <color name="classic_favouriteColor">@color/classic_negativeColor</color>
-    <color name="classic_softFavouriteColor">@color/classic_negativeColor</color>
-    <color name="classic_positiveColor">#27C79C</color>
-    <color name="classic_negativeColor">#FF1A80</color>
-    <color name="classic_neutralColor">#ffffff</color>
-    <color name="classic_noticeColor">#FFAB1A</color>
-    <color name="classic_navigationBarColor">@color/classic_colorBackground</color>
-    <color name="classic_colorBackground">#200C22</color>
-    <color name="classic_colorOnBackground">#ffffff</color>
-    <color name="classic_colorSurface">@color/classic_colorBackground</color>
-    <color name="classic_colorOnSurface">@color/classic_textColorPrimary</color>
-    <color name="classic_colorPrimary">#FFF6EF</color>
-    <color name="classic_colorPrimaryVariant">#CCC3BD</color>
-    <color name="classic_colorOnPrimary">@color/classic_colorBackground</color>
-    <color name="classic_colorSecondary">@color/classic_negativeColor</color>
-    <color name="classic_colorSecondaryVariant">#F6FFEF</color>
-    <color name="classic_colorOnSecondary">@color/classic_colorBackground</color>
-    <color name="classic_colorError">@color/classic_negativeColor</color>
-    <color name="classic_colorOnError">#FFF6EF</color>
 
     <color name="offForeground">#FFF6EF</color>
     <color name="offBackground">#2A142C</color>

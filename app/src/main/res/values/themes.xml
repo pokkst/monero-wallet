@@ -1,6 +1,3 @@
 <resources>
 
-    <style name="MyMaterialThemeClassic.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="MyMaterialThemeClassic.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

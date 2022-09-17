@@ -32,33 +32,6 @@
     <color name="button_disabled_bg_color">#454545</color>
 
     <!-- CLASSIC -->
-    <color name="classic_textColorPrimary">#0C080C</color>
-    <color name="classic_textColorSecondary">#392F39</color>
-    <color name="classic_statusBarColor">@color/classic_gradientTopColor</color>
-    <color name="classic_gradientTopColor">#FF6105</color>
-    <color name="classic_gradientBottomColor">#FF006B</color>
-    <color name="classic_streetColorA">#D81F0759</color>
-    <color name="classic_streetColorB">#D819001E</color>
-    <color name="classic_toolbarTextColor">#FFF6EF</color>
-    <color name="classic_favouriteColor">@color/classic_gradientBottomColor</color>
-    <color name="classic_softFavouriteColor">@color/classic_gradientBottomColor</color>
-    <color name="classic_positiveColor">#00C691</color>
-    <color name="classic_negativeColor">@color/classic_gradientBottomColor</color>
-    <color name="classic_neutralColor">@color/classic_positiveColor</color>
-    <color name="classic_noticeColor">#1f4e97</color>
-    <color name="classic_navigationBarColor">@color/classic_colorOnBackground</color>
-    <color name="classic_colorBackground">#FFF6EF</color>
-    <color name="classic_colorOnBackground">#0C080C</color>
-    <color name="classic_colorSurface">#FFF6EF</color>
-    <color name="classic_colorOnSurface">#2D1A2E</color>
-    <color name="classic_colorPrimary">#2D1A2E</color>
-    <color name="classic_colorPrimaryVariant">#825985</color>
-    <color name="classic_colorOnPrimary">#FFF6EF</color>
-    <color name="classic_colorSecondary">@color/classic_gradientBottomColor</color>
-    <color name="classic_colorSecondaryVariant">#BC0050</color>
-    <color name="classic_colorOnSecondary">#FFF6EF</color>
-    <color name="classic_colorError">@color/classic_gradientBottomColor</color>
-    <color name="classic_colorOnError">#FFF6EF</color>
 
     <color name="offForeground">#573059</color>
     <color name="offBackground">#FFF6EF</color>
