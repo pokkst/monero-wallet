@@ -1,5 +1,6 @@
 package com.m2049r.xmrwallet.fragment.dialog;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.m2049r.xmrwallet.R;
 import com.m2049r.xmrwallet.service.PrefService;
 import com.m2049r.xmrwallet.util.Constants;
+import com.m2049r.xmrwallet.util.Helper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,13 @@ public class AddNodeBottomSheetDialog extends BottomSheetDialogFragment {
         Button addNodeButton = view.findViewById(R.id.add_node_button);
         EditText addressEditText = view.findViewById(R.id.address_edittext);
         EditText nodeNameEditText = view.findViewById(R.id.node_name_edittext);
-
+        ImageButton pasteAddressImageButton = view.findViewById(R.id.paste_address_imagebutton);
+        pasteAddressImageButton.setOnClickListener(view1 -> {
+            Context ctx = getContext();
+            if(ctx != null) {
+                addressEditText.setText(Helper.getClipBoardText(ctx));
+            }
+        });
         addNodeButton.setOnClickListener(view1 -> {
             String node = addressEditText.getText().toString();
             String name = nodeNameEditText.getText().toString();
