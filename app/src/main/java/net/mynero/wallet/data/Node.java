@@ -21,7 +21,6 @@ import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.util.OnionHelper;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -285,57 +284,5 @@ public class Node {
         username = anotherNode.username;
         password = anotherNode.password;
         favourite = anotherNode.favourite;
-    }
-
-    static class Address {
-        final private InetAddress inet;
-        final private String onion;
-
-        private Address(InetAddress address, String onion) {
-            this.inet = address;
-            this.onion = onion;
-        }
-
-        static Address of(InetAddress address) {
-            return new Address(address, null);
-        }
-
-        static Address of(String host) throws UnknownHostException {
-            if (OnionHelper.isOnionHost(host)) {
-                return new Address(null, host);
-            } else {
-                return new Address(InetAddress.getByName(host), null);
-            }
-        }
-
-        public boolean isOnion() {
-            return onion != null;
-        }
-
-        public String getHostName() {
-            if (inet != null) {
-                return inet.getHostName();
-            } else {
-                return onion;
-            }
-        }
-
-        public String getHostAddress() {
-            if (inet != null) {
-                return inet.getHostAddress();
-            } else {
-                return onion;
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return getHostAddress().hashCode();
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            return (other instanceof Address) && (getHostAddress().equals(((Address) other).getHostAddress()));
-        }
     }
 }

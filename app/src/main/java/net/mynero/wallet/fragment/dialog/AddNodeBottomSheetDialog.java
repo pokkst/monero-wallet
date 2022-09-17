@@ -53,8 +53,8 @@ public class AddNodeBottomSheetDialog extends BottomSheetDialogFragment {
                         String address = nodeParts[0];
                         int port = Integer.parseInt(nodeParts[1]);
                         String newNodeString = address + ":" + port + "/mainnet/" + name;
-                        boolean validIp = Patterns.IP_ADDRESS.matcher(address).matches();
-                        if(validIp) {
+                        boolean validAddress = Patterns.IP_ADDRESS.matcher(address).matches() || Patterns.DOMAIN_NAME.matcher(address).matches();
+                        if(validAddress) {
                             String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
                             JSONArray jsonArray = new JSONArray(nodesArray);
                             boolean exists = false;

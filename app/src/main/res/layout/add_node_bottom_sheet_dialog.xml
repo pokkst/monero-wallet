@@ -65,7 +65,7 @@
             android:background="@drawable/edittext_bg"
             android:hint="@string/node_address_hint"
             android:inputType="text"
-            android:digits="1234567890.:"
+            android:digits="-QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890.:"
             app:layout_constraintBottom_toTopOf="@id/add_node_button"
             app:layout_constraintEnd_toStartOf="@id/paste_address_imagebutton"
             app:layout_constraintStart_toStartOf="parent" />
