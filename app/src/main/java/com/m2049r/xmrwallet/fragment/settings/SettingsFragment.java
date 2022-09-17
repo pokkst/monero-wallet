@@ -1,5 +1,6 @@
 package com.m2049r.xmrwallet.fragment.settings;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -198,7 +199,10 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress()));
         selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
         mViewModel.updateProxy();
-        WalletManager.getInstance().getWallet().startRefresh();
+        AsyncTask.execute(() -> {
+            WalletManager.getInstance().getWallet().init(0);
+            WalletManager.getInstance().getWallet().startRefresh();
+        });
     }
 
     @Override
