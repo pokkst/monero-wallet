@@ -23,5 +23,5 @@ task clean(type: Delete) {
 }
 
 ext {
-    apkName = 'monerujo'
+    apkName = 'mynero'
 }

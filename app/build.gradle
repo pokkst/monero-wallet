@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion '30.0.3'
     ndkVersion '17.2.4988734'
     defaultConfig {
         applicationId "net.mynero.wallet"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 3002
-        versionName "3.0.2 'Fluorine Fermi'"
+        targetSdkVersion 33
+        versionCode 100
+        versionName "0.1.0 'Fluorine Fermi'"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -120,7 +120,7 @@ android {
 
 static def getId(name) {
     Properties props = new Properties()
-    props.load(new FileInputStream(new File('monerujo.id')))
+    props.load(new FileInputStream(new File('mynero.id')))
     return props[name]
 }
 
