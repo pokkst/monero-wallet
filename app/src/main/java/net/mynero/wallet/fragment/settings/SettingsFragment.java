@@ -130,6 +130,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
             boolean usesPassword = PrefService.getInstance().getBoolean(Constants.PREF_USES_PASSWORD, false);
             if (usesPassword) {
                 PasswordBottomSheetDialog passwordDialog = new PasswordBottomSheetDialog();
+                passwordDialog.cancelable = true;
                 passwordDialog.listener = this;
                 passwordDialog.show(getActivity().getSupportFragmentManager(), "password_dialog");
             } else {

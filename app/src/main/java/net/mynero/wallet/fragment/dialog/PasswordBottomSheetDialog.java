@@ -21,6 +21,7 @@ import java.io.File;
 
 public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
     public PasswordListener listener = null;
+    public boolean cancelable = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class PasswordBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setCancelable(false);
+        setCancelable(cancelable);
         File walletFile = new File(getActivity().getApplicationInfo().dataDir, Constants.WALLET_NAME);
 
         ImageButton pastePasswordImageButton = view.findViewById(R.id.paste_password_imagebutton);
