@@ -144,7 +144,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                 }
                 Toast.makeText(getActivity(), getString(R.string.creating_tx), Toast.LENGTH_SHORT).show();
                 createButton.setEnabled(false);
-                createTx(address, amount, sendAll, PendingTransaction.Priority.Priority_Default);
+                createTx(address, amount, sendAll, priority);
             } else if (!validAddress) {
                 Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
             } else {
@@ -219,7 +219,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private void createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority) {
         AsyncTask.execute(() -> {
             PendingTransaction pendingTx = TxService.getInstance().createTx(address, amount, sendAll, feePriority);
-            if (pendingTx != null) {
+            if (pendingTx != null && pendingTx.getStatus() == PendingTransaction.Status.Status_Ok) {
                 _pendingTransaction.postValue(pendingTx);
             } else {
                 Activity activity = getActivity();
