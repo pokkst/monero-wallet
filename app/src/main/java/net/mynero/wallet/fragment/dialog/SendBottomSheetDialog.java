@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.zxing.client.android.Intents;
@@ -93,6 +94,44 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             }
         }
 
+        bindObservers();
+        bindListeners();
+    }
+
+    private void bindObservers() {
+
+        BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
+            createButton.setEnabled(balance != 0);
+            sendMaxButton.setEnabled(balance != 0);
+        });
+
+        sendingMax.observe(getViewLifecycleOwner(), sendingMax -> {
+            if (pendingTransaction.getValue() == null) {
+                if (sendingMax) {
+                    amountEditText.setVisibility(View.INVISIBLE);
+                    sendAllTextView.setVisibility(View.VISIBLE);
+                    sendMaxButton.setText(getText(R.string.undo));
+                } else {
+                    amountEditText.setVisibility(View.VISIBLE);
+                    sendAllTextView.setVisibility(View.GONE);
+                    sendMaxButton.setText(getText(R.string.send_max));
+                }
+            }
+        });
+
+        pendingTransaction.observe(getViewLifecycleOwner(), pendingTx -> {
+            showConfirmationLayout(pendingTx != null);
+
+            if (pendingTx != null) {
+                String address = addressEditText.getText().toString();
+                addressTextView.setText(getString(R.string.tx_address_text, address));
+                amountTextView.setText(getString(R.string.tx_amount_text, Helper.getDisplayAmount(pendingTx.getAmount())));
+                feeTextView.setText(getString(R.string.tx_fee_text, Helper.getDisplayAmount(pendingTx.getFee())));
+            }
+        });
+    }
+
+    private void bindListeners() {
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
             if (ctx != null) {
@@ -140,31 +179,6 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                 Toast.makeText(getActivity(), getString(R.string.sending_tx), Toast.LENGTH_SHORT).show();
                 sendButton.setEnabled(false);
                 sendTx(pendingTx);
-            }
-        });
-
-        sendingMax.observe(getViewLifecycleOwner(), sendingMax -> {
-            if (pendingTransaction.getValue() == null) {
-                if (sendingMax) {
-                    amountEditText.setVisibility(View.INVISIBLE);
-                    sendAllTextView.setVisibility(View.VISIBLE);
-                    sendMaxButton.setText(getText(R.string.undo));
-                } else {
-                    amountEditText.setVisibility(View.VISIBLE);
-                    sendAllTextView.setVisibility(View.GONE);
-                    sendMaxButton.setText(getText(R.string.send_max));
-                }
-            }
-        });
-
-        pendingTransaction.observe(getViewLifecycleOwner(), pendingTx -> {
-            showConfirmationLayout(pendingTx != null);
-
-            if (pendingTx != null) {
-                String address = addressEditText.getText().toString();
-                addressTextView.setText(getString(R.string.tx_address_text, address));
-                amountTextView.setText(getString(R.string.tx_amount_text, Helper.getDisplayAmount(pendingTx.getAmount())));
-                feeTextView.setText(getString(R.string.tx_fee_text, Helper.getDisplayAmount(pendingTx.getFee())));
             }
         });
     }
