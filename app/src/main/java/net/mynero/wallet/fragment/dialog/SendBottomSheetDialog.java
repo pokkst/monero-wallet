@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,13 +59,16 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private TextView feeTextView;
     private TextView addressTextView;
     private TextView amountTextView;
+    private TextView feeRadioGroupLabelTextView;
     private Button createButton;
     private Button sendButton;
     private Button sendMaxButton;
     private ImageButton pasteAddressImageButton;
     private ImageButton scanAddressImageButton;
+    private RadioGroup feeRadioGroup;
 
     public UriData uriData = null;
+    public PendingTransaction.Priority priority;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +89,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         feeTextView = view.findViewById(R.id.fee_textview);
         addressTextView = view.findViewById(R.id.address_pending_textview);
         amountTextView = view.findViewById(R.id.amount_pending_textview);
+        feeRadioGroup = view.findViewById(R.id.tx_fee_radiogroup);
+        feeRadioGroupLabelTextView = view.findViewById(R.id.tx_fee_radiogroup_label_textview);
 
         if (uriData != null) {
             addressEditText.setText(uriData.getAddress());
@@ -92,6 +98,18 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                 amountEditText.setText(uriData.getAmount());
             }
         }
+
+        feeRadioGroup.check(R.id.low_fee_radiobutton);
+        priority = PendingTransaction.Priority.Priority_Low;
+        feeRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            if(i == R.id.low_fee_radiobutton) {
+                priority = PendingTransaction.Priority.Priority_Low;
+            } else if(i == R.id.med_fee_radiobutton) {
+                priority = PendingTransaction.Priority.Priority_Medium;
+            } else if(i == R.id.high_fee_radiobutton) {
+                priority = PendingTransaction.Priority.Priority_High;
+            }
+        });
 
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
@@ -228,6 +246,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.VISIBLE);
             addressTextView.setVisibility(View.VISIBLE);
             amountTextView.setVisibility(View.VISIBLE);
+            feeRadioGroup.setVisibility(View.GONE);
+            feeRadioGroupLabelTextView.setVisibility(View.GONE);
         } else {
             sendButton.setVisibility(View.GONE);
             addressEditText.setVisibility(View.VISIBLE);
@@ -240,6 +260,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
             amountTextView.setVisibility(View.GONE);
+            feeRadioGroup.setVisibility(View.VISIBLE);
+            feeRadioGroupLabelTextView.setVisibility(View.VISIBLE);
         }
     }
 

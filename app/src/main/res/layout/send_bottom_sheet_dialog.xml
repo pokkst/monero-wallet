@@ -17,7 +17,7 @@
             android:id="@+id/send_monero_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/send_monero"
             android:textSize="32sp"
             android:textStyle="bold"
@@ -30,7 +30,7 @@
             android:id="@+id/address_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_bg"
             android:ellipsize="middle"
             android:hint="@string/address"
@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toStartOf="@id/paste_address_imagebutton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/send_monero_textview"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/paste_address_imagebutton"
@@ -48,8 +48,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
-            android:minWidth="24dp"
-            android:minHeight="24dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:padding="8dp"
             android:src="@drawable/ic_content_paste_24dp"
             app:layout_constraintBottom_toBottomOf="@id/address_edittext"
@@ -57,15 +57,15 @@
             app:layout_constraintStart_toEndOf="@id/address_edittext"
             app:layout_constraintTop_toTopOf="@id/address_edittext"
             tools:ignore="SpeakableTextPresentCheck"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/scan_address_imagebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:minWidth="24dp"
-            android:minHeight="24dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:padding="8dp"
             android:src="@drawable/ic_scan"
             app:layout_constraintBottom_toBottomOf="@id/address_edittext"
@@ -73,20 +73,21 @@
             app:layout_constraintStart_toEndOf="@id/paste_address_imagebutton"
             app:layout_constraintTop_toTopOf="@id/address_edittext"
             tools:ignore="SpeakableTextPresentCheck"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <EditText
             android:id="@+id/amount_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_bg"
             android:hint="@string/amount"
             android:inputType="numberDecimal"
-            app:layout_constraintBottom_toTopOf="@id/create_tx_button"
+            app:layout_constraintBottom_toTopOf="@id/tx_fee_radiogroup"
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/sending_all_textview"
@@ -101,7 +102,7 @@
             app:layout_constraintEnd_toStartOf="@id/send_max_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/amount_edittext"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/send_max_button"
@@ -113,18 +114,62 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/amount_edittext"
             app:layout_constraintTop_toTopOf="@id/amount_edittext"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tx_fee_radiogroup_label_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fee_priority"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tx_fee_radiogroup"
+            app:layout_constraintTop_toTopOf="@id/tx_fee_radiogroup"
+            app:layout_constraintBottom_toBottomOf="@id/tx_fee_radiogroup"/>
+
+        <RadioGroup
+            android:id="@+id/tx_fee_radiogroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/send_max_button"
+            app:layout_constraintBottom_toTopOf="@id/create_tx_button"
+            app:layout_constraintStart_toEndOf="@id/tx_fee_radiogroup_label_textview"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/low"
+                android:id="@+id/low_fee_radiobutton"
+                android:checked="true"
+                android:textSize="16sp" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/medium"
+                android:id="@+id/med_fee_radiobutton"
+                android:checked="false"
+                android:textSize="16sp"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/high"
+                android:id="@+id/high_fee_radiobutton"
+                android:checked="false"
+                android:textSize="16sp"/>
+        </RadioGroup>
 
         <Button
             android:id="@+id/create_tx_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/button_bg"
             android:text="@string/create"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/amount_edittext"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@id/tx_fee_radiogroup"
+            tools:visibility="visible" />
 
 
         <!-- SEND LAYOUT -->
@@ -132,7 +177,7 @@
             android:id="@+id/address_pending_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:ellipsize="middle"
             android:singleLine="true"
             android:text="@string/tx_address_text"
@@ -143,13 +188,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/send_monero_textview"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/amount_pending_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/tx_amount_text"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -158,13 +203,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/address_pending_textview"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/fee_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/tx_fee_text"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -173,19 +218,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/amount_pending_textview"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <Button
             android:id="@+id/send_tx_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/button_bg"
             android:text="@string/send"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fee_textview"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

@@ -97,4 +97,8 @@
     <string name="confirmations">Confirmations</string>
     <string name="date">Date</string>
     <string name="node_selected">Node has been selected</string>
+    <string name="fee_priority">Fee priority:</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
 </resources>
