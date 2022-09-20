@@ -22,11 +22,15 @@ public class UriData {
     }
 
     public String getAmount() {
-        return params.get(Constants.URI_ARG_AMOUNT);
+        String txAmount = params.get(Constants.URI_ARG_AMOUNT);
+        if(txAmount == null) {
+            return params.get(Constants.URI_ARG_AMOUNT2);
+        }
+        return txAmount;
     }
 
     public boolean hasAmount() {
-        return params.containsKey(Constants.URI_ARG_AMOUNT);
+        return params.containsKey(Constants.URI_ARG_AMOUNT) || params.containsKey(Constants.URI_ARG_AMOUNT2);
     }
 
     public static UriData parse(String uri) {
