@@ -122,7 +122,7 @@ public class WalletManager {
             final long oldHeight = wallet.getRestoreHeight();
             // Go back 4 days if we don't have a precise restore height
             Calendar restoreDate = Calendar.getInstance();
-            restoreDate.add(Calendar.DAY_OF_MONTH, -4);
+            restoreDate.add(Calendar.DAY_OF_MONTH, 0);
             final long restoreHeight =
                     (height > -1) ? height : RestoreHeight.getInstance().getHeight(restoreDate.getTime());
             wallet.setRestoreHeight(restoreHeight);
