@@ -23,6 +23,9 @@ import net.mynero.wallet.model.PendingTransaction;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.util.Helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
 public class TxData implements Parcelable {
 
@@ -41,6 +44,7 @@ public class TxData implements Parcelable {
     private int mixin;
     private PendingTransaction.Priority priority;
     private UserNotes userNotes;
+    private ArrayList<String> preferredInputs;
 
     public TxData() {
     }
@@ -50,16 +54,19 @@ public class TxData implements Parcelable {
         this.amount = txData.amount;
         this.mixin = txData.mixin;
         this.priority = txData.priority;
+        this.preferredInputs = txData.preferredInputs;
     }
 
     public TxData(String dstAddr,
                   long amount,
                   int mixin,
-                  PendingTransaction.Priority priority) {
+                  PendingTransaction.Priority priority,
+                  ArrayList<String> preferredInputs) {
         this.dstAddr = dstAddr;
         this.amount = amount;
         this.mixin = mixin;
         this.priority = priority;
+        this.preferredInputs = preferredInputs;
     }
 
     protected TxData(Parcel in) {
@@ -67,7 +74,7 @@ public class TxData implements Parcelable {
         amount = in.readLong();
         mixin = in.readInt();
         priority = PendingTransaction.Priority.fromInteger(in.readInt());
-
+        in.readStringList(preferredInputs);
     }
 
     public String getDestinationAddress() {
@@ -92,6 +99,10 @@ public class TxData implements Parcelable {
 
     public double getAmountAsDouble() {
         return 1.0 * amount / Helper.ONE_XMR;
+    }
+
+    public ArrayList<String> getPreferredInputs() {
+        return preferredInputs;
     }
 
     public int getMixin() {

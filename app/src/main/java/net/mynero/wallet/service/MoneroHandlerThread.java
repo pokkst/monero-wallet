@@ -28,6 +28,9 @@ import net.mynero.wallet.model.WalletListener;
 import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.util.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Handy class for starting a new thread that has a looper. The looper can then be
@@ -121,7 +124,9 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority) {
         long amount = sendAll ? SWEEP_ALL : Wallet.getAmountFromString(amountStr);
-        return wallet.createTransaction(new TxData(address, amount, 0, feePriority));
+        ArrayList<String> preferredInputs = new ArrayList<>();
+        preferredInputs.add("");
+        return wallet.createTransaction(new TxData(address, amount, 0, feePriority, preferredInputs));
     }
 
     public boolean sendTx(PendingTransaction pendingTx) {

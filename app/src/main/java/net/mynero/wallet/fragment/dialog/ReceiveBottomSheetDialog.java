@@ -56,7 +56,9 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         List<CoinsInfo> coins = WalletManager.getInstance().getWallet().getCoins().getAll();
         System.out.println("COINS::");
         for(CoinsInfo coinsInfo : coins) {
-            System.out.println(coinsInfo.getGlobalOutputIndex());
+            if(!coinsInfo.isSpent()) {
+                System.out.println(coinsInfo.getKeyImage());
+            }
         }
     }
 

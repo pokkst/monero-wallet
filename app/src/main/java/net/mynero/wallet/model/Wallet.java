@@ -24,6 +24,7 @@ import net.mynero.wallet.data.TxData;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -276,32 +277,31 @@ public class Wallet {
         return createTransaction(
                 txData.getDestinationAddress(),
                 txData.getAmount(),
-                txData.getMixin(),
-                txData.getPriority());
+                txData.getPriority(),
+                txData.getPreferredInputs());
     }
 
     public PendingTransaction createTransaction(String dst_addr,
-                                                long amount, int mixin_count,
-                                                PendingTransaction.Priority priority) {
+                                                long amount, PendingTransaction.Priority priority, ArrayList<String> key_images) {
         disposePendingTransaction();
         int _priority = priority.getValue();
         long txHandle =
                 (amount == SWEEP_ALL ?
-                        createSweepTransaction(dst_addr, "", mixin_count, _priority,
-                                accountIndex) :
-                        createTransactionJ(dst_addr, "", amount, mixin_count, _priority,
-                                accountIndex));
+                        createSweepTransaction(dst_addr, "", 0, _priority,
+                                accountIndex, key_images) :
+                        createTransactionJ(dst_addr, "", amount, 0, _priority,
+                                accountIndex, key_images));
         pendingTransaction = new PendingTransaction(txHandle);
         return pendingTransaction;
     }
 
     private native long createTransactionJ(String dst_addr, String payment_id,
                                            long amount, int mixin_count,
-                                           int priority, int accountIndex);
+                                           int priority, int accountIndex, ArrayList<String> key_images);
 
     private native long createSweepTransaction(String dst_addr, String payment_id,
                                                int mixin_count,
-                                               int priority, int accountIndex);
+                                               int priority, int accountIndex, ArrayList<String> key_images);
 
     private native long createTransactionSingleJ(String key_image, String dst_addr, int priority);
 

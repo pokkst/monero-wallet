@@ -230,6 +230,25 @@ std::vector<std::string> java2cpp(JNIEnv *env, jobject arrayList) {
     return result;
 }
 
+std::set<std::string> java2cpp_set(JNIEnv *env, jobject arrayList) {
+
+    jmethodID java_util_ArrayList_size = env->GetMethodID(class_ArrayList, "size", "()I");
+    jmethodID java_util_ArrayList_get = env->GetMethodID(class_ArrayList, "get",
+                                                         "(I)Ljava/lang/Object;");
+
+    jint len = env->CallIntMethod(arrayList, java_util_ArrayList_size);
+    std::set<std::string> result;
+    for (jint i = 0; i < len; i++) {
+        jstring element = static_cast<jstring>(env->CallObjectMethod(arrayList,
+                                                                     java_util_ArrayList_get, i));
+        const char *pchars = env->GetStringUTFChars(element, nullptr);
+        result.emplace(pchars);
+        env->ReleaseStringUTFChars(element, pchars);
+        env->DeleteLocalRef(element);
+    }
+    return result;
+}
+
 jobject cpp2java(JNIEnv *env, const std::vector<std::string> &vector) {
 
     jmethodID java_util_ArrayList_ = env->GetMethodID(class_ArrayList, "<init>", "(I)V");
@@ -961,8 +980,8 @@ Java_net_mynero_wallet_model_Wallet_createTransactionJ(JNIEnv *env, jobject inst
                                                           jstring dst_addr, jstring payment_id,
                                                           jlong amount, jint mixin_count,
                                                           jint priority,
-                                                          jint accountIndex) {
-
+                                                          jint accountIndex, jobject key_images) {
+    const std::set<std::string> _key_images = java2cpp_set(env, key_images);
     const char *_dst_addr = env->GetStringUTFChars(dst_addr, nullptr);
     const char *_payment_id = env->GetStringUTFChars(payment_id, nullptr);
     Monero::PendingTransaction::Priority _priority =
@@ -972,7 +991,7 @@ Java_net_mynero_wallet_model_Wallet_createTransactionJ(JNIEnv *env, jobject inst
     Monero::PendingTransaction *tx = wallet->createTransaction(_dst_addr, _payment_id,
                                                                amount, (uint32_t) mixin_count,
                                                                _priority,
-                                                               (uint32_t) accountIndex);
+                                                               (uint32_t) accountIndex, {}, _key_images);
 
     env->ReleaseStringUTFChars(dst_addr, _dst_addr);
     env->ReleaseStringUTFChars(payment_id, _payment_id);
@@ -1013,8 +1032,8 @@ Java_net_mynero_wallet_model_Wallet_createSweepTransaction(JNIEnv *env, jobject 
                                                               jstring dst_addr, jstring payment_id,
                                                               jint mixin_count,
                                                               jint priority,
-                                                              jint accountIndex) {
-
+                                                              jint accountIndex, jobject key_images) {
+    const std::set<std::string> _key_images = java2cpp_set(env, key_images);
     const char *_dst_addr = env->GetStringUTFChars(dst_addr, nullptr);
     const char *_payment_id = env->GetStringUTFChars(payment_id, nullptr);
     Monero::PendingTransaction::Priority _priority =
@@ -1026,7 +1045,7 @@ Java_net_mynero_wallet_model_Wallet_createSweepTransaction(JNIEnv *env, jobject 
     Monero::PendingTransaction *tx = wallet->createTransaction(_dst_addr, _payment_id,
                                                                empty, (uint32_t) mixin_count,
                                                                _priority,
-                                                               (uint32_t) accountIndex);
+                                                               (uint32_t) accountIndex, {}, _key_images);
 
     env->ReleaseStringUTFChars(dst_addr, _dst_addr);
     env->ReleaseStringUTFChars(payment_id, _payment_id);
@@ -1064,9 +1083,13 @@ Java_net_mynero_wallet_model_Wallet_getCoinsJ(JNIEnv *env, jobject instance) {
 
 jobject newCoinsInfo(JNIEnv *env, Monero::CoinsInfo *info) {
     jmethodID c = env->GetMethodID(class_CoinsInfo, "<init>",
-                                   "(J)V");
+                                   "(JZLjava/lang/String;)V");
+    jstring _key_image = env->NewStringUTF(info->keyImage().c_str());
     jobject result = env->NewObject(class_CoinsInfo, c,
-                                    static_cast<jlong> (info->globalOutputIndex()));
+                                    static_cast<jlong> (info->globalOutputIndex()),
+                                    info->spent(),
+                                    _key_image);
+    env->DeleteLocalRef(_key_image);
     return result;
 }
 
