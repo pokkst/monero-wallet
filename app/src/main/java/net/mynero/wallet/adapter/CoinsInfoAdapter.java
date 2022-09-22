@@ -97,10 +97,10 @@ public class CoinsInfoAdapter extends RecyclerView.Adapter<CoinsInfoAdapter.View
 
         public void bind(CoinsInfo coinsInfo, List<String> selectedUtxos) {
             boolean selected = selectedUtxos.contains(coinsInfo.getKeyImage());
-            TextView keyImageTextView = itemView.findViewById(R.id.utxo_key_image_textview);
+            TextView pubKeyTextView = itemView.findViewById(R.id.utxo_pub_key_textview);
             TextView amountTextView = itemView.findViewById(R.id.utxo_amount_textview);
             amountTextView.setText(Wallet.getDisplayAmount(coinsInfo.getAmount()));
-            keyImageTextView.setText(coinsInfo.getKeyImage());
+            pubKeyTextView.setText(coinsInfo.getPubKey());
             itemView.setOnLongClickListener(view -> {
                 listener.onUtxoSelected(coinsInfo);
                 return true;
