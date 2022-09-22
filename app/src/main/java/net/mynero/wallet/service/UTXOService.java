@@ -39,12 +39,15 @@ public class UTXOService extends ServiceBase {
         List<CoinsInfo> utxos = getUtxos();
         long amountSelected = 0;
         Collections.shuffle(utxos);
+        //loop through each utxo
         for (CoinsInfo coinsInfo : utxos) {
-            if(!coinsInfo.isSpent()) {
+            if(!coinsInfo.isSpent()) { //filter out spent outputs
                 if (sendAll) {
+                    // if send all, add all utxos and set amount to send all
                     selectedUtxos.add(coinsInfo.getKeyImage());
                     amountSelected = Wallet.SWEEP_ALL;
                 } else {
+                    //if amount selected is still less than amount needed, and the utxos tx hash hasn't already been seen, add utxo
                     if (amountSelected <= amount && !seenTxs.contains(coinsInfo.getHash())) {
                         selectedUtxos.add(coinsInfo.getKeyImage());
                         // we don't want to spend multiple utxos from the same transaction, so we prevent that from happening here.

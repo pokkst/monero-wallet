@@ -125,6 +125,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         long amount = sendAll ? Wallet.SWEEP_ALL : Wallet.getAmountFromString(amountStr);
         ArrayList<String> preferredInputs;
         if(selectedUtxos.isEmpty()) {
+            // no inputs manually selected, we are sending from home screen most likely, or user somehow broke the app
             preferredInputs = UTXOService.getInstance().selectUtxos(amount, sendAll);
         } else {
             preferredInputs = selectedUtxos;
