@@ -56,6 +56,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wallet_settings_textview" />
 
+        <Button
+            android:id="@+id/display_utxos_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/view_utxos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/display_seed_button" />
+
         <TextView
             android:id="@+id/appearance_settings_textview"
             android:layout_width="match_parent"
@@ -66,7 +78,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/display_seed_button" />
+            app:layout_constraintTop_toBottomOf="@id/display_utxos_button" />
 
         <TextView
             android:id="@+id/day_night_textview"

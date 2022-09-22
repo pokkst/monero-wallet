@@ -27,16 +27,20 @@ import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 import net.mynero.wallet.R;
+import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.model.PendingTransaction;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.service.BalanceService;
 import net.mynero.wallet.service.TxService;
+import net.mynero.wallet.service.UTXOService;
 import net.mynero.wallet.util.Helper;
 import net.mynero.wallet.util.UriData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
+    public ArrayList<String> selectedUtxos = new ArrayList<>();
     private final MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
     public LiveData<Boolean> sendingMax = _sendingMax;    private final ActivityResultLauncher<String> cameraPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
             granted -> {
@@ -61,6 +65,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private TextView addressTextView;
     private TextView amountTextView;
     private TextView feeRadioGroupLabelTextView;
+    private TextView selectedUtxosValueTextView;
     private Button createButton;
     private Button sendButton;
     private Button sendMaxButton;
@@ -92,12 +97,29 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         amountTextView = view.findViewById(R.id.amount_pending_textview);
         feeRadioGroup = view.findViewById(R.id.tx_fee_radiogroup);
         feeRadioGroupLabelTextView = view.findViewById(R.id.tx_fee_radiogroup_label_textview);
+        selectedUtxosValueTextView = view.findViewById(R.id.selected_utxos_value_textview);
 
         if (uriData != null) {
             addressEditText.setText(uriData.getAddress());
             if(uriData.hasAmount()) {
                 amountEditText.setText(uriData.getAmount());
             }
+        }
+
+        if(!selectedUtxos.isEmpty()) {
+            long selectedValue = 0;
+
+            for(CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
+                if(selectedUtxos.contains(coinsInfo.getKeyImage())) {
+                    selectedValue += coinsInfo.getAmount();
+                }
+            }
+
+            String valueString = Wallet.getDisplayAmount(selectedValue);
+            selectedUtxosValueTextView.setVisibility(View.VISIBLE);
+            selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value, valueString));
+        } else {
+            selectedUtxosValueTextView.setVisibility(View.GONE);
         }
 
         bindObservers();
@@ -232,7 +254,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
     private void createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority) {
         AsyncTask.execute(() -> {
-            PendingTransaction pendingTx = TxService.getInstance().createTx(address, amount, sendAll, feePriority);
+            PendingTransaction pendingTx = TxService.getInstance().createTx(address, amount, sendAll, feePriority, selectedUtxos);
             if (pendingTx != null && pendingTx.getStatus() == PendingTransaction.Status.Status_Ok) {
                 _pendingTransaction.postValue(pendingTx);
             } else {

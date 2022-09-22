@@ -1083,12 +1083,13 @@ Java_net_mynero_wallet_model_Wallet_getCoinsJ(JNIEnv *env, jobject instance) {
 
 jobject newCoinsInfo(JNIEnv *env, Monero::CoinsInfo *info) {
     jmethodID c = env->GetMethodID(class_CoinsInfo, "<init>",
-                                   "(JZLjava/lang/String;)V");
+                                   "(JZLjava/lang/String;J)V");
     jstring _key_image = env->NewStringUTF(info->keyImage().c_str());
     jobject result = env->NewObject(class_CoinsInfo, c,
                                     static_cast<jlong> (info->globalOutputIndex()),
                                     info->spent(),
-                                    _key_image);
+                                    _key_image,
+                                    static_cast<jlong> (info->amount()));
     env->DeleteLocalRef(_key_image);
     return result;
 }

@@ -24,6 +24,7 @@ import net.mynero.wallet.service.HistoryService;
 import net.mynero.wallet.service.MoneroHandlerThread;
 import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.service.TxService;
+import net.mynero.wallet.service.UTXOService;
 import net.mynero.wallet.util.Constants;
 import net.mynero.wallet.util.UriData;
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     private AddressService addressService = null;
     private HistoryService historyService = null;
     private BlockchainService blockchainService = null;
+    private UTXOService utxoService = null;
 
     private boolean proceedToSend = false;
     private UriData uriData = null;
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.addressService = new AddressService(thread);
         this.historyService = new HistoryService(thread);
         this.blockchainService = new BlockchainService(thread);
+        this.utxoService = new UTXOService(thread);
         thread.start();
     }
 
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.balanceService.refreshBalance();
         this.blockchainService.refreshBlockchain();
         this.addressService.refreshAddresses();
+        this.utxoService.refreshUtxos();
     }
 
     @Override

@@ -122,10 +122,14 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         listener.onRefresh();
     }
 
-    public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority) {
+    public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) {
         long amount = sendAll ? SWEEP_ALL : Wallet.getAmountFromString(amountStr);
-        ArrayList<String> preferredInputs = new ArrayList<>();
-        preferredInputs.add("");
+        ArrayList<String> preferredInputs;
+        if(selectedUtxos.isEmpty()) {
+            preferredInputs = UTXOService.getInstance().selectUtxos(amount, sendAll);
+        } else {
+            preferredInputs = selectedUtxos;
+        }
         return wallet.createTransaction(new TxData(address, amount, 0, feePriority, preferredInputs));
     }
 

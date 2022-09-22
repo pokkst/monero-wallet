@@ -30,7 +30,17 @@
         android:id="@+id/settings_fragment"
         android:name="net.mynero.wallet.fragment.settings.SettingsFragment"
         android:label="fragment_send_amount"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/nav_to_utxos"
+            app:destination="@id/utxos_fragment">
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/utxos_fragment"
+        android:name="net.mynero.wallet.fragment.utxos.UtxosFragment"
+        android:label="fragment_utxos"
+        tools:layout="@layout/fragment_utxos" />
     <fragment
         android:id="@+id/onboarding_fragment"
         android:name="net.mynero.wallet.fragment.onboarding.OnboardingFragment"

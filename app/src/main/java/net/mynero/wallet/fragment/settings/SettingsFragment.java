@@ -18,7 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.mynero.wallet.R;
 import net.mynero.wallet.data.DefaultNodes;
@@ -73,6 +77,8 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         Button displaySeedButton = view.findViewById(R.id.display_seed_button);
+        Button displayUtxosButton = view.findViewById(R.id.display_utxos_button);
+
         selectNodeButton = view.findViewById(R.id.select_node_button);
         SwitchCompat nightModeSwitch = view.findViewById(R.id.day_night_switch);
         SwitchCompat torSwitch = view.findViewById(R.id.tor_switch);
@@ -136,6 +142,10 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
             } else {
                 displaySeedDialog();
             }
+        });
+
+        displayUtxosButton.setOnClickListener(view1 -> {
+            navigate(R.id.nav_to_utxos);
         });
 
         TextView statusTextView = view.findViewById(R.id.status_textview);
@@ -217,5 +227,17 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
         NodeSelectionBottomSheetDialog dialog = new NodeSelectionBottomSheetDialog();
         dialog.listener = this;
         dialog.show(getActivity().getSupportFragmentManager(), "node_selection_dialog");
+    }
+
+    private void navigate(int destination) {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            FragmentManager fm = activity.getSupportFragmentManager();
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) fm.findFragmentById(R.id.nav_host_fragment);
+            if (navHostFragment != null) {
+                navHostFragment.getNavController().navigate(destination);
+            }
+        }
     }
 }

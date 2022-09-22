@@ -101,4 +101,6 @@
     <string name="low">Low</string>
     <string name="medium">Medium</string>
     <string name="high">High</string>
+    <string name="view_utxos">View UTXOs</string>
+    <string name="selected_utxos_value">Selected value: %1$s XMR</string>
 </resources>
