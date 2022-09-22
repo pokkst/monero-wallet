@@ -980,6 +980,35 @@ Java_net_mynero_wallet_model_Wallet_createTransactionJ(JNIEnv *env, jobject inst
 }
 
 JNIEXPORT jlong JNICALL
+Java_net_mynero_wallet_model_Wallet_createTransactionSingleJ(JNIEnv *env, jobject instance,
+                                                             jstring key_image, jstring dst_addr,
+                                                             jint priority) {
+    const char *_key_image = env->GetStringUTFChars(key_image, nullptr);
+    const char *_dst_addr = env->GetStringUTFChars(dst_addr, nullptr);
+    Monero::PendingTransaction::Priority _priority =
+            static_cast<Monero::PendingTransaction::Priority>(priority);
+    Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
+    Monero::PendingTransaction *tx = wallet->createTransactionSingle(_key_image, _dst_addr, _priority);
+    env->ReleaseStringUTFChars(key_image, _key_image);
+    env->ReleaseStringUTFChars(dst_addr, _dst_addr);
+    return reinterpret_cast<jlong>(tx);
+}
+
+JNIEXPORT jlong JNICALL
+Java_net_mynero_wallet_model_Wallet_createTransactionSelectedJ(JNIEnv *env, jobject instance,
+                                                               jobject key_images, jstring dst_addr,
+                                                               jint priority) {
+    const std::vector<std::string> _key_images = java2cpp(env, key_images);
+    const char *_dst_addr = env->GetStringUTFChars(dst_addr, nullptr);
+    Monero::PendingTransaction::Priority _priority =
+            static_cast<Monero::PendingTransaction::Priority>(priority);
+    Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
+    Monero::PendingTransaction *tx = wallet->createTransactionSelected(_key_images, _dst_addr, _priority);
+    env->ReleaseStringUTFChars(dst_addr, _dst_addr);
+    return reinterpret_cast<jlong>(tx);
+}
+
+JNIEXPORT jlong JNICALL
 Java_net_mynero_wallet_model_Wallet_createSweepTransaction(JNIEnv *env, jobject instance,
                                                               jstring dst_addr, jstring payment_id,
                                                               jint mixin_count,

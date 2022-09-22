@@ -25,6 +25,7 @@ import net.mynero.wallet.data.TxData;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import lombok.Getter;
@@ -301,6 +302,10 @@ public class Wallet {
     private native long createSweepTransaction(String dst_addr, String payment_id,
                                                int mixin_count,
                                                int priority, int accountIndex);
+
+    private native long createTransactionSingleJ(String key_image, String dst_addr, int priority);
+
+    private native long createTransactionSelectedJ(List<String> key_images, String dst_addr, int priority);
 
     public PendingTransaction createSweepUnmixableTransaction() {
         disposePendingTransaction();
