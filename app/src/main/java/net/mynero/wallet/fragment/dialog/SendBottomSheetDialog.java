@@ -307,7 +307,9 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
             amountTextView.setVisibility(View.GONE);
-            selectedUtxosValueTextView.setVisibility(View.VISIBLE);
+            if(!selectedUtxos.isEmpty()) {
+                selectedUtxosValueTextView.setVisibility(View.VISIBLE);
+            }
             feeRadioGroup.setVisibility(View.VISIBLE);
             feeRadioGroupLabelTextView.setVisibility(View.VISIBLE);
         }
