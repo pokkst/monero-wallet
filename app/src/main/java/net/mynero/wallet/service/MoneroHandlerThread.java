@@ -115,6 +115,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     private void refresh() {
         wallet.refreshHistory();
+        wallet.refreshCoins();
         listener.onRefresh();
     }
 

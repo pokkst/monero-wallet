@@ -45,6 +45,7 @@ public class Wallet {
     private long listenerHandle = 0;
     private PendingTransaction pendingTransaction = null;
     private TransactionHistory history = null;
+    private Coins coins = null;
 
     Wallet(long handle) {
         this.handle = handle;
@@ -324,6 +325,14 @@ public class Wallet {
 
     private native long getHistoryJ();
 
+    public Coins getCoins() {
+        if (coins == null) {
+            coins = new Coins(getCoinsJ());
+        }
+        return coins;
+    }
+    private native long getCoinsJ();
+
 //virtual bool exportKeyImages(const std::string &filename) = 0;
 //virtual bool importKeyImages(const std::string &filename) = 0;
 
@@ -332,6 +341,10 @@ public class Wallet {
 
     public void refreshHistory() {
         getHistory().refreshWithNotes(this);
+    }
+
+    public void refreshCoins() {
+        getCoins().refresh();
     }
 
     private native long setListenerJ(WalletListener listener);

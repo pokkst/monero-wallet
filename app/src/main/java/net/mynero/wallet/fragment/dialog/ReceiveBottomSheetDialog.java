@@ -21,12 +21,15 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import net.mynero.wallet.R;
 import net.mynero.wallet.data.Subaddress;
+import net.mynero.wallet.model.CoinsInfo;
+import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.AddressService;
 import net.mynero.wallet.util.DayNightMode;
 import net.mynero.wallet.util.Helper;
 import net.mynero.wallet.util.NightmodeHelper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
@@ -49,6 +52,12 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         addressTextView.setText(addr.getAddress());
         addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
         copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", addr.getAddress()));
+
+        List<CoinsInfo> coins = WalletManager.getInstance().getWallet().getCoins().getAll();
+        System.out.println("COINS::");
+        for(CoinsInfo coinsInfo : coins) {
+            System.out.println(coinsInfo.getGlobalOutputIndex());
+        }
     }
 
     public Bitmap generate(String text, int width, int height) {

@@ -40,6 +40,7 @@ static jclass class_TransactionInfo;
 static jclass class_Transfer;
 static jclass class_Ledger;
 static jclass class_WalletStatus;
+static jclass class_CoinsInfo;
 
 std::mutex _listenerMutex;
 
@@ -62,6 +63,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
             jenv->FindClass("net/mynero/wallet/model/WalletListener")));
     class_WalletStatus = static_cast<jclass>(jenv->NewGlobalRef(
             jenv->FindClass("net/mynero/wallet/model/Wallet$Status")));
+    class_CoinsInfo = static_cast<jclass>(jenv->NewGlobalRef(
+            jenv->FindClass("net/mynero/wallet/model/CoinsInfo")));
     return JNI_VERSION_1_6;
 }
 #ifdef __cplusplus
@@ -1024,6 +1027,48 @@ Java_net_mynero_wallet_model_Wallet_disposeTransaction(JNIEnv *env, jobject inst
 //virtual bool exportKeyImages(const std::string &filename) = 0;
 //virtual bool importKeyImages(const std::string &filename) = 0;
 
+JNIEXPORT jlong JNICALL
+Java_net_mynero_wallet_model_Wallet_getCoinsJ(JNIEnv *env, jobject instance) {
+    Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
+    return reinterpret_cast<jlong>(wallet->coins());
+}
+
+jobject newCoinsInfo(JNIEnv *env, Monero::CoinsInfo *info) {
+    jmethodID c = env->GetMethodID(class_CoinsInfo, "<init>",
+                                   "(J)V");
+    jobject result = env->NewObject(class_CoinsInfo, c,
+                                    static_cast<jlong> (info->globalOutputIndex()));
+    return result;
+}
+
+jobject coins_cpp2java(JNIEnv *env, const std::vector<Monero::CoinsInfo *> &vector) {
+
+    jmethodID java_util_ArrayList_ = env->GetMethodID(class_ArrayList, "<init>", "(I)V");
+    jmethodID java_util_ArrayList_add = env->GetMethodID(class_ArrayList, "add",
+                                                         "(Ljava/lang/Object;)Z");
+
+    jobject arrayList = env->NewObject(class_ArrayList, java_util_ArrayList_,
+                                       static_cast<jint> (vector.size()));
+    for (Monero::CoinsInfo *s: vector) {
+        jobject info = newCoinsInfo(env, s);
+        env->CallBooleanMethod(arrayList, java_util_ArrayList_add, info);
+        env->DeleteLocalRef(info);
+    }
+    return arrayList;
+}
+
+JNIEXPORT jint JNICALL
+Java_net_mynero_wallet_model_Coins_getCount(JNIEnv *env, jobject instance) {
+    Monero::Coins *coins = getHandle<Monero::Coins>(env, instance);
+    return coins->count();
+}
+
+JNIEXPORT jobject JNICALL
+Java_net_mynero_wallet_model_Coins_refreshJ(JNIEnv *env, jobject instance) {
+    Monero::Coins *coins = getHandle<Monero::Coins>(env, instance);
+    coins->refresh();
+    return coins_cpp2java(env, coins->getAll());
+}
 
 //virtual TransactionHistory * history() const = 0;
 JNIEXPORT jlong JNICALL
