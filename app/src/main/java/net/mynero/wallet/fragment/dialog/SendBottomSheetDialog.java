@@ -292,6 +292,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.VISIBLE);
             addressTextView.setVisibility(View.VISIBLE);
             amountTextView.setVisibility(View.VISIBLE);
+            selectedUtxosValueTextView.setVisibility(View.GONE);
             feeRadioGroup.setVisibility(View.GONE);
             feeRadioGroupLabelTextView.setVisibility(View.GONE);
         } else {
@@ -306,6 +307,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
             amountTextView.setVisibility(View.GONE);
+            selectedUtxosValueTextView.setVisibility(View.VISIBLE);
             feeRadioGroup.setVisibility(View.VISIBLE);
             feeRadioGroupLabelTextView.setVisibility(View.VISIBLE);
         }
