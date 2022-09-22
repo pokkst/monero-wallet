@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.mynero.wallet.R;
@@ -105,6 +106,12 @@ public class CoinsInfoAdapter extends RecyclerView.Adapter<CoinsInfoAdapter.View
                 listener.onUtxoSelected(coinsInfo);
                 return true;
             });
+
+            if(selected) {
+                itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.oled_negativeColor));
+            } else {
+                itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.transparent));
+            }
         }
     }
 }
