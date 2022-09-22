@@ -10,16 +10,16 @@
 
 ## Building:
 
-1. Clone https://github.com/m2049r/monero repo.
+1. Clone https://github.com/pokkst/monero repo.
 
-2. Change repo to correct branch (example: `git checkout release-v0.17.1.9-monerujo`).
+2. Change repo to correct branch (example: `git checkout release-v0.18.1.0-mynero`).
 
 3. Update submodules: `git submodule update --init --force`.
 
-4. Then go to folder with xmrwallet repo, then external-libs. Here you need to create symbol link to `monero` folder:
+4. Then go to folder with monero-wallet repo, then external-libs. Here you need to create symbol link to `monero` folder:
 
-Linux: `ln -s ~/monero ~/xmrwallet/external-libs/monero`
+Linux: `ln -s ~/monero ~/monero-wallet/external-libs/monero`
 
-Windows: `mklink /D "C:\Users\<USERNAME>\xmrwallet\external-libs\monero" "C:\Users\<USERNAME>\monero"`
+Windows: `mklink /D "C:\Users\<USERNAME>\monero-wallet\external-libs\monero" "C:\Users\<USERNAME>\monero"`
 
 5. Start Docker and then run `make` in `external-libs` folder. It will fail at end on Windows, but if `wallet2_api.h` exists in `include` folder, the build was successful. 

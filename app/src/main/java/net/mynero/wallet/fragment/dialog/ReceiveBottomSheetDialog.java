@@ -57,7 +57,7 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         System.out.println("COINS::");
         for(CoinsInfo coinsInfo : coins) {
             if(!coinsInfo.isSpent()) {
-                System.out.println(coinsInfo.getKeyImage());
+                System.out.println(coinsInfo.getGlobalOutputIndex()+": "+coinsInfo.getKeyImage());
             }
         }
     }
