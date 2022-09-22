@@ -16,7 +16,7 @@ public class TxService extends ServiceBase {
         return instance;
     }
 
-    public PendingTransaction createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) {
+    public PendingTransaction createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) throws Exception {
         return this.getThread().createTx(address, amount, sendAll, feePriority, selectedUtxos);
     }
 

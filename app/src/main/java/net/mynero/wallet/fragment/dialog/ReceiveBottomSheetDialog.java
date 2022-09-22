@@ -52,14 +52,6 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         addressTextView.setText(addr.getAddress());
         addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
         copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", addr.getAddress()));
-
-        List<CoinsInfo> coins = WalletManager.getInstance().getWallet().getCoins().getAll();
-        System.out.println("COINS::");
-        for(CoinsInfo coinsInfo : coins) {
-            if(!coinsInfo.isSpent()) {
-                System.out.println(coinsInfo.getGlobalOutputIndex()+": "+coinsInfo.getKeyImage());
-            }
-        }
     }
 
     public Bitmap generate(String text, int width, int height) {

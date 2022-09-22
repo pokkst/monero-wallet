@@ -78,10 +78,8 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
     public void onUtxoSelected(CoinsInfo coinsInfo) {
         boolean selected = selectedUtxos.contains(coinsInfo.getKeyImage());
         if(selected) {
-            System.out.println("Deselecting: " + coinsInfo.getKeyImage());
             selectedUtxos.remove(coinsInfo.getKeyImage());
         } else {
-            System.out.println("Selecting: " + coinsInfo.getKeyImage());
             selectedUtxos.add(coinsInfo.getKeyImage());
         }
 

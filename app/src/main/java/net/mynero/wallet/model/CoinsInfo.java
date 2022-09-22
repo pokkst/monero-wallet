@@ -33,12 +33,14 @@ public class CoinsInfo  implements Parcelable {
     boolean spent;
     String keyImage;
     long amount;
+    String hash;
 
-    public CoinsInfo(long globalOutputIndex, boolean spent, String keyImage, long amount) {
+    public CoinsInfo(long globalOutputIndex, boolean spent, String keyImage, long amount, String hash) {
         this.globalOutputIndex = globalOutputIndex;
         this.spent = spent;
         this.keyImage = keyImage;
         this.amount = amount;
+        this.hash = hash;
     }
 
     protected CoinsInfo(Parcel in) {
@@ -67,6 +69,10 @@ public class CoinsInfo  implements Parcelable {
 
     public String getKeyImage() {
         return keyImage;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     public long getAmount() {

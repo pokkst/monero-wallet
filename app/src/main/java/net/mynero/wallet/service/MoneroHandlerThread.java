@@ -17,11 +17,10 @@
 
 package net.mynero.wallet.service;
 
-import static net.mynero.wallet.model.Wallet.SWEEP_ALL;
-
 import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.data.Node;
 import net.mynero.wallet.data.TxData;
+import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.model.PendingTransaction;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletListener;
@@ -122,15 +121,31 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
         listener.onRefresh();
     }
 
-    public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) {
-        long amount = sendAll ? SWEEP_ALL : Wallet.getAmountFromString(amountStr);
+    public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) throws Exception {
+        long amount = sendAll ? Wallet.SWEEP_ALL : Wallet.getAmountFromString(amountStr);
         ArrayList<String> preferredInputs;
         if(selectedUtxos.isEmpty()) {
             preferredInputs = UTXOService.getInstance().selectUtxos(amount, sendAll);
         } else {
             preferredInputs = selectedUtxos;
+            checkSelectedAmounts(selectedUtxos, amount, sendAll);
         }
         return wallet.createTransaction(new TxData(address, amount, 0, feePriority, preferredInputs));
+    }
+
+    private void checkSelectedAmounts(ArrayList<String> selectedUtxos, long amount, boolean sendAll) throws Exception {
+        if(!sendAll) {
+            long amountSelected = 0;
+            for(CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
+                if(selectedUtxos.contains(coinsInfo.getKeyImage())) {
+                    amountSelected += coinsInfo.getAmount();
+                }
+            }
+
+            if(amountSelected <= amount) {
+                throw new Exception("insufficient wallet balance");
+            }
+        }
     }
 
     public boolean sendTx(PendingTransaction pendingTx) {

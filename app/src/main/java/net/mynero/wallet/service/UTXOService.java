@@ -33,26 +33,30 @@ public class UTXOService extends ServiceBase {
         return WalletManager.getInstance().getWallet().getCoins().getAll();
     }
 
-    public ArrayList<String> selectUtxos(long amount, boolean sendAll) {
+    public ArrayList<String> selectUtxos(long amount, boolean sendAll) throws Exception {
         ArrayList<String> selectedUtxos = new ArrayList<>();
+        ArrayList<String> seenTxs = new ArrayList<>();
         List<CoinsInfo> utxos = getUtxos();
-        if(sendAll) {
-            for(CoinsInfo coinsInfo : utxos) {
-                selectedUtxos.add(coinsInfo.getKeyImage());
-            }
-        } else {
-            long amountSelected = 0;
-            Collections.shuffle(utxos);
-            for (CoinsInfo coinsInfo : utxos) {
-                if (amount == Wallet.SWEEP_ALL) {
+        long amountSelected = 0;
+        Collections.shuffle(utxos);
+        for (CoinsInfo coinsInfo : utxos) {
+            if(!coinsInfo.isSpent()) {
+                if (sendAll) {
                     selectedUtxos.add(coinsInfo.getKeyImage());
+                    amountSelected = Wallet.SWEEP_ALL;
                 } else {
-                    if (amountSelected <= amount) {
+                    if (amountSelected <= amount && !seenTxs.contains(coinsInfo.getHash())) {
                         selectedUtxos.add(coinsInfo.getKeyImage());
+                        // we don't want to spend multiple utxos from the same transaction, so we prevent that from happening here.
+                        seenTxs.add(coinsInfo.getHash());
                         amountSelected += coinsInfo.getAmount();
                     }
                 }
             }
+        }
+
+        if (amountSelected <= amount && !sendAll) {
+            throw new Exception("insufficient wallet balance");
         }
 
         return selectedUtxos;
