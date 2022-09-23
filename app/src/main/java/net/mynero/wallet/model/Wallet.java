@@ -349,7 +349,9 @@ public class Wallet {
     }
 
     public void refreshCoins() {
-        getCoins().refresh();
+        if(this.isSynchronized()) {
+            getCoins().refresh();
+        }
     }
 
     private native long setListenerJ(WalletListener listener);

@@ -86,13 +86,13 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     @Override
     public void newBlock(long height) {
-        refresh();
+        refresh(false);
         BlockchainService.getInstance().setDaemonHeight(wallet.isSynchronized() ? height : 0);
     }
 
     @Override
     public void updated() {
-        refresh();
+        refresh(false);
     }
 
     @Override
@@ -109,15 +109,17 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
             BlockchainService.getInstance().setDaemonHeight(wallet.getDaemonBlockChainHeight());
             wallet.setSynchronized();
             wallet.store();
-            refresh();
+            refresh(true);
         }
 
         BlockchainService.getInstance().setConnectionStatus(status);
     }
 
-    private void refresh() {
+    private void refresh(boolean refreshCoins) {
         wallet.refreshHistory();
-        wallet.refreshCoins();
+        if(refreshCoins) {
+            wallet.refreshCoins();
+        }
         listener.onRefresh();
     }
 
