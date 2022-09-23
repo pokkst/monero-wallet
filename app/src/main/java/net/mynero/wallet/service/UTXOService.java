@@ -38,7 +38,7 @@ public class UTXOService extends ServiceBase {
         ArrayList<String> seenTxs = new ArrayList<>();
         List<CoinsInfo> utxos = getUtxos();
         long amountSelected = 0;
-        Collections.shuffle(utxos);
+        Collections.sort(utxos);
         //loop through each utxo
         for (CoinsInfo coinsInfo : utxos) {
             if(!coinsInfo.isSpent()) { //filter out spent outputs

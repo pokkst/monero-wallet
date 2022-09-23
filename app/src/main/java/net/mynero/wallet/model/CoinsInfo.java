@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoinsInfo  implements Parcelable {
+public class CoinsInfo  implements Parcelable, Comparable<CoinsInfo> {
     static {
         System.loadLibrary("monerujo");
     }
@@ -93,5 +93,18 @@ public class CoinsInfo  implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeLong(globalOutputIndex);
+    }
+
+    @Override
+    public int compareTo(CoinsInfo another) {
+        long b1 = this.amount;
+        long b2 = another.amount;
+        if (b1 > b2) {
+            return -1;
+        } else if (b1 < b2) {
+            return 1;
+        } else {
+            return this.hash.compareTo(another.hash);
+        }
     }
 }

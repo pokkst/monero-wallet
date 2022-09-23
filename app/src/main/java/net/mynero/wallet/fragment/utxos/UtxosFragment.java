@@ -19,6 +19,7 @@ import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.service.UTXOService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInfoAdapterListener {
 
@@ -64,6 +65,7 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
                         filteredUtxos.add(coinsInfo);
                     }
                 }
+                Collections.sort(filteredUtxos);
                 if (filteredUtxos.isEmpty()) {
                     utxosRecyclerView.setVisibility(View.GONE);
                 } else {
