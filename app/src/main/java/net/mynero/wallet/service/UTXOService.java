@@ -41,7 +41,7 @@ public class UTXOService extends ServiceBase {
         Collections.sort(utxos);
         //loop through each utxo
         for (CoinsInfo coinsInfo : utxos) {
-            if(!coinsInfo.isSpent()) { //filter out spent outputs
+            if(!coinsInfo.isSpent() && coinsInfo.isUnlocked()) { //filter out spent and locked outputs
                 if (sendAll) {
                     // if send all, add all utxos and set amount to send all
                     selectedUtxos.add(coinsInfo.getKeyImage());
