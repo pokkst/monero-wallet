@@ -35,14 +35,16 @@ public class CoinsInfo  implements Parcelable, Comparable<CoinsInfo> {
     long amount;
     String hash;
     String pubKey;
+    boolean unlocked;
 
-    public CoinsInfo(long globalOutputIndex, boolean spent, String keyImage, long amount, String hash, String pubKey) {
+    public CoinsInfo(long globalOutputIndex, boolean spent, String keyImage, long amount, String hash, String pubKey, boolean unlocked) {
         this.globalOutputIndex = globalOutputIndex;
         this.spent = spent;
         this.keyImage = keyImage;
         this.amount = amount;
         this.hash = hash;
         this.pubKey = pubKey;
+        this.unlocked = unlocked;
     }
 
     protected CoinsInfo(Parcel in) {
@@ -83,6 +85,10 @@ public class CoinsInfo  implements Parcelable, Comparable<CoinsInfo> {
 
     public String getPubKey() {
         return pubKey;
+    }
+
+    public boolean isUnlocked() {
+        return unlocked;
     }
 
     @Override

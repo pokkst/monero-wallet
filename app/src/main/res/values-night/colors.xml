@@ -29,6 +29,7 @@
     <color name="oled_colorError">@color/oled_favouriteColor</color>
     <color name="oled_colorOnError">#ffffff</color>
     <color name="edittext_bg_color">#202020</color>
+    <color name="oled_locked_utxo">#956E43</color>
 
     <!-- CLASSIC -->
 
