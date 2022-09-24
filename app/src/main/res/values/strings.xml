@@ -17,19 +17,11 @@
 
     <!--note: as in "Test a network connection"-->
 
-    <string name="node_updated_now">Last Block: %1$d seconds ago</string>
-    <string name="node_updated_mins">Last Block: %1$d minutes ago</string>
-    <string name="node_updated_hours">Last Block: %1$d hours ago</string>
-    <string name="node_updated_days">Last Block: %1$d days ago</string>
-
     <string name="tx_details_notes" translatable="false">&lt;span style=\"background-color: #%1$s; color: #%2$s;\"&gt;&nbsp;%3$s&nbsp;&lt;/span&gt;%4$s</string>
 
     <string name="menu_restore">Import wallet</string>
 
-    <string name="status" translatable="false">&lt;span style=\"background-color: #%1$s; color: #%2$s;\"&gt;%3$s&lt;/span&gt;%4$s</string>
-
     <string name="preferred_theme" translatable="false">preferred_theme</string>
-    <string name="preferred_locale" translatable="false">preferred_locale</string>
 
     <!-- like: User Intreface -->
 
@@ -86,7 +78,6 @@
 
     <string name="wallet_proxy_address_hint">127.0.0.1</string>
     <string name="wallet_proxy_port_hint">9050</string>
-    <string name="invalid_ip">Invalid IP address</string>
     <string name="no_history_nget_some_monero_in_here">No history!\nGet some Monero in here!</string>
     <string name="node_button_text">Node: %1$s</string>
     <string name="connected">Connected</string>
