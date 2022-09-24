@@ -94,4 +94,6 @@
     <string name="high">High</string>
     <string name="view_utxos">View UTXOs</string>
     <string name="selected_utxos_value">Selected value: %1$s XMR</string>
+    <string name="global_index_text">Global Idx: %1$d</string>
+    <string name="outpoint_text">Outpoint: %1$s</string>
 </resources>

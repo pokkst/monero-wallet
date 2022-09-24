@@ -100,8 +100,14 @@ public class CoinsInfoAdapter extends RecyclerView.Adapter<CoinsInfoAdapter.View
             boolean selected = selectedUtxos.contains(coinsInfo.getKeyImage());
             TextView pubKeyTextView = itemView.findViewById(R.id.utxo_pub_key_textview);
             TextView amountTextView = itemView.findViewById(R.id.utxo_amount_textview);
-            amountTextView.setText(Wallet.getDisplayAmount(coinsInfo.getAmount()));
+            TextView globalIdxTextView = itemView.findViewById(R.id.utxo_global_index_textview);
+            TextView outpointTextView = itemView.findViewById(R.id.utxo_outpoint_textview);
+
+            amountTextView.setText(itemView.getResources().getString(R.string.tx_amount_no_prefix, Wallet.getDisplayAmount(coinsInfo.getAmount())));
             pubKeyTextView.setText(coinsInfo.getPubKey());
+            globalIdxTextView.setText(itemView.getResources().getString(R.string.global_index_text, coinsInfo.getGlobalOutputIndex()));
+            outpointTextView.setText(itemView.getResources().getString(R.string.outpoint_text, coinsInfo.getHash()+":"+coinsInfo.getLocalOutputIndex()));
+
             itemView.setOnLongClickListener(view -> {
                 boolean unlocked = coinsInfo.isUnlocked();
                 if(unlocked) {
