@@ -41,6 +41,7 @@ static jclass class_Transfer;
 static jclass class_Ledger;
 static jclass class_WalletStatus;
 static jclass class_CoinsInfo;
+static jclass class_Pair;
 
 std::mutex _listenerMutex;
 
@@ -55,6 +56,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
     class_ArrayList = static_cast<jclass>(jenv->NewGlobalRef(
             jenv->FindClass("java/util/ArrayList")));
+    class_Pair = static_cast<jclass>(jenv->NewGlobalRef(
+            jenv->FindClass("android/util/Pair")));
     class_TransactionInfo = static_cast<jclass>(jenv->NewGlobalRef(
             jenv->FindClass("net/mynero/wallet/model/TransactionInfo")));
     class_Transfer = static_cast<jclass>(jenv->NewGlobalRef(
@@ -245,6 +248,34 @@ std::set<std::string> java2cpp_set(JNIEnv *env, jobject arrayList) {
         result.emplace(pchars);
         env->ReleaseStringUTFChars(element, pchars);
         env->DeleteLocalRef(element);
+    }
+    return result;
+}
+
+std::pair<std::string, uint64_t> extract_pair(JNIEnv *env, jobject p) {
+    jfieldID first = env->GetFieldID(class_Pair, "first", "Ljava/lang/Object;");
+    jfieldID second = env->GetFieldID(class_Pair, "second", "Ljava/lang/Object;");
+    jstring string = static_cast<jstring>(env->GetObjectField(p, first));
+    std::string converted_string = env->GetStringUTFChars(string, nullptr);
+    uint64_t value = reinterpret_cast<uint64_t>(env->GetObjectField(p, second));
+    auto pair = std::make_pair(converted_string, value);
+    return pair;
+}
+
+std::vector<std::pair<std::string, uint64_t>> java2cpp_pairvector(JNIEnv *env, jobject arrayList) {
+
+    jmethodID java_util_ArrayList_size = env->GetMethodID(class_ArrayList, "size", "()I");
+    jmethodID java_util_ArrayList_get = env->GetMethodID(class_ArrayList, "get",
+                                                         "(I)Ljava/lang/Object;");
+
+    jint len = env->CallIntMethod(arrayList, java_util_ArrayList_size);
+    std::vector<std::pair<std::string, uint64_t>> result;
+
+    for (jint i = 0; i < len; i++) {
+        jobject element = static_cast<jobject>(env->CallObjectMethod(arrayList,
+                                                                     java_util_ArrayList_get, i));
+        auto pair = extract_pair(env, element);
+        result.emplace_back(pair);
     }
     return result;
 }
@@ -996,6 +1027,16 @@ Java_net_mynero_wallet_model_Wallet_createTransactionJ(JNIEnv *env, jobject inst
     env->ReleaseStringUTFChars(dst_addr, _dst_addr);
     env->ReleaseStringUTFChars(payment_id, _payment_id);
     return reinterpret_cast<jlong>(tx);
+}
+
+JNIEXPORT jlong JNICALL
+Java_net_mynero_wallet_model_Wallet_estimateTransactionFee(JNIEnv *env, jobject instance,
+                                                           jobject destinations, jint priority) {
+    std::vector<std::pair<std::string, uint64_t>> dest_vector = java2cpp_pairvector(env, destinations);
+    Monero::PendingTransaction::Priority _priority = static_cast<Monero::PendingTransaction::Priority>(priority);
+    Monero::Wallet *wallet = getHandle<Monero::Wallet>(env, instance);
+    uint64_t fee = wallet->estimateTransactionFee(dest_vector, _priority);
+    return fee;
 }
 
 JNIEXPORT jlong JNICALL

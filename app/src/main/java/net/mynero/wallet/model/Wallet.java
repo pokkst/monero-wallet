@@ -16,6 +16,8 @@
 
 package net.mynero.wallet.model;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -272,6 +274,13 @@ public class Wallet {
             pendingTransaction = null;
         }
     }
+
+    public long estimateTransactionFee(List<Pair<String, Long>> destinations, PendingTransaction.Priority priority) {
+        int _priority = priority.getValue();
+        return estimateTransactionFee(destinations, _priority);
+    }
+
+    private native long estimateTransactionFee(List<Pair<String, Long>> destinations, int priority);
 
     public PendingTransaction createTransaction(TxData txData) {
         return createTransaction(
