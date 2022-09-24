@@ -1,9 +1,12 @@
 package net.mynero.wallet.service;
 
+import android.util.Pair;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.mynero.wallet.model.CoinsInfo;
+import net.mynero.wallet.model.PendingTransaction;
 import net.mynero.wallet.model.TransactionInfo;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
@@ -34,6 +37,8 @@ public class UTXOService extends ServiceBase {
     }
 
     public ArrayList<String> selectUtxos(long amount, boolean sendAll) throws Exception {
+        final long basicFeeEstimate = calculateBasicFee(amount);
+        final long amountWithBasicFee = amount + basicFeeEstimate;
         ArrayList<String> selectedUtxos = new ArrayList<>();
         ArrayList<String> seenTxs = new ArrayList<>();
         List<CoinsInfo> utxos = getUtxos();
@@ -48,7 +53,7 @@ public class UTXOService extends ServiceBase {
                     amountSelected = Wallet.SWEEP_ALL;
                 } else {
                     //if amount selected is still less than amount needed, and the utxos tx hash hasn't already been seen, add utxo
-                    if (amountSelected <= amount && !seenTxs.contains(coinsInfo.getHash())) {
+                    if (amountSelected <= amountWithBasicFee && !seenTxs.contains(coinsInfo.getHash())) {
                         selectedUtxos.add(coinsInfo.getKeyImage());
                         // we don't want to spend multiple utxos from the same transaction, so we prevent that from happening here.
                         seenTxs.add(coinsInfo.getHash());
@@ -58,10 +63,18 @@ public class UTXOService extends ServiceBase {
             }
         }
 
-        if (amountSelected <= amount && !sendAll) {
+        if (amountSelected < amountWithBasicFee && !sendAll) {
             throw new Exception("insufficient wallet balance");
         }
 
         return selectedUtxos;
+    }
+
+    private long calculateBasicFee(long amount) {
+        ArrayList<Pair<String, Long>> destinations = new ArrayList<>();
+        destinations.add(new Pair<>("87MRtZPrWUCVUgcFHdsVb5MoZUcLtqfD3FvQVGwftFb8eSdMnE39JhAJcbuSW8X2vRaRsB9RQfuCpFciybJFHaz3QYPhCLw", amount));
+        // destination string doesn't actually matter here, so i'm using the donation address. amount also technically doesn't matter
+        // priority also isn't accounted for in the Monero C++ code. maybe this is a bug by the core Monero team, or i'm using an outdated method.
+        return WalletManager.getInstance().getWallet().estimateTransactionFee(destinations, PendingTransaction.Priority.Priority_Low);
     }
 }
