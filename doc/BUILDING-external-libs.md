@@ -12,7 +12,7 @@
 
 1. Clone https://github.com/pokkst/monero repo.
 
-2. Change repo to correct branch (example: `git checkout release-v0.18.1.0-mynero`).
+2. Change repo to correct branch (example: `git checkout release-v0.18.1.1-mynero`).
 
 3. Update submodules: `git submodule update --init --force`.
 

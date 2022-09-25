@@ -312,10 +312,6 @@ public class Wallet {
                                                int mixin_count,
                                                int priority, int accountIndex, ArrayList<String> key_images);
 
-    private native long createTransactionSingleJ(String key_image, String dst_addr, int priority);
-
-    private native long createTransactionSelectedJ(List<String> key_images, String dst_addr, int priority);
-
     public PendingTransaction createSweepUnmixableTransaction() {
         disposePendingTransaction();
         long txHandle = createSweepUnmixableTransactionJ();
