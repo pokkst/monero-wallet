@@ -4,6 +4,7 @@
     <padding
         android:left="8dp"
         android:right="8dp" />
-    <solid android:color="@color/button_disabled_bg_color" />
-    <corners android:radius="16dp" />
+    <solid android:color="@color/oled_colorSecondary" />
+    <corners android:topRightRadius="16dp"
+        android:bottomRightRadius="16dp"/>
 </shape>
