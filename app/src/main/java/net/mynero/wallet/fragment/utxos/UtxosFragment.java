@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.adapter.CoinsInfoAdapter;
 import net.mynero.wallet.fragment.dialog.SendBottomSheetDialog;
@@ -24,8 +25,8 @@ import java.util.Collections;
 public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInfoAdapterListener {
 
     private UtxosViewModel mViewModel;
-    private ArrayList<String> selectedUtxos = new ArrayList<>();
-    private CoinsInfoAdapter adapter = new CoinsInfoAdapter(this);
+    private final ArrayList<String> selectedUtxos = new ArrayList<>();
+    private final CoinsInfoAdapter adapter = new CoinsInfoAdapter(this);
     private Button sendUtxosButton;
 
     @Override
@@ -60,8 +61,8 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
         if (utxoService != null) {
             utxoService.utxos.observe(getViewLifecycleOwner(), utxos -> {
                 ArrayList<CoinsInfo> filteredUtxos = new ArrayList<>();
-                for(CoinsInfo coinsInfo : utxos) {
-                    if(!coinsInfo.isSpent()) {
+                for (CoinsInfo coinsInfo : utxos) {
+                    if (!coinsInfo.isSpent()) {
                         filteredUtxos.add(coinsInfo);
                     }
                 }
@@ -79,13 +80,13 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
     @Override
     public void onUtxoSelected(CoinsInfo coinsInfo) {
         boolean selected = selectedUtxos.contains(coinsInfo.getKeyImage());
-        if(selected) {
+        if (selected) {
             selectedUtxos.remove(coinsInfo.getKeyImage());
         } else {
             selectedUtxos.add(coinsInfo.getKeyImage());
         }
 
-        if(selectedUtxos.isEmpty()) {
+        if (selectedUtxos.isEmpty()) {
             sendUtxosButton.setVisibility(View.GONE);
         } else {
             sendUtxosButton.setVisibility(View.VISIBLE);

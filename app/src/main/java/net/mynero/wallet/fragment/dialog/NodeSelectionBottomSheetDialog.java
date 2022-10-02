@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.adapter.NodeSelectionAdapter;
 import net.mynero.wallet.data.DefaultNodes;
@@ -28,8 +29,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment implements NodeSelectionAdapter.NodeSelectionAdapterListener {
-    private NodeSelectionAdapter adapter = null;
     public NodeSelectionDialogListener listener = null;
+    private NodeSelectionAdapter adapter = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
 
         Button addNodeButton = view.findViewById(R.id.add_node_button);
         addNodeButton.setOnClickListener(view1 -> {
-            if(listener != null) {
+            if (listener != null) {
                 listener.onClickedAddNode();
             }
             dismiss();
@@ -57,10 +58,10 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
         try {
             String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
             JSONArray jsonArray = new JSONArray(nodesArray);
-            for(int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 String nodeString = jsonArray.getString(i);
                 Node node = Node.fromString(nodeString);
-                if(node != null) {
+                if (node != null) {
                     nodes.add(node);
                 }
             }
@@ -68,7 +69,7 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
             e.printStackTrace();
         }
 
-        for(DefaultNodes defaultNode : DefaultNodes.values()) {
+        for (DefaultNodes defaultNode : DefaultNodes.values()) {
             nodes.add(Node.fromString(defaultNode.getUri()));
         }
         adapter.submitList(nodes);
@@ -77,7 +78,7 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
     @Override
     public void onSelectNode(Node node) {
         Activity activity = getActivity();
-        if(activity != null) {
+        if (activity != null) {
             activity.runOnUiThread(() -> {
                 Toast.makeText(activity, getString(R.string.node_selected), Toast.LENGTH_SHORT).show();
             });
@@ -90,6 +91,7 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
 
     public interface NodeSelectionDialogListener {
         void onNodeSelected();
+
         void onClickedAddNode();
     }
 }

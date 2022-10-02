@@ -19,17 +19,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.data.Subaddress;
-import net.mynero.wallet.model.CoinsInfo;
-import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.AddressService;
 import net.mynero.wallet.util.DayNightMode;
 import net.mynero.wallet.util.Helper;
 import net.mynero.wallet.util.NightmodeHelper;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;

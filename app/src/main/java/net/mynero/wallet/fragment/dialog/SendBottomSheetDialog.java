@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +20,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.model.PendingTransaction;
 import net.mynero.wallet.model.Wallet;
-import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.BalanceService;
 import net.mynero.wallet.service.TxService;
 import net.mynero.wallet.service.UTXOService;
@@ -42,8 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
-    public ArrayList<String> selectedUtxos = new ArrayList<>();
     private final MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
+    private final MutableLiveData<PendingTransaction> _pendingTransaction = new MutableLiveData<>(null);
+    public ArrayList<String> selectedUtxos = new ArrayList<>();
     public LiveData<Boolean> sendingMax = _sendingMax;    private final ActivityResultLauncher<String> cameraPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
             granted -> {
                 if (granted) {
@@ -52,16 +51,17 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                     Toast.makeText(getActivity(), getString(R.string.no_camera_permission), Toast.LENGTH_SHORT).show();
                 }
             });
-    private final MutableLiveData<PendingTransaction> _pendingTransaction = new MutableLiveData<>(null);
     public LiveData<PendingTransaction> pendingTransaction = _pendingTransaction;
+    public UriData uriData = null;
+    public PendingTransaction.Priority priority;
     private EditText addressEditText;
+    private EditText amountEditText;
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
                 if (result.getContents() != null) {
                     pasteAddress(result.getContents());
                 }
             });
-    private EditText amountEditText;
     private TextView sendAllTextView;
     private TextView feeTextView;
     private TextView addressTextView;
@@ -74,9 +74,6 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private ImageButton pasteAddressImageButton;
     private ImageButton scanAddressImageButton;
     private RadioGroup feeRadioGroup;
-
-    public UriData uriData = null;
-    public PendingTransaction.Priority priority;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,16 +100,16 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
         if (uriData != null) {
             addressEditText.setText(uriData.getAddress());
-            if(uriData.hasAmount()) {
+            if (uriData.hasAmount()) {
                 amountEditText.setText(uriData.getAmount());
             }
         }
 
-        if(!selectedUtxos.isEmpty()) {
+        if (!selectedUtxos.isEmpty()) {
             long selectedValue = 0;
 
-            for(CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
-                if(selectedUtxos.contains(coinsInfo.getKeyImage())) {
+            for (CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
+                if (selectedUtxos.contains(coinsInfo.getKeyImage())) {
                     selectedValue += coinsInfo.getAmount();
                 }
             }
@@ -165,11 +162,11 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         feeRadioGroup.check(R.id.low_fee_radiobutton);
         priority = PendingTransaction.Priority.Priority_Low;
         feeRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-            if(i == R.id.low_fee_radiobutton) {
+            if (i == R.id.low_fee_radiobutton) {
                 priority = PendingTransaction.Priority.Priority_Low;
-            } else if(i == R.id.med_fee_radiobutton) {
+            } else if (i == R.id.med_fee_radiobutton) {
                 priority = PendingTransaction.Priority.Priority_Medium;
-            } else if(i == R.id.high_fee_radiobutton) {
+            } else if (i == R.id.high_fee_radiobutton) {
                 priority = PendingTransaction.Priority.Priority_High;
             }
         });
@@ -309,7 +306,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             feeTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
             amountTextView.setVisibility(View.GONE);
-            if(!selectedUtxos.isEmpty()) {
+            if (!selectedUtxos.isEmpty()) {
                 selectedUtxosValueTextView.setVisibility(View.VISIBLE);
             }
             feeRadioGroup.setVisibility(View.VISIBLE);
@@ -321,11 +318,13 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         UriData uriData = UriData.parse(address);
         if (uriData != null) {
             addressEditText.setText(uriData.getAddress());
-            if(uriData.hasAmount()) {
+            if (uriData.hasAmount()) {
                 amountEditText.setText(uriData.getAmount());
             }
         } else {
             Toast.makeText(getActivity(), getString(R.string.send_address_invalid), Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

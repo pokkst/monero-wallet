@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
 
             Intent intent = getIntent();
             Uri uri = intent.getData();
-            if(uri != null) {
+            if (uri != null) {
                 uriData = UriData.parse(uri.toString());
                 if (uriData != null) {
                     proceedToSend = true;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         init(walletFile, password);
         restartEvents.call();
 
-        if(proceedToSend) {
+        if (proceedToSend) {
             SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
             sendDialog.uriData = uriData;
             sendDialog.show(getSupportFragmentManager(), null);

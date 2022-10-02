@@ -14,23 +14,24 @@ public class SettingsViewModel extends ViewModel {
 
     private String proxyAddress = "";
     private String proxyPort = "";
+
     public void updateProxy() {
         AsyncTask.execute(() -> {
             boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
             String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
             boolean isNodeLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");
 
-            if(!usesProxy || isNodeLocalIp) {
+            if (!usesProxy || isNodeLocalIp) {
                 WalletManager.getInstance().setProxy("");
                 WalletManager.getInstance().getWallet().setProxy("");
                 return;
             }
 
-            if(proxyAddress.isEmpty()) proxyAddress = "127.0.0.1";
-            if(proxyPort.isEmpty()) proxyPort = "9050";
+            if (proxyAddress.isEmpty()) proxyAddress = "127.0.0.1";
+            if (proxyPort.isEmpty()) proxyPort = "9050";
             boolean validIpAddress = Patterns.IP_ADDRESS.matcher(proxyAddress).matches();
 
-            if(validIpAddress) {
+            if (validIpAddress) {
                 String proxy = proxyAddress + ":" + proxyPort;
                 PrefService.getInstance().edit().putString(Constants.PREF_PROXY, proxy).apply();
                 WalletManager.getInstance().setProxy(proxy);

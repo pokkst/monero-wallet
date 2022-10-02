@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import net.mynero.wallet.R;
@@ -43,20 +42,34 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     private SettingsViewModel mViewModel;
     TextWatcher proxyAddressListener = new TextWatcher() {
-        @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override public void afterTextChanged(Editable editable) {
-            if(mViewModel != null) {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (mViewModel != null) {
                 mViewModel.setProxyAddress(editable.toString());
                 mViewModel.updateProxy();
             }
         }
     };
     TextWatcher proxyPortListener = new TextWatcher() {
-        @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override public void afterTextChanged(Editable editable) {
-            if(mViewModel != null) {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (mViewModel != null) {
                 mViewModel.setProxyPort(editable.toString());
                 mViewModel.updateProxy();
             }
@@ -97,13 +110,13 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
         boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
         String proxy = PrefService.getInstance().getString(Constants.PREF_PROXY, "");
-        if(proxy.contains(":")) {
+        if (proxy.contains(":")) {
             String proxyAddress = proxy.split(":")[0];
             String proxyPort = proxy.split(":")[1];
             initProxyStuff(proxyAddress, proxyPort);
         }
         torSwitch.setChecked(usesProxy);
-        if(usesProxy) {
+        if (usesProxy) {
             proxySettingsLayout.setVisibility(View.VISIBLE);
         } else {
             proxySettingsLayout.setVisibility(View.GONE);
@@ -113,9 +126,9 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
         torSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_TOR, b).apply();
-            if(b) {
+            if (b) {
                 String proxyString = PrefService.getInstance().getString(Constants.PREF_PROXY, "");
-                if(proxyString.contains(":")) {
+                if (proxyString.contains(":")) {
                     removeProxyTextListeners();
 
                     String proxyAddress = proxyString.split(":")[0];
@@ -150,11 +163,11 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
         TextView statusTextView = view.findViewById(R.id.status_textview);
         BlockchainService.getInstance().connectionStatus.observe(getViewLifecycleOwner(), connectionStatus -> {
-            if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Connected) {
+            if (connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Connected) {
                 statusTextView.setText(getResources().getText(R.string.connected));
-            } else if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Disconnected) {
+            } else if (connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_Disconnected) {
                 statusTextView.setText(getResources().getText(R.string.disconnected));
-            } else if(connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_WrongVersion) {
+            } else if (connectionStatus == Wallet.ConnectionStatus.ConnectionStatus_WrongVersion) {
                 statusTextView.setText(getResources().getText(R.string.version_mismatch));
             }
         });
@@ -186,7 +199,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     private void initProxyStuff(String proxyAddress, String proxyPort) {
         boolean validIpAddress = Patterns.IP_ADDRESS.matcher(proxyAddress).matches();
-        if(validIpAddress) {
+        if (validIpAddress) {
             mViewModel.setProxyAddress(proxyAddress);
             mViewModel.setProxyPort(proxyPort);
             walletProxyAddressEditText.setText(proxyAddress);

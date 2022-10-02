@@ -28,7 +28,6 @@ import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.util.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -39,9 +38,9 @@ import java.util.List;
 public class MoneroHandlerThread extends Thread implements WalletListener {
     // from src/cryptonote_config.h
     static public final long THREAD_STACK_SIZE = 5 * 1024 * 1024;
+    private final Wallet wallet;
     int triesLeft = 5;
     private Listener listener = null;
-    private final Wallet wallet;
 
     public MoneroHandlerThread(String name, Listener listener, Wallet wallet) {
         super(null, null, name, THREAD_STACK_SIZE);
@@ -117,7 +116,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
 
     private void refresh(boolean refreshCoins) {
         wallet.refreshHistory();
-        if(refreshCoins) {
+        if (refreshCoins) {
             wallet.refreshCoins();
         }
         listener.onRefresh();
@@ -126,7 +125,7 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     public PendingTransaction createTx(String address, String amountStr, boolean sendAll, PendingTransaction.Priority feePriority, ArrayList<String> selectedUtxos) throws Exception {
         long amount = sendAll ? Wallet.SWEEP_ALL : Wallet.getAmountFromString(amountStr);
         ArrayList<String> preferredInputs;
-        if(selectedUtxos.isEmpty()) {
+        if (selectedUtxos.isEmpty()) {
             // no inputs manually selected, we are sending from home screen most likely, or user somehow broke the app
             preferredInputs = UTXOService.getInstance().selectUtxos(amount, sendAll);
         } else {
@@ -137,15 +136,15 @@ public class MoneroHandlerThread extends Thread implements WalletListener {
     }
 
     private void checkSelectedAmounts(ArrayList<String> selectedUtxos, long amount, boolean sendAll) throws Exception {
-        if(!sendAll) {
+        if (!sendAll) {
             long amountSelected = 0;
-            for(CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
-                if(selectedUtxos.contains(coinsInfo.getKeyImage())) {
+            for (CoinsInfo coinsInfo : UTXOService.getInstance().getUtxos()) {
+                if (selectedUtxos.contains(coinsInfo.getKeyImage())) {
                     amountSelected += coinsInfo.getAmount();
                 }
             }
 
-            if(amountSelected <= amount) {
+            if (amountSelected <= amount) {
                 throw new Exception("insufficient wallet balance");
             }
         }

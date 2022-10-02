@@ -30,6 +30,7 @@ public enum DefaultNodes {
     boldsuck("6dsdenp6vjkvqzy4wzsnzn6wixkdzihx3khiumyzieauxuxslmcaeiad.onion:18081/mainnet/boldsuck.onion");
 
     private final String uri;
+
     DefaultNodes(String uri) {
         this.uri = uri;
     }

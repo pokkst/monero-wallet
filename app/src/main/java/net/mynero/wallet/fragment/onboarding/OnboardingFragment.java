@@ -16,10 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import net.mynero.wallet.MainActivity;
 import net.mynero.wallet.R;
@@ -98,7 +95,7 @@ public class OnboardingFragment extends Fragment {
 
     private void createOrImportWallet(String walletPassword, String walletSeed, String restoreHeightText) {
         MainActivity mainActivity = (MainActivity) getActivity();
-        if(mainActivity != null) {
+        if (mainActivity != null) {
             if (!walletPassword.isEmpty()) {
                 PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_PASSWORD, true).apply();
             }

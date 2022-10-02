@@ -113,14 +113,14 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
         public void bind(TransactionInfo txInfo) {
             String displayAmount = Helper.getDisplayAmount(txInfo.amount, Helper.DISPLAY_DIGITS_INFO);
 
-            TextView confirmationsTextView = ((TextView) itemView.findViewById(R.id.tvConfirmations));
-            CircularProgressIndicator confirmationsProgressBar = ((CircularProgressIndicator) itemView.findViewById(R.id.pbConfirmations));
+            TextView confirmationsTextView = itemView.findViewById(R.id.tvConfirmations);
+            CircularProgressIndicator confirmationsProgressBar = itemView.findViewById(R.id.pbConfirmations);
             confirmationsProgressBar.setMax(TransactionInfo.CONFIRMATION);
-            this.amountTextView = ((TextView) itemView.findViewById(R.id.tx_amount));
-            ((TextView) itemView.findViewById(R.id.tx_failed)).setVisibility(View.GONE);
+            this.amountTextView = itemView.findViewById(R.id.tx_amount);
+            itemView.findViewById(R.id.tx_failed).setVisibility(View.GONE);
             if (txInfo.isFailed) {
                 ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_negative, displayAmount));
-                ((TextView) itemView.findViewById(R.id.tx_failed)).setVisibility(View.VISIBLE);
+                itemView.findViewById(R.id.tx_failed).setVisibility(View.VISIBLE);
                 setTxColour(failedColour);
                 confirmationsTextView.setVisibility(View.GONE);
                 confirmationsProgressBar.setVisibility(View.GONE);
@@ -158,7 +158,7 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
                 ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_positive, displayAmount));
             }
 
-            TextView paymentIdTextView = ((TextView) itemView.findViewById(R.id.tx_paymentid));
+            TextView paymentIdTextView = itemView.findViewById(R.id.tx_paymentid);
             String tag = null;
             String info = "";
             UserNotes userNotes = new UserNotes(txInfo.notes);

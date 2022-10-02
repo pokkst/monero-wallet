@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.model.PendingTransaction;
-import net.mynero.wallet.model.TransactionInfo;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
 
@@ -19,6 +18,7 @@ public class UTXOService extends ServiceBase {
     public static UTXOService instance = null;
     private final MutableLiveData<List<CoinsInfo>> _utxos = new MutableLiveData<>();
     public LiveData<List<CoinsInfo>> utxos = _utxos;
+
     public UTXOService(MoneroHandlerThread thread) {
         super(thread);
         instance = this;
@@ -46,7 +46,7 @@ public class UTXOService extends ServiceBase {
         Collections.sort(utxos);
         //loop through each utxo
         for (CoinsInfo coinsInfo : utxos) {
-            if(!coinsInfo.isSpent() && coinsInfo.isUnlocked()) { //filter out spent and locked outputs
+            if (!coinsInfo.isSpent() && coinsInfo.isUnlocked()) { //filter out spent and locked outputs
                 if (sendAll) {
                     // if send all, add all utxos and set amount to send all
                     selectedUtxos.add(coinsInfo.getKeyImage());

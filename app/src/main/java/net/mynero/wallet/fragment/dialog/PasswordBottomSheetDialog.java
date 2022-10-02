@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.util.Constants;

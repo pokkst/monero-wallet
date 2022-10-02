@@ -87,6 +87,7 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final NodeSelectionAdapterListener listener;
+
         public ViewHolder(NodeSelectionAdapterListener listener, View view) {
             super(view);
             this.listener = listener;
@@ -96,7 +97,7 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
             String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
             Node currentNode = Node.fromString(currentNodeString);
             boolean match = node.equals(currentNode);
-            if(match) {
+            if (match) {
                 itemView.setBackgroundColor(itemView.getResources().getColor(R.color.oled_colorSecondary));
             } else {
                 itemView.setBackgroundColor(itemView.getResources().getColor(android.R.color.transparent));

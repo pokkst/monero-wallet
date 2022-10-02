@@ -11,6 +11,7 @@ public class BalanceService extends ServiceBase {
     private final MutableLiveData<Long> _lockedBalance = new MutableLiveData<>(0L);
     public LiveData<Long> balance = _balance;
     public LiveData<Long> lockedBalance = _lockedBalance;
+
     public BalanceService(MoneroHandlerThread thread) {
         super(thread);
         instance = this;

@@ -24,7 +24,6 @@ import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.util.Helper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents
 public class TxData implements Parcelable {

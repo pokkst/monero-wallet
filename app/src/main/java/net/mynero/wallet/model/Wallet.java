@@ -341,6 +341,7 @@ public class Wallet {
         }
         return coins;
     }
+
     private native long getCoinsJ();
 
 //virtual bool exportKeyImages(const std::string &filename) = 0;
@@ -354,7 +355,7 @@ public class Wallet {
     }
 
     public void refreshCoins() {
-        if(this.isSynchronized()) {
+        if (this.isSynchronized()) {
             getCoins().refresh();
         }
     }
@@ -486,6 +487,7 @@ public class Wallet {
         final private String errorString;
         @Nullable
         private ConnectionStatus connectionStatus; // optional
+
         Status(int status, String errorString) {
             this.status = StatusEnum.values()[status];
             this.errorString = errorString;

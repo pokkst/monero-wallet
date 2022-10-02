@@ -6,7 +6,6 @@ import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class AddressService extends ServiceBase {

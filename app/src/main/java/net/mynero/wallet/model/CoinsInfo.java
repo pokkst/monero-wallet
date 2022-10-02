@@ -21,10 +21,19 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+public class CoinsInfo implements Parcelable, Comparable<CoinsInfo> {
+    public static final Creator<CoinsInfo> CREATOR = new Creator<CoinsInfo>() {
+        @Override
+        public CoinsInfo createFromParcel(Parcel in) {
+            return new CoinsInfo(in);
+        }
 
-public class CoinsInfo  implements Parcelable, Comparable<CoinsInfo> {
+        @Override
+        public CoinsInfo[] newArray(int size) {
+            return new CoinsInfo[size];
+        }
+    };
+
     static {
         System.loadLibrary("monerujo");
     }
@@ -52,18 +61,6 @@ public class CoinsInfo  implements Parcelable, Comparable<CoinsInfo> {
     protected CoinsInfo(Parcel in) {
         globalOutputIndex = in.readLong();
     }
-
-    public static final Creator<CoinsInfo> CREATOR = new Creator<CoinsInfo>() {
-        @Override
-        public CoinsInfo createFromParcel(Parcel in) {
-            return new CoinsInfo(in);
-        }
-
-        @Override
-        public CoinsInfo[] newArray(int size) {
-            return new CoinsInfo[size];
-        }
-    };
 
     public long getGlobalOutputIndex() {
         return globalOutputIndex;

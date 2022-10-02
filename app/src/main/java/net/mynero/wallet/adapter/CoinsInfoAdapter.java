@@ -106,19 +106,19 @@ public class CoinsInfoAdapter extends RecyclerView.Adapter<CoinsInfoAdapter.View
             amountTextView.setText(itemView.getResources().getString(R.string.tx_amount_no_prefix, Wallet.getDisplayAmount(coinsInfo.getAmount())));
             pubKeyTextView.setText(coinsInfo.getPubKey());
             globalIdxTextView.setText(itemView.getResources().getString(R.string.global_index_text, coinsInfo.getGlobalOutputIndex()));
-            outpointTextView.setText(itemView.getResources().getString(R.string.outpoint_text, coinsInfo.getHash()+":"+coinsInfo.getLocalOutputIndex()));
+            outpointTextView.setText(itemView.getResources().getString(R.string.outpoint_text, coinsInfo.getHash() + ":" + coinsInfo.getLocalOutputIndex()));
 
             itemView.setOnLongClickListener(view -> {
                 boolean unlocked = coinsInfo.isUnlocked();
-                if(unlocked) {
+                if (unlocked) {
                     listener.onUtxoSelected(coinsInfo);
                 }
                 return unlocked;
             });
 
-            if(!coinsInfo.isUnlocked()) {
+            if (!coinsInfo.isUnlocked()) {
                 itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.oled_locked_utxo));
-            } else if(selected) {
+            } else if (selected) {
                 itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.oled_negativeColor));
             } else {
                 itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.transparent));

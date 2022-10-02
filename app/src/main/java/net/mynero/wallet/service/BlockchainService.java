@@ -9,11 +9,12 @@ import net.mynero.wallet.model.WalletManager;
 public class BlockchainService extends ServiceBase {
     public static BlockchainService instance = null;
     private final MutableLiveData<Long> _currentHeight = new MutableLiveData<>(0L);
-    public LiveData<Long> height = _currentHeight;
     private final MutableLiveData<Wallet.ConnectionStatus> _connectionStatus = new MutableLiveData<>(Wallet.ConnectionStatus.ConnectionStatus_Disconnected);
+    public LiveData<Long> height = _currentHeight;
     public LiveData<Wallet.ConnectionStatus> connectionStatus = _connectionStatus;
     private long daemonHeight = 0;
     private long lastDaemonHeightUpdateTimeMs = 0;
+
     public BlockchainService(MoneroHandlerThread thread) {
         super(thread);
         instance = this;

@@ -43,7 +43,7 @@ public class TransactionFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
         Bundle args = getArguments();
-        if(args != null) {
+        if (args != null) {
             TransactionInfo txInfo = getArguments().getParcelable(Constants.NAV_ARG_TXINFO);
             mViewModel.init(txInfo);
         }
@@ -56,7 +56,7 @@ public class TransactionFragment extends Fragment {
         ImageButton copyTxHashImageButton = view.findViewById(R.id.copy_txhash_imagebutton);
         copyTxHashImageButton.setOnClickListener(view1 -> {
             TransactionInfo txInfo = mViewModel.transaction.getValue();
-            if(txInfo != null) {
+            if (txInfo != null) {
                 Helper.clipBoardCopy(getContext(), "transaction_hash", txInfo.hash);
             }
         });
@@ -64,9 +64,9 @@ public class TransactionFragment extends Fragment {
         ImageButton copyTxAddressImageButton = view.findViewById(R.id.copy_txaddress_imagebutton);
         copyTxAddressImageButton.setOnClickListener(view1 -> {
             TransactionInfo txInfo = mViewModel.transaction.getValue();
-            if(txInfo != null) {
+            if (txInfo != null) {
                 String destination = mViewModel.destination.getValue();
-                if(destination != null) {
+                if (destination != null) {
                     Helper.clipBoardCopy(getContext(), "transaction_address", destination);
                 }
             }
@@ -83,14 +83,14 @@ public class TransactionFragment extends Fragment {
 
         mViewModel.transaction.observe(getViewLifecycleOwner(), transactionInfo -> {
             txHashTextView.setText(transactionInfo.hash);
-            txConfTextView.setText(""+transactionInfo.confirmations);
+            txConfTextView.setText("" + transactionInfo.confirmations);
             txDateTextView.setText(getDateTime(transactionInfo.timestamp));
             txAmountTextView.setText(getResources().getString(R.string.tx_amount_no_prefix, Helper.getDisplayAmount(transactionInfo.amount)));
         });
 
         mViewModel.destination.observe(getViewLifecycleOwner(), s -> {
             txAddressTextView.setText(Objects.requireNonNullElse(s, "-"));
-            if(s == null) {
+            if (s == null) {
                 copyTxAddressImageButton.setVisibility(View.INVISIBLE);
             }
         });

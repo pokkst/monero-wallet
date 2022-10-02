@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import net.mynero.wallet.R;
 import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
@@ -39,42 +40,42 @@ public class AddNodeBottomSheetDialog extends BottomSheetDialogFragment {
         ImageButton pasteAddressImageButton = view.findViewById(R.id.paste_address_imagebutton);
         pasteAddressImageButton.setOnClickListener(view1 -> {
             Context ctx = getContext();
-            if(ctx != null) {
+            if (ctx != null) {
                 addressEditText.setText(Helper.getClipBoardText(ctx));
             }
         });
         addNodeButton.setOnClickListener(view1 -> {
             String node = addressEditText.getText().toString();
             String name = nodeNameEditText.getText().toString();
-            if(node.contains(":") && !name.isEmpty()) {
+            if (node.contains(":") && !name.isEmpty()) {
                 String[] nodeParts = node.split(":");
-                if(nodeParts.length == 2) {
+                if (nodeParts.length == 2) {
                     try {
                         String address = nodeParts[0];
                         int port = Integer.parseInt(nodeParts[1]);
                         String newNodeString = address + ":" + port + "/mainnet/" + name;
                         boolean validAddress = Patterns.IP_ADDRESS.matcher(address).matches() || Patterns.DOMAIN_NAME.matcher(address).matches();
-                        if(validAddress) {
+                        if (validAddress) {
                             String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
                             JSONArray jsonArray = new JSONArray(nodesArray);
                             boolean exists = false;
-                            for(int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 String nodeString = jsonArray.getString(i);
-                                if(nodeString.equals(newNodeString))
+                                if (nodeString.equals(newNodeString))
                                     exists = true;
                             }
 
-                            if(!exists) {
+                            if (!exists) {
                                 jsonArray.put(newNodeString);
                             }
 
                             PrefService.getInstance().edit().putString(Constants.PREF_CUSTOM_NODES, jsonArray.toString()).apply();
-                            if(listener != null) {
+                            if (listener != null) {
                                 listener.onNodeAdded();
                             }
                             dismiss();
                         }
-                    } catch(NumberFormatException | JSONException e) {
+                    } catch (NumberFormatException | JSONException e) {
                         e.printStackTrace();
                     }
                 }
