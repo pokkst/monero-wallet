@@ -133,16 +133,4 @@ public class OnboardingFragment extends Fragment {
     private boolean checkMnemonic(String seed) {
         return (seed.split("\\s").length == 25);
     }
-
-    private void navigate(int destination) {
-        FragmentActivity activity = getActivity();
-        if (activity != null) {
-            FragmentManager fm = activity.getSupportFragmentManager();
-            NavHostFragment navHostFragment =
-                    (NavHostFragment) fm.findFragmentById(R.id.nav_host_fragment);
-            if (navHostFragment != null) {
-                navHostFragment.getNavController().navigate(destination);
-            }
-        }
-    }
 }
