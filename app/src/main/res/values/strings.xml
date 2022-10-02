@@ -96,4 +96,5 @@
     <string name="selected_utxos_value">Selected value: %1$s XMR</string>
     <string name="global_index_text">Global Idx: %1$d</string>
     <string name="outpoint_text">Outpoint: %1$s</string>
+    <string name="create_wallet_failed">Create wallet failed: %1$s</string>
 </resources>

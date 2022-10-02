@@ -109,7 +109,7 @@ public class OnboardingFragment extends Fragment {
                 wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, restoreHeight);
             } else {
                 if (!checkMnemonic(walletSeed)) {
-                    Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mainActivity, getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!restoreHeightText.isEmpty()) {
@@ -117,12 +117,15 @@ public class OnboardingFragment extends Fragment {
                 }
                 wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", restoreHeight);
             }
-            boolean ok = wallet.getStatus().isOk();
+            Wallet.Status walletStatus = wallet.getStatus();
+            boolean ok = walletStatus.isOk();
             walletFile.delete(); // cache is broken for some reason when recovering wallets. delete the file here. this happens in monerujo too.
 
             if (ok) {
                 mainActivity.init(walletFile, walletPassword);
                 mainActivity.runOnUiThread(mainActivity::onBackPressed);
+            } else {
+                Toast.makeText(mainActivity, getString(R.string.create_wallet_failed, walletStatus.getErrorString()), Toast.LENGTH_SHORT).show();
             }
         }
     }
