@@ -1,5 +1,6 @@
 package net.mynero.wallet.fragment.onboarding;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,34 +55,13 @@ public class OnboardingFragment extends Fragment {
         moreOptionsChevronImageView.setOnClickListener(view12 -> mViewModel.onMoreOptionsClicked());
 
         createWalletButton.setOnClickListener(view1 -> {
-            String walletPassword = walletPasswordEditText.getText().toString();
-            if (!walletPassword.isEmpty()) {
-                PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_PASSWORD, true).apply();
-            }
-            String walletSeed = walletSeedEditText.getText().toString().trim();
-            String restoreHeightText = walletRestoreHeightEditText.getText().toString().trim();
-            long restoreHeight = -1;
-            File walletFile = new File(getActivity().getApplicationInfo().dataDir, Constants.WALLET_NAME);
-            Wallet wallet = null;
-            if (walletSeed.isEmpty()) {
-                wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, restoreHeight);
-            } else {
-                if (!checkMnemonic(walletSeed)) {
-                    Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!restoreHeightText.isEmpty()) {
-                    restoreHeight = Long.parseLong(restoreHeightText);
-                }
-                wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", restoreHeight);
-            }
-            boolean ok = wallet.getStatus().isOk();
-            walletFile.delete(); // cache is broken for some reason when recovering wallets. delete the file here. this happens in monerujo too.
-
-            if (ok) {
-                ((MainActivity) getActivity()).init(walletFile, walletPassword);
-                getActivity().onBackPressed();
-            }
+            AsyncTask.execute(() -> {
+                createOrImportWallet(
+                        walletPasswordEditText.getText().toString(),
+                        walletSeedEditText.getText().toString().trim(),
+                        walletRestoreHeightEditText.getText().toString().trim()
+                );
+            });
         });
         walletSeedEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,6 +94,37 @@ public class OnboardingFragment extends Fragment {
                 walletRestoreHeightEditText.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void createOrImportWallet(String walletPassword, String walletSeed, String restoreHeightText) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if(mainActivity != null) {
+            if (!walletPassword.isEmpty()) {
+                PrefService.getInstance().edit().putBoolean(Constants.PREF_USES_PASSWORD, true).apply();
+            }
+            long restoreHeight = -1;
+            File walletFile = new File(mainActivity.getApplicationInfo().dataDir, Constants.WALLET_NAME);
+            Wallet wallet = null;
+            if (walletSeed.isEmpty()) {
+                wallet = WalletManager.getInstance().createWallet(walletFile, walletPassword, Constants.MNEMONIC_LANGUAGE, restoreHeight);
+            } else {
+                if (!checkMnemonic(walletSeed)) {
+                    Toast.makeText(getContext(), getString(R.string.invalid_mnemonic_code), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!restoreHeightText.isEmpty()) {
+                    restoreHeight = Long.parseLong(restoreHeightText);
+                }
+                wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", restoreHeight);
+            }
+            boolean ok = wallet.getStatus().isOk();
+            walletFile.delete(); // cache is broken for some reason when recovering wallets. delete the file here. this happens in monerujo too.
+
+            if (ok) {
+                mainActivity.init(walletFile, walletPassword);
+                mainActivity.runOnUiThread(mainActivity::onBackPressed);
+            }
+        }
     }
 
     private boolean checkMnemonic(String seed) {

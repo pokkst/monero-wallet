@@ -169,7 +169,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     private void displaySeedDialog() {
         InformationBottomSheetDialog informationDialog = new InformationBottomSheetDialog();
-        informationDialog.showCopyButton = true;
+        informationDialog.showCopyButton = false;
         informationDialog.information = WalletManager.getInstance().getWallet().getSeed("");
         informationDialog.show(getActivity().getSupportFragmentManager(), "information_seed_dialog");
     }
