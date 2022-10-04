@@ -26,8 +26,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 
-import lombok.Getter;
-import lombok.Setter;
 import timber.log.Timber;
 
 public class Node {
@@ -36,28 +34,32 @@ public class Node {
     static public final String TESTNET = "testnet";
     static private int DEFAULT_LEVIN_PORT = 0;
     static private int DEFAULT_RPC_PORT = 0;
-    @Getter
     final private NetworkType networkType;
-    @Getter
-    @Setter
     private final boolean selected = false;
-    @Getter
-    @Setter
     int rpcPort = 0;
-    @Getter
     private String name = null;
-    @Getter
     private String host;
     private int levinPort = 0;
-    @Getter
-    @Setter
     private String username = "";
-    @Getter
-    @Setter
     private String password = "";
-    @Getter
-    @Setter
     private boolean favourite = false;
+
+
+    public NetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 
     Node(String nodeString) {
         if ((nodeString == null) || nodeString.isEmpty())

@@ -23,9 +23,6 @@ import net.mynero.wallet.data.Subaddress;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 // this is not the TransactionInfo from the API as that is owned by the TransactionHistory
 // this is a POJO for the TransactionInfoAdapter
 public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> {
@@ -163,13 +160,19 @@ public class TransactionInfo implements Parcelable, Comparable<TransactionInfo> 
         }
     }
 
-    @RequiredArgsConstructor
     public enum Direction {
         Direction_In(0),
         Direction_Out(1);
 
-        @Getter
         private final int value;
+
+        Direction(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
 
         public static Direction fromInteger(int n) {
             switch (n) {

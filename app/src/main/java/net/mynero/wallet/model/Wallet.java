@@ -31,8 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import timber.log.Timber;
 
 public class Wallet {
@@ -460,14 +458,25 @@ public class Wallet {
 
     private native int getDeviceTypeJ();
 
-    @RequiredArgsConstructor
-    @Getter
     public enum Device {
         Device_Undefined(0, 0),
         Device_Software(50, 200),
         Device_Ledger(5, 20);
         private final int accountLookahead;
         private final int subaddressLookahead;
+
+        Device(int accountLookahead, int subaddressLookahead) {
+            this.accountLookahead = accountLookahead;
+            this.subaddressLookahead = subaddressLookahead;
+        }
+
+        public int getAccountLookahead() {
+            return accountLookahead;
+        }
+
+        public int getSubaddressLookahead() {
+            return subaddressLookahead;
+        }
     }
 
     public enum StatusEnum {

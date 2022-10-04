@@ -18,28 +18,20 @@ package net.mynero.wallet.data;
 
 import java.util.regex.Pattern;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@RequiredArgsConstructor
-@ToString
-@EqualsAndHashCode
 public class Subaddress implements Comparable<Subaddress> {
     public static final Pattern DEFAULT_LABEL_FORMATTER = Pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}$");
-    @Getter
     final private int accountIndex;
-    @Getter
     final private int addressIndex;
-    @Getter
     final private String address;
-    @Getter
     private final String label;
-    @Getter
-    @Setter
     private long amount;
+
+    public Subaddress(int accountIndex, int addressIndex, String address, String label) {
+        this.accountIndex = accountIndex;
+        this.addressIndex = addressIndex;
+        this.address = address;
+        this.label = label;
+    }
 
     @Override
     public int compareTo(Subaddress another) { // newer is <
@@ -58,5 +50,29 @@ public class Subaddress implements Comparable<Subaddress> {
             return ("#" + addressIndex);
         else
             return label;
+    }
+
+    public long getAmount() {
+        return amount;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getAccountIndex() {
+        return accountIndex;
+    }
+
+    public int getAddressIndex() {
+        return addressIndex;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 }

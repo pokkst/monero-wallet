@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import lombok.Getter;
 import timber.log.Timber;
 
 public class WalletManager {
@@ -325,9 +324,7 @@ public class WalletManager {
     public native boolean setProxyJ(String address);
 
     public class WalletInfo implements Comparable<WalletInfo> {
-        @Getter
         final private File path;
-        @Getter
         final private String name;
 
         public WalletInfo(File wallet) {
