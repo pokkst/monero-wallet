@@ -27,7 +27,7 @@ import net.mynero.wallet.R;
 import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.data.Node;
 import net.mynero.wallet.fragment.dialog.AddNodeBottomSheetDialog;
-import net.mynero.wallet.fragment.dialog.InformationBottomSheetDialog;
+import net.mynero.wallet.fragment.dialog.WalletKeysBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.NodeSelectionBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.PasswordBottomSheetDialog;
 import net.mynero.wallet.model.Wallet;
@@ -37,9 +37,6 @@ import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
 import net.mynero.wallet.util.DayNightMode;
 import net.mynero.wallet.util.NightmodeHelper;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener, NodeSelectionBottomSheetDialog.NodeSelectionDialogListener, AddNodeBottomSheetDialog.AddNodeListener {
 
@@ -184,7 +181,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     }
 
     private void displaySeedDialog() {
-        InformationBottomSheetDialog informationDialog = new InformationBottomSheetDialog();
+        WalletKeysBottomSheetDialog informationDialog = new WalletKeysBottomSheetDialog();
         informationDialog.showCopyButton = false;
         informationDialog.information = WalletManager.getInstance().getWallet().getSeed("");
         informationDialog.show(getActivity().getSupportFragmentManager(), "information_seed_dialog");

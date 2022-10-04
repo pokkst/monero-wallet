@@ -15,13 +15,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import net.mynero.wallet.R;
 import net.mynero.wallet.util.Helper;
 
-public class InformationBottomSheetDialog extends BottomSheetDialogFragment {
+public class WalletKeysBottomSheetDialog extends BottomSheetDialogFragment {
     public boolean showCopyButton = false;
     public String information = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.information_bottom_sheet_dialog, null);
+        return inflater.inflate(R.layout.wallet_keys_bottom_sheet_dialog, null);
     }
 
     @Override

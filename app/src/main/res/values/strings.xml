@@ -31,7 +31,7 @@
     <string name="wallet_locked_balance_text">+ %1$s confirming</string>
     <string name="send_amount_empty">Please enter an amount</string>
     <string name="send_amount_invalid">Please enter a valid amount</string>
-    <string name="send_max">Send Max</string>
+    <string name="send_max">Max</string>
     <string name="undo">Undo</string>
     <string name="error_sending_tx">Error sending tx</string>
     <string name="error_creating_tx">Error creating tx</string>
@@ -39,7 +39,7 @@
     <string name="invalid_mnemonic_code">Invalid mnemonic</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="night_mode">Night mode</string>
-    <string name="display_recovery_phrase">Display recovery phrase</string>
+    <string name="display_recovery_phrase">Display wallet keys</string>
     <string name="tor_switch_label">Enable proxy</string>
     <string name="connection_failed">Connection failed</string>
     <string name="address">87MRtZPrWUCVUgcFHdsVb5MoZUcLtqfD3FvQVGwftFb8eSdMnE39JhAJcbuSW8X2vRaRsB9RQfuCpFciybJFHaz3QYPhCLw</string>
@@ -97,4 +97,5 @@
     <string name="global_index_text">Global Idx: %1$d</string>
     <string name="outpoint_text">Outpoint: %1$s</string>
     <string name="create_wallet_failed">Create wallet failed: %1$s</string>
+    <string name="wallet_keys_label">Wallet Keys</string>
 </resources>

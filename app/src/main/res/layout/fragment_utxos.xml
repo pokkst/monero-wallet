@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
     tools:context="net.mynero.wallet.fragment.home.HomeFragment">
 
     <TextView
@@ -14,6 +13,9 @@
         android:text="@string/view_utxos"
         android:textSize="32sp"
         android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:clipToPadding="false"
         android:paddingBottom="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,6 +41,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_bg"
         android:visibility="gone"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="24dp"
         android:text="@string/send"
         tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
