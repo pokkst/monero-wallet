@@ -1,6 +1,5 @@
 package net.mynero.wallet.fragment.onboarding;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import net.mynero.wallet.MainActivity;
+import net.mynero.wallet.MoneroApplication;
 import net.mynero.wallet.R;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
@@ -26,6 +26,8 @@ import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class OnboardingFragment extends Fragment {
 
@@ -52,7 +54,7 @@ public class OnboardingFragment extends Fragment {
         moreOptionsChevronImageView.setOnClickListener(view12 -> mViewModel.onMoreOptionsClicked());
 
         createWalletButton.setOnClickListener(view1 -> {
-            AsyncTask.execute(() -> {
+            ((MoneroApplication)getActivity().getApplication()).getExecutor().execute(() -> {
                 createOrImportWallet(
                         walletPasswordEditText.getText().toString(),
                         walletSeedEditText.getText().toString().trim(),
@@ -115,6 +117,7 @@ public class OnboardingFragment extends Fragment {
                 wallet = WalletManager.getInstance().recoveryWallet(walletFile, walletPassword, walletSeed, "", restoreHeight);
             }
             Wallet.Status walletStatus = wallet.getStatus();
+            wallet.close();
             boolean ok = walletStatus.isOk();
             walletFile.delete(); // cache is broken for some reason when recovering wallets. delete the file here. this happens in monerujo too.
 
@@ -122,7 +125,7 @@ public class OnboardingFragment extends Fragment {
                 mainActivity.init(walletFile, walletPassword);
                 mainActivity.runOnUiThread(mainActivity::onBackPressed);
             } else {
-                Toast.makeText(mainActivity, getString(R.string.create_wallet_failed, walletStatus.getErrorString()), Toast.LENGTH_SHORT).show();
+                mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.create_wallet_failed, walletStatus.getErrorString()), Toast.LENGTH_SHORT).show());
             }
         }
     }

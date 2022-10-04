@@ -1,22 +1,25 @@
 package net.mynero.wallet.fragment.settings;
 
-import android.os.AsyncTask;
 import android.util.Patterns;
 
 import androidx.lifecycle.ViewModel;
 
+import net.mynero.wallet.MoneroApplication;
 import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SettingsViewModel extends ViewModel {
 
     private String proxyAddress = "";
     private String proxyPort = "";
 
-    public void updateProxy() {
-        AsyncTask.execute(() -> {
+    public void updateProxy(MoneroApplication application) {
+        application.getExecutor().execute(() -> {
             boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
             String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
             boolean isNodeLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");

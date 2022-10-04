@@ -2,7 +2,6 @@ package net.mynero.wallet.fragment.dialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import net.mynero.wallet.MoneroApplication;
 import net.mynero.wallet.R;
 import net.mynero.wallet.model.CoinsInfo;
 import net.mynero.wallet.model.PendingTransaction;
@@ -38,6 +38,8 @@ import net.mynero.wallet.util.UriData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     private final MutableLiveData<Boolean> _sendingMax = new MutableLiveData<>(false);
@@ -234,7 +236,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void sendTx(PendingTransaction pendingTx) {
-        AsyncTask.execute(() -> {
+        ((MoneroApplication)getActivity().getApplication()).getExecutor().execute(() -> {
             boolean success = TxService.getInstance().sendTx(pendingTx);
             Activity activity = getActivity();
             if (activity != null) {
@@ -252,7 +254,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void createTx(String address, String amount, boolean sendAll, PendingTransaction.Priority feePriority) {
-        AsyncTask.execute(() -> {
+        ((MoneroApplication)getActivity().getApplication()).getExecutor().execute(() -> {
             try {
                 PendingTransaction pendingTx = TxService.getInstance().createTx(address, amount, sendAll, feePriority, selectedUtxos);
                 if (pendingTx != null && pendingTx.getStatus() == PendingTransaction.Status.Status_Ok) {
