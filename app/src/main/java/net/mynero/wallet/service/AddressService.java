@@ -37,6 +37,7 @@ public class AddressService extends ServiceBase {
         Wallet wallet = WalletManager.getInstance().getWallet();
         wallet.addSubaddress(wallet.getAccountIndex(), timeStamp);
         refreshAddresses();
+        wallet.store();
         return wallet.getSubaddressObject(latestAddressIndex);
     }
 
