@@ -19,11 +19,13 @@ package net.mynero.wallet.data;
 // Nodes stolen from https://moneroworld.com/#nodes
 
 public enum DefaultNodes {
+    SAMOURAI("163.172.56.213:18089/mainnet/SamouraiWallet"),
     MONERUJO("nodex.monerujo.io:18081/mainnet/monerujo"),
     SUPPORTXMR("node.supportxmr.com:18081/mainnet/SupportXMR"),
     HASHVAULT("nodes.hashvault.pro:18081/mainnet/Hashvault"),
     MONEROWORLD("node.moneroworld.com:18089/mainnet/MoneroWorld"),
     XMRTW("opennode.xmr-tw.org:18089/mainnet/XMRTW"),
+    SAMOURAI_ONION("446unwib5vc7pfbzflosy6m6vtyuhddnalr3hutyavwe4esfuu5g6ryd.onion:18089/mainnet/SamouraiWallet.onion"),
     MONERUJO_ONION("monerujods7mbghwe6cobdr6ujih6c22zu5rl7zshmizz2udf7v7fsad.onion:18081/mainnet/monerujo.onion"),
     Criminales78("56wl7y2ebhamkkiza4b7il4mrzwtyvpdym7bm2bkg3jrei2je646k3qd.onion:18089/mainnet/Criminales78.onion"),
     xmrfail("mxcd4577fldb3ppzy7obmmhnu3tf57gbcbd4qhwr2kxyjj2qi3dnbfqd.onion:18081/mainnet/xmrfail.onion"),
