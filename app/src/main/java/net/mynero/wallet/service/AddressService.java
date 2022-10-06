@@ -1,5 +1,6 @@
 package net.mynero.wallet.service;
 
+import net.mynero.wallet.MoneroApplication;
 import net.mynero.wallet.data.Subaddress;
 import net.mynero.wallet.model.TransactionInfo;
 import net.mynero.wallet.model.Wallet;
@@ -14,6 +15,7 @@ import java.util.Locale;
 public class AddressService extends ServiceBase {
     public static AddressService instance = null;
     private int latestAddressIndex = 1;
+    private int lastUsedSubaddress = 0;
 
     public AddressService(MoneroHandlerThread thread) {
         super(thread);
@@ -25,7 +27,16 @@ public class AddressService extends ServiceBase {
     }
 
     public void refreshAddresses() {
+        List<TransactionInfo> localTransactionList = new ArrayList<>(HistoryService.getInstance().getHistory());
+        for (TransactionInfo info : localTransactionList) {
+            if (info.addressIndex > lastUsedSubaddress)
+                lastUsedSubaddress = info.addressIndex;
+        }
         latestAddressIndex = WalletManager.getInstance().getWallet().getNumSubaddresses();
+    }
+
+    public int getLastUsedSubaddress() {
+        return lastUsedSubaddress;
     }
 
     public String getPrimaryAddress() {

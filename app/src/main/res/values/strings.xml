@@ -98,4 +98,5 @@
     <string name="outpoint_text">Outpoint: %1$s</string>
     <string name="create_wallet_failed">Create wallet failed: %1$s</string>
     <string name="wallet_keys_label">Wallet Keys</string>
+    <string name="max_subaddresses_warning">Max subaddresses. Please receive funds first.</string>
 </resources>

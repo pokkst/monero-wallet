@@ -15,16 +15,26 @@
 
         <TextView
             android:id="@+id/recv_monero_textview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:text="@string/recv_monero"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/monero_qr_imageview"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fresh_address_imageview"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/fresh_address_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lb_ic_replay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recv_monero_textview"
+            app:layout_constraintBottom_toBottomOf="@id/recv_monero_textview"
+            app:tint="@color/oled_textColorPrimary" />
 
         <ImageView
             android:id="@+id/monero_qr_imageview"

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +23,11 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import net.mynero.wallet.R;
 import net.mynero.wallet.data.Subaddress;
+import net.mynero.wallet.model.TransactionInfo;
+import net.mynero.wallet.model.Wallet;
+import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.AddressService;
+import net.mynero.wallet.service.HistoryService;
 import net.mynero.wallet.util.DayNightMode;
 import net.mynero.wallet.util.Helper;
 import net.mynero.wallet.util.NightmodeHelper;
@@ -33,6 +38,9 @@ import java.util.Map;
 import timber.log.Timber;
 
 public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
+    private TextView addressTextView = null;
+    private ImageView addressImageView = null;
+    private ImageButton copyAddressImageButton = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,14 +50,29 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView addressImageView = view.findViewById(R.id.monero_qr_imageview);
-        TextView addressTextView = view.findViewById(R.id.address_textview);
-        ImageButton copyAddressImageButton = view.findViewById(R.id.copy_address_imagebutton);
+        addressImageView = view.findViewById(R.id.monero_qr_imageview);
+        addressTextView = view.findViewById(R.id.address_textview);
+        copyAddressImageButton = view.findViewById(R.id.copy_address_imagebutton);
+        ImageView freshAddressImageView = view.findViewById(R.id.fresh_address_imageview);
+        Wallet wallet = WalletManager.getInstance().getWallet();
+        AddressService addressService = AddressService.getInstance();
 
-        Subaddress addr = AddressService.getInstance().currentSubaddress();
-        addressTextView.setText(addr.getAddress());
-        addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
-        copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", addr.getAddress()));
+        Subaddress addr = addressService.currentSubaddress();
+        setAddress(addr);
+        freshAddressImageView.setOnClickListener(view1 -> {
+            final int maxSubaddresses = addressService.getLastUsedSubaddress() + wallet.getDeviceType().getSubaddressLookahead();
+            if(wallet.getNumSubaddresses() < maxSubaddresses) {
+                setAddress(AddressService.getInstance().freshSubaddress());
+            } else {
+                Toast.makeText(getContext(), getResources().getString(R.string.max_subaddresses_warning), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setAddress(Subaddress subaddress) {
+        addressTextView.setText(subaddress.getAddress());
+        addressImageView.setImageBitmap(generate(subaddress.getAddress(), 256, 256));
+        copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", subaddress.getAddress()));
     }
 
     public Bitmap generate(String text, int width, int height) {
