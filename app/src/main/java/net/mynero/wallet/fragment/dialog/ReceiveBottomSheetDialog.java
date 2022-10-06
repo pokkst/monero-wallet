@@ -46,7 +46,7 @@ public class ReceiveBottomSheetDialog extends BottomSheetDialogFragment {
         TextView addressTextView = view.findViewById(R.id.address_textview);
         ImageButton copyAddressImageButton = view.findViewById(R.id.copy_address_imagebutton);
 
-        Subaddress addr = AddressService.getInstance().getLatestSubaddress();
+        Subaddress addr = AddressService.getInstance().currentSubaddress();
         addressTextView.setText(addr.getAddress());
         addressImageView.setImageBitmap(generate(addr.getAddress(), 256, 256));
         copyAddressImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "address", addr.getAddress()));

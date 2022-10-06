@@ -5,8 +5,11 @@ import net.mynero.wallet.model.TransactionInfo;
 import net.mynero.wallet.model.Wallet;
 import net.mynero.wallet.model.WalletManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AddressService extends ServiceBase {
     public static AddressService instance = null;
@@ -22,19 +25,22 @@ public class AddressService extends ServiceBase {
     }
 
     public void refreshAddresses() {
-        List<TransactionInfo> localTransactionList = new ArrayList<>(HistoryService.getInstance().getHistory());
-        for (TransactionInfo info : localTransactionList) {
-            if (info.addressIndex >= latestAddressIndex) {
-                latestAddressIndex = info.addressIndex + 1;
-            }
-        }
+        latestAddressIndex = WalletManager.getInstance().getWallet().getNumSubaddresses();
     }
 
     public String getPrimaryAddress() {
         return WalletManager.getInstance().getWallet().getAddress();
     }
 
-    public Subaddress getLatestSubaddress() {
+    public Subaddress freshSubaddress() {
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US).format(new Date());
+        Wallet wallet = WalletManager.getInstance().getWallet();
+        wallet.addSubaddress(wallet.getAccountIndex(), timeStamp);
+        refreshAddresses();
+        return wallet.getSubaddressObject(latestAddressIndex);
+    }
+
+    public Subaddress currentSubaddress() {
         Wallet wallet = WalletManager.getInstance().getWallet();
         return wallet.getSubaddressObject(latestAddressIndex);
     }
