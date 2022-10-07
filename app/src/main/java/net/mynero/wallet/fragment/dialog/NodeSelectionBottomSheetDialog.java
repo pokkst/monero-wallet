@@ -89,9 +89,18 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
         listener.onNodeSelected();
     }
 
+    @Override
+    public boolean onSelectEditNode(Node node) {
+        if (listener != null) {
+            listener.onClickedEditNode(node.toNodeString());
+        }
+        dismiss();
+        return true;
+    }
+
     public interface NodeSelectionDialogListener {
         void onNodeSelected();
-
+        void onClickedEditNode(String nodeString);
         void onClickedAddNode();
     }
 }

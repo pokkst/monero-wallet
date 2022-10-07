@@ -99,4 +99,9 @@
     <string name="create_wallet_failed">Create wallet failed: %1$s</string>
     <string name="wallet_keys_label">Wallet Keys</string>
     <string name="max_subaddresses_warning">Max subaddresses. Please receive funds first.</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="cant_edit_current_node">Cannot edit current node.</string>
+    <string name="cant_edit_default_nodes">Cannot edit default node.</string>
+    <string name="edit_node">Edit Node</string>
 </resources>

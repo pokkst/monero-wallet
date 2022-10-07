@@ -27,6 +27,7 @@ import net.mynero.wallet.R;
 import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.data.Node;
 import net.mynero.wallet.fragment.dialog.AddNodeBottomSheetDialog;
+import net.mynero.wallet.fragment.dialog.EditNodeBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.WalletKeysBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.NodeSelectionBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.PasswordBottomSheetDialog;
@@ -38,7 +39,9 @@ import net.mynero.wallet.util.Constants;
 import net.mynero.wallet.util.DayNightMode;
 import net.mynero.wallet.util.NightmodeHelper;
 
-public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener, NodeSelectionBottomSheetDialog.NodeSelectionDialogListener, AddNodeBottomSheetDialog.AddNodeListener {
+import org.json.JSONArray;
+
+public class SettingsFragment extends Fragment implements PasswordBottomSheetDialog.PasswordListener, NodeSelectionBottomSheetDialog.NodeSelectionDialogListener, AddNodeBottomSheetDialog.AddNodeListener, EditNodeBottomSheetDialog.EditNodeListener {
 
     private SettingsViewModel mViewModel;
     TextWatcher proxyAddressListener = new TextWatcher() {
@@ -236,6 +239,14 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
     }
 
     @Override
+    public void onClickedEditNode(String nodeString) {
+        EditNodeBottomSheetDialog editNodeDialog = new EditNodeBottomSheetDialog();
+        editNodeDialog.listener = this;
+        editNodeDialog.nodeString = nodeString;
+        editNodeDialog.show(getActivity().getSupportFragmentManager(), "edit_node_dialog");
+    }
+
+    @Override
     public void onNodeAdded() {
         NodeSelectionBottomSheetDialog dialog = new NodeSelectionBottomSheetDialog();
         dialog.listener = this;
@@ -252,5 +263,44 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
                 navHostFragment.getNavController().navigate(destination);
             }
         }
+    }
+
+    @Override
+    public void onNodeDeleted(Node node) {
+        try {
+            String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
+            JSONArray jsonArray = new JSONArray(nodesArray);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String jsonNodeString = jsonArray.getString(i);
+                Node savedNode = Node.fromString(jsonNodeString);
+                if (savedNode.toNodeString().equals(node.toNodeString()))
+                    jsonArray.remove(i);
+            }
+            saveNodesAndReopen(jsonArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onNodeEdited(Node oldNode, Node newNode) {
+        try {
+            String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
+            JSONArray jsonArray = new JSONArray(nodesArray);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String jsonNodeString = jsonArray.getString(i);
+                Node savedNode = Node.fromString(jsonNodeString);
+                if (savedNode.toNodeString().equals(oldNode.toNodeString()))
+                    jsonArray.put(i, newNode.toNodeString());
+            }
+            saveNodesAndReopen(jsonArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveNodesAndReopen(JSONArray jsonArray) {
+        PrefService.getInstance().edit().putString(Constants.PREF_CUSTOM_NODES, jsonArray.toString()).apply();
+        onNodeAdded();
     }
 }

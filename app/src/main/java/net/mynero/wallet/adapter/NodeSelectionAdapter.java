@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +80,7 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
 
     public interface NodeSelectionAdapterListener {
         void onSelectNode(Node node);
+        boolean onSelectEditNode(Node node);
     }
 
     /**
@@ -108,7 +110,28 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
             nodeNameTextView.setText(node.getName());
             nodeAddressTextView.setText(node.getAddress());
 
+            itemView.setOnLongClickListener(view -> {
+                if(match) {
+                    Toast.makeText(itemView.getContext(), itemView.getResources().getString(R.string.cant_edit_current_node), Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if(isDefaultNode(node)) {
+                    Toast.makeText(itemView.getContext(), itemView.getResources().getString(R.string.cant_edit_default_nodes), Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    return listener.onSelectEditNode(node);
+                }
+            });
             itemView.setOnClickListener(view -> listener.onSelectNode(node));
+        }
+
+        private boolean isDefaultNode(Node currentNode) {
+            boolean isDefault = false;
+            for(DefaultNodes defaultNode : DefaultNodes.values()) {
+                if(currentNode.toNodeString().equals(defaultNode.getUri()))
+                    isDefault = true;
+            }
+
+            return isDefault;
         }
     }
 }

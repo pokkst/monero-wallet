@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:padding="24dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- CREATE LAYOUT -->
+        <TextView
+            android:id="@+id/send_monero_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="@string/edit_node"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/node_name_edittext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/node_name_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/edittext_bg"
+            android:ellipsize="middle"
+            android:hint="@string/node_name_hint"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/address_edittext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/send_monero_textview" />
+
+        <ImageButton
+            android:id="@+id/paste_address_imagebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:minWidth="24dp"
+            android:minHeight="24dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_content_paste_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/address_edittext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/address_edittext"
+            app:layout_constraintTop_toTopOf="@id/address_edittext"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/address_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="@string/node_address_hint"
+            android:inputType="text"
+            android:digits="-QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890.:"
+            app:layout_constraintBottom_toTopOf="@id/delete_node_button"
+            app:layout_constraintEnd_toStartOf="@id/paste_address_imagebutton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/delete_node_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="1dp"
+            android:background="@drawable/button_bg_left"
+            android:text="@string/delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/done_editing_button"
+            app:layout_constraintTop_toBottomOf="@id/address_edittext" />
+        <Button
+            android:id="@+id/done_editing_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="1dp"
+            android:background="@drawable/button_bg_right"
+            android:text="@string/done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/delete_node_button"
+            app:layout_constraintTop_toBottomOf="@id/address_edittext" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
