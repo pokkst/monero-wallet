@@ -55,6 +55,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             });
     public LiveData<PendingTransaction> pendingTransaction = _pendingTransaction;
     public UriData uriData = null;
+    public boolean isChurning = false;
     public PendingTransaction.Priority priority;
     private EditText addressEditText;
     private EditText amountEditText;
@@ -118,7 +119,11 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
             String valueString = Wallet.getDisplayAmount(selectedValue);
             selectedUtxosValueTextView.setVisibility(View.VISIBLE);
-            selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value, valueString));
+            if(isChurning) {
+                selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value_churning, valueString));
+            } else {
+                selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value, valueString));
+            }
         } else {
             selectedUtxosValueTextView.setVisibility(View.GONE);
         }

@@ -17,7 +17,9 @@ import net.mynero.wallet.R;
 import net.mynero.wallet.adapter.CoinsInfoAdapter;
 import net.mynero.wallet.fragment.dialog.SendBottomSheetDialog;
 import net.mynero.wallet.model.CoinsInfo;
+import net.mynero.wallet.service.AddressService;
 import net.mynero.wallet.service.UTXOService;
+import net.mynero.wallet.util.UriData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +30,7 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
     private final ArrayList<String> selectedUtxos = new ArrayList<>();
     private final CoinsInfoAdapter adapter = new CoinsInfoAdapter(this);
     private Button sendUtxosButton;
+    private Button churnUtxosButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,9 +48,18 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
 
     private void bindListeners(View view) {
         sendUtxosButton = view.findViewById(R.id.send_utxos_button);
+        churnUtxosButton = view.findViewById(R.id.churn_utxos_button);
         sendUtxosButton.setVisibility(View.GONE);
+        churnUtxosButton.setVisibility(View.GONE);
         sendUtxosButton.setOnClickListener(view1 -> {
             SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.selectedUtxos = selectedUtxos;
+            sendDialog.show(getActivity().getSupportFragmentManager(), null);
+        });
+        churnUtxosButton.setOnClickListener(view1 -> {
+            SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.isChurning = true;
+            sendDialog.uriData = UriData.parse(AddressService.getInstance().getLatestSubaddress().getAddress());
             sendDialog.selectedUtxos = selectedUtxos;
             sendDialog.show(getActivity().getSupportFragmentManager(), null);
         });
