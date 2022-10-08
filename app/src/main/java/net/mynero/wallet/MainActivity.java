@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
+import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.fragment.dialog.PasswordBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.SendBottomSheetDialog;
 import net.mynero.wallet.livedata.SingleLiveEvent;

@@ -96,7 +96,7 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
         }
 
         public void bind(Node node) {
-            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
+            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, "");
             Node currentNode = Node.fromString(currentNodeString);
             boolean match = node.equals(currentNode);
             if (match) {

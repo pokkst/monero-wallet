@@ -28,25 +28,82 @@
         android:background="@drawable/edittext_bg"
         android:hint="@string/password_optional"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@id/advanced_settings_dropdown_textview"
+        app:layout_constraintBottom_toTopOf="@id/tor_onboarding_switch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/create_wallet_textview"
         tools:visibility="visible" />
 
     <TextView
+        android:id="@+id/tor_onboarding_switch_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tor_switch_label"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tor_onboarding_switch"
+        app:layout_constraintEnd_toStartOf="@id/tor_onboarding_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tor_onboarding_switch" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/tor_onboarding_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallet_password_edittext" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wallet_proxy_settings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tor_onboarding_switch"
+        app:layout_constraintBottom_toTopOf="@id/advanced_settings_dropdown_textview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <EditText
+            android:id="@+id/wallet_proxy_address_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="@string/wallet_proxy_address_hint"
+            app:layout_constraintBottom_toTopOf="@id/wallet_proxy_port_edittext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/wallet_proxy_port_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bg"
+            android:hint="@string/wallet_proxy_port_hint"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wallet_proxy_address_edittext" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
         android:id="@+id/advanced_settings_dropdown_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/more_options"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toTopOf="@id/wallet_seed_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallet_password_edittext" />
+        app:layout_constraintTop_toBottomOf="@id/wallet_proxy_settings_layout" />
 
     <ImageView
         android:id="@+id/advanced_settings_chevron_imageview"
@@ -63,7 +120,7 @@
         android:id="@+id/wallet_seed_edittext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_bg"
         android:hint="@string/recovery_phrase_optional"
         android:visibility="gone"

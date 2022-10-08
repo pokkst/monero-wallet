@@ -21,7 +21,7 @@ public class SettingsViewModel extends ViewModel {
     public void updateProxy(MoneroApplication application) {
         application.getExecutor().execute(() -> {
             boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, DefaultNodes.XMRTW.getAddress());
+            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, "");
             boolean isNodeLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");
 
             if (!usesProxy || isNodeLocalIp) {
