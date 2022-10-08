@@ -13,11 +13,11 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.mynero.wallet.R;
+import net.mynero.wallet.model.Wallet;
+import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.util.Helper;
 
 public class WalletKeysBottomSheetDialog extends BottomSheetDialogFragment {
-    public boolean showCopyButton = false;
-    public String information = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,14 +27,19 @@ public class WalletKeysBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageButton copyInformationImageButton = view.findViewById(R.id.copy_information_imagebutton);
-        if (showCopyButton) {
-            copyInformationImageButton.setVisibility(View.VISIBLE);
-        } else {
-            copyInformationImageButton.setVisibility(View.INVISIBLE);
-        }
-        TextView informationTextView = view.findViewById(R.id.information_textview);
-        informationTextView.setText(information);
-        copyInformationImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "information", information));
+        ImageButton copyViewKeyImageButton = view.findViewById(R.id.copy_viewkey_imagebutton);
+        TextView informationTextView = view.findViewById(R.id.information_textview); // seed
+        TextView viewKeyTextView = view.findViewById(R.id.viewkey_textview);
+        TextView restoreHeightTextView = view.findViewById(R.id.restore_height_textview);
+
+        Wallet wallet = WalletManager.getInstance().getWallet();
+        String seed = wallet.getSeed("");
+        String privateViewKey = wallet.getSecretViewKey();
+
+        informationTextView.setText(seed);
+        viewKeyTextView.setText(privateViewKey);
+        restoreHeightTextView.setText(wallet.getRestoreHeight()+"");
+
+        copyViewKeyImageButton.setOnClickListener(view1 -> Helper.clipBoardCopy(getContext(), "private view-key", privateViewKey));
     }
 }

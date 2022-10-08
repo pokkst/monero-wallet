@@ -185,8 +185,6 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     private void displaySeedDialog() {
         WalletKeysBottomSheetDialog informationDialog = new WalletKeysBottomSheetDialog();
-        informationDialog.showCopyButton = false;
-        informationDialog.information = WalletManager.getInstance().getWallet().getSeed("");
         informationDialog.show(getActivity().getSupportFragmentManager(), "information_seed_dialog");
     }
 
