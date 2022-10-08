@@ -59,7 +59,7 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
         churnUtxosButton.setOnClickListener(view1 -> {
             SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
             sendDialog.isChurning = true;
-            sendDialog.uriData = UriData.parse(AddressService.getInstance().getLatestSubaddress().getAddress());
+            sendDialog.uriData = UriData.parse(AddressService.getInstance().currentSubaddress().getAddress());
             sendDialog.selectedUtxos = selectedUtxos;
             sendDialog.show(getActivity().getSupportFragmentManager(), null);
         });
@@ -100,8 +100,10 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
 
         if (selectedUtxos.isEmpty()) {
             sendUtxosButton.setVisibility(View.GONE);
+            churnUtxosButton.setVisibility(View.GONE);
         } else {
             sendUtxosButton.setVisibility(View.VISIBLE);
+            churnUtxosButton.setVisibility(View.VISIBLE);
         }
 
         adapter.updateSelectedUtxos(selectedUtxos);

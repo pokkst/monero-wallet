@@ -120,6 +120,8 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
             String valueString = Wallet.getDisplayAmount(selectedValue);
             selectedUtxosValueTextView.setVisibility(View.VISIBLE);
             if(isChurning) {
+                _sendingMax.postValue(true);
+                sendMaxButton.setEnabled(false);
                 selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value_churning, valueString));
             } else {
                 selectedUtxosValueTextView.setText(getResources().getString(R.string.selected_utxos_value, valueString));
@@ -136,7 +138,9 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
 
         BalanceService.getInstance().balance.observe(getViewLifecycleOwner(), balance -> {
             createButton.setEnabled(balance != 0);
-            sendMaxButton.setEnabled(balance != 0);
+            if(!isChurning) {
+                sendMaxButton.setEnabled(balance != 0);
+            }
         });
 
         sendingMax.observe(getViewLifecycleOwner(), sendingMax -> {
