@@ -24,7 +24,7 @@ import net.mynero.wallet.util.UriData;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInfoAdapterListener {
+public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInfoAdapterListener, SendBottomSheetDialog.Listener {
 
     private UtxosViewModel mViewModel;
     private final ArrayList<String> selectedUtxos = new ArrayList<>();
@@ -53,11 +53,13 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
         churnUtxosButton.setVisibility(View.GONE);
         sendUtxosButton.setOnClickListener(view1 -> {
             SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.listener = this;
             sendDialog.selectedUtxos = selectedUtxos;
             sendDialog.show(getActivity().getSupportFragmentManager(), null);
         });
         churnUtxosButton.setOnClickListener(view1 -> {
             SendBottomSheetDialog sendDialog = new SendBottomSheetDialog();
+            sendDialog.listener = this;
             sendDialog.isChurning = true;
             sendDialog.uriData = UriData.parse(AddressService.getInstance().currentSubaddress().getAddress());
             sendDialog.selectedUtxos = selectedUtxos;
@@ -107,5 +109,11 @@ public class UtxosFragment extends Fragment implements CoinsInfoAdapter.CoinsInf
         }
 
         adapter.updateSelectedUtxos(selectedUtxos);
+    }
+
+    @Override
+    public void onSentTransaction() {
+        churnUtxosButton.setVisibility(View.GONE);
+        sendUtxosButton.setVisibility(View.GONE);
     }
 }

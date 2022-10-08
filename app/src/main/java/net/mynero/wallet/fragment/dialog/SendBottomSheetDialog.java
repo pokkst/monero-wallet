@@ -56,6 +56,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
     public LiveData<PendingTransaction> pendingTransaction = _pendingTransaction;
     public UriData uriData = null;
     public boolean isChurning = false;
+    public Listener listener = null;
     public PendingTransaction.Priority priority;
     private EditText addressEditText;
     private EditText amountEditText;
@@ -252,6 +253,9 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
                 activity.runOnUiThread(() -> {
                     if (success) {
                         Toast.makeText(getActivity(), getString(R.string.sent_tx), Toast.LENGTH_SHORT).show();
+                        if(listener != null) {
+                            listener.onSentTransaction();
+                        }
                         dismiss();
                     } else {
                         sendButton.setEnabled(true);
@@ -337,5 +341,7 @@ public class SendBottomSheetDialog extends BottomSheetDialogFragment {
         }
     }
 
-
+    public interface Listener {
+        void onSentTransaction();
+    }
 }
