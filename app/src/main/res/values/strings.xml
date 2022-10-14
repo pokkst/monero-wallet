@@ -111,4 +111,5 @@
     <string name="wallet_viewkey_label">Private view-key</string>
     <string name="wallet_viewkey_desc">Anyone with your private view-key can see all incoming transactions!</string>
     <string name="wallet_restore_height_label">Restore height</string>
+    <string name="block_height">Block Height</string>
 </resources>

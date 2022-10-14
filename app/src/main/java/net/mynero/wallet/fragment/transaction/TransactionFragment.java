@@ -80,12 +80,22 @@ public class TransactionFragment extends Fragment {
         ImageButton copyTxAddressImageButton = view.findViewById(R.id.copy_txaddress_imagebutton);
         TextView txDateTextView = view.findViewById(R.id.transaction_date_textview);
         TextView txAmountTextView = view.findViewById(R.id.transaction_amount_textview);
+        TextView blockHeightTextView = view.findViewById(R.id.tx_block_height_textview);
+        TextView blockHeightLabelTextView = view.findViewById(R.id.transaction_block_height_label_textview);
 
         mViewModel.transaction.observe(getViewLifecycleOwner(), transactionInfo -> {
             txHashTextView.setText(transactionInfo.hash);
             txConfTextView.setText("" + transactionInfo.confirmations);
             txDateTextView.setText(getDateTime(transactionInfo.timestamp));
             txAmountTextView.setText(getResources().getString(R.string.tx_amount_no_prefix, Helper.getDisplayAmount(transactionInfo.amount)));
+            if(transactionInfo.confirmations > 0) {
+                blockHeightTextView.setText("" + transactionInfo.blockheight);
+                blockHeightTextView.setVisibility(View.VISIBLE);
+                blockHeightLabelTextView.setVisibility(View.VISIBLE);
+            } else {
+                blockHeightTextView.setVisibility(View.GONE);
+                blockHeightLabelTextView.setVisibility(View.GONE);
+            }
         });
 
         mViewModel.destination.observe(getViewLifecycleOwner(), s -> {
