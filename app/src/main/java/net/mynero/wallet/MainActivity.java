@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import net.mynero.wallet.data.DefaultNodes;
+import net.mynero.wallet.data.Node;
 import net.mynero.wallet.fragment.dialog.PasswordBottomSheetDialog;
 import net.mynero.wallet.fragment.dialog.SendBottomSheetDialog;
 import net.mynero.wallet.livedata.SingleLiveEvent;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     }
 
     public void init(File walletFile, String password) {
+        upgradeOldNodePrefs();
         Wallet wallet = WalletManager.getInstance().openWallet(walletFile.getAbsolutePath(), password);
         thread = new MoneroHandlerThread("WalletService", this, wallet);
         new TxService(thread);
@@ -101,6 +103,16 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
         this.blockchainService = new BlockchainService(thread);
         this.utxoService = new UTXOService(thread);
         thread.start();
+    }
+
+    private void upgradeOldNodePrefs() {
+        String oldNodeString = PrefService.getInstance().getString("pref_node", "");
+        if(!oldNodeString.isEmpty()) {
+            Node oldNode = Node.fromString(oldNodeString);
+            if(oldNode != null) {
+                PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, oldNode.toNodeString()).apply();
+            }
+        }
     }
 
     @Override
