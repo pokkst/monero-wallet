@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     }
 
     private void upgradeOldNodePrefs() {
-        PrefService.getInstance().getNode();
+        PrefService.getInstance().upgradeNodePrefs();
     }
 
     @Override

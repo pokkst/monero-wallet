@@ -26,6 +26,17 @@ public class PrefService extends ServiceBase {
     }
 
     public Node getNode() {
+        boolean usesProxy = getBoolean(Constants.PREF_USES_TOR, false);
+        DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
+        String nodeString = getString(Constants.PREF_NODE_2, defaultNode.getUri());
+        if(!nodeString.isEmpty()) {
+            return Node.fromString(nodeString);
+        } else {
+            return null;
+        }
+    }
+
+    public void upgradeNodePrefs() {
         String oldNodeString = getString("pref_node", "");
         if(!oldNodeString.isEmpty()) {
             //upgrade old node pref to new node pref
@@ -40,14 +51,6 @@ public class PrefService extends ServiceBase {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        boolean usesProxy = getBoolean(Constants.PREF_USES_TOR, false);
-        DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
-        String nodeString = getString(Constants.PREF_NODE_2, defaultNode.getUri());
-        if(!nodeString.isEmpty()) {
-            return Node.fromString(nodeString);
-        } else {
-            return null;
         }
     }
 
@@ -79,8 +82,7 @@ public class PrefService extends ServiceBase {
         if(nodeString.isEmpty()) {
             return null;
         } else {
-            Node oldNode = Node.fromString(nodeString);
-            return oldNode;
+            return Node.fromString(nodeString);
         }
     }
 
