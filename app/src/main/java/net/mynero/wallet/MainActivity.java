@@ -30,6 +30,8 @@ import net.mynero.wallet.service.UTXOService;
 import net.mynero.wallet.util.Constants;
 import net.mynero.wallet.util.UriData;
 
+import org.json.JSONArray;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements MoneroHandlerThread.Listener, PasswordBottomSheetDialog.PasswordListener {
@@ -106,12 +108,42 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     }
 
     private void upgradeOldNodePrefs() {
-        String oldNodeString = PrefService.getInstance().getString("pref_node", "");
-        if(!oldNodeString.isEmpty()) {
-            Node oldNode = Node.fromString(oldNodeString);
-            if(oldNode != null) {
-                PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, oldNode.toNodeString()).apply();
+        try {
+            String oldNodeString = PrefService.getInstance().getString("pref_node", "");
+            String nodeString = "";
+            if (!oldNodeString.isEmpty()) {
+                String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
+                JSONArray jsonArray = new JSONArray(nodesArray);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String jsonNodeString = jsonArray.getString(i);
+                    Node savedNode = Node.fromString(jsonNodeString);
+                    if(savedNode != null) {
+                        if (savedNode.getAddress().equals(oldNodeString)) {
+                            nodeString = savedNode.toNodeString();
+                            break;
+                        }
+                    }
+                }
+                if(nodeString.isEmpty()) {
+                    for (DefaultNodes defaultNode : DefaultNodes.values()) {
+                        Node node = Node.fromString(defaultNode.getUri());
+                        if(node != null) {
+                            if(node.getAddress().equals(oldNodeString)) {
+                                nodeString = node.toNodeString();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(!nodeString.isEmpty()) {
+                    Node oldNode = Node.fromString(nodeString);
+                    if (oldNode != null) {
+                        PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, oldNode.toNodeString()).apply();
+                    }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
