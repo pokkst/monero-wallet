@@ -4,10 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import net.mynero.wallet.MoneroApplication;
+import net.mynero.wallet.data.DefaultNodes;
+import net.mynero.wallet.data.Node;
+import net.mynero.wallet.util.Constants;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class PrefService extends ServiceBase {
-    public static SharedPreferences preferences = null;
-    public static PrefService instance = null;
+    private static SharedPreferences preferences = null;
+    private static PrefService instance = null;
 
     public PrefService(MoneroApplication application) {
         super(null);
@@ -17,6 +23,65 @@ public class PrefService extends ServiceBase {
 
     public SharedPreferences.Editor edit() {
         return preferences.edit();
+    }
+
+    public Node getNode() {
+        String oldNodeString = getString("pref_node", "");
+        if(!oldNodeString.isEmpty()) {
+            //upgrade old node pref to new node pref
+            try {
+                Node oldNode = getNode(oldNodeString);
+                if(oldNode != null) {
+                    SharedPreferences.Editor editor = edit();
+                    editor.putString(Constants.PREF_NODE_2, oldNode.toNodeString());
+                    editor.putString("pref_node", "");
+                    editor.apply();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean usesProxy = getBoolean(Constants.PREF_USES_TOR, false);
+        DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
+        String nodeString = getString(Constants.PREF_NODE_2, defaultNode.getUri());
+        if(!nodeString.isEmpty()) {
+            return Node.fromString(nodeString);
+        } else {
+            return null;
+        }
+    }
+
+    private Node getNode(String oldNodeString) throws JSONException {
+        String nodeString = "";
+        String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
+        JSONArray jsonArray = new JSONArray(nodesArray);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            String jsonNodeString = jsonArray.getString(i);
+            Node savedNode = Node.fromString(jsonNodeString);
+            if(savedNode != null) {
+                if (savedNode.getAddress().equals(oldNodeString)) {
+                    nodeString = savedNode.toNodeString();
+                    break;
+                }
+            }
+        }
+        if(nodeString.isEmpty()) {
+            for (DefaultNodes defaultNode : DefaultNodes.values()) {
+                Node node = Node.fromString(defaultNode.getUri());
+                if(node != null) {
+                    if(node.getAddress().equals(oldNodeString)) {
+                        nodeString = node.toNodeString();
+                        break;
+                    }
+                }
+            }
+        }
+        if(nodeString.isEmpty()) {
+            return null;
+        } else {
+            Node oldNode = Node.fromString(nodeString);
+            return oldNode;
+        }
     }
 
     public String getString(String key, String defaultValue) {

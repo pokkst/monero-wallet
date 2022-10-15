@@ -1,6 +1,7 @@
 package net.mynero.wallet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -108,43 +109,7 @@ public class MainActivity extends AppCompatActivity implements MoneroHandlerThre
     }
 
     private void upgradeOldNodePrefs() {
-        try {
-            String oldNodeString = PrefService.getInstance().getString("pref_node", "");
-            String nodeString = "";
-            if (!oldNodeString.isEmpty()) {
-                String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
-                JSONArray jsonArray = new JSONArray(nodesArray);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    String jsonNodeString = jsonArray.getString(i);
-                    Node savedNode = Node.fromString(jsonNodeString);
-                    if(savedNode != null) {
-                        if (savedNode.getAddress().equals(oldNodeString)) {
-                            nodeString = savedNode.toNodeString();
-                            break;
-                        }
-                    }
-                }
-                if(nodeString.isEmpty()) {
-                    for (DefaultNodes defaultNode : DefaultNodes.values()) {
-                        Node node = Node.fromString(defaultNode.getUri());
-                        if(node != null) {
-                            if(node.getAddress().equals(oldNodeString)) {
-                                nodeString = node.toNodeString();
-                                break;
-                            }
-                        }
-                    }
-                }
-                if(!nodeString.isEmpty()) {
-                    Node oldNode = Node.fromString(nodeString);
-                    if (oldNode != null) {
-                        PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, oldNode.toNodeString()).apply();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        PrefService.getInstance().getNode();
     }
 
     @Override

@@ -159,9 +159,7 @@ public class OnboardingFragment extends Fragment {
     }
 
     private void prepareDefaultNode() {
-        boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-        DefaultNodes defaultNode = usesTor ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
-        PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, defaultNode.getUri()).apply();
+        PrefService.getInstance().getNode();
     }
 
     private void createOrImportWallet(String walletPassword, String walletSeed, String restoreHeightText) {
