@@ -30,8 +30,6 @@ import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class OnboardingFragment extends Fragment {
 
@@ -163,7 +161,7 @@ public class OnboardingFragment extends Fragment {
     private void prepareDefaultNode() {
         boolean usesTor = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
         DefaultNodes defaultNode = usesTor ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
-        PrefService.getInstance().edit().putString(Constants.PREF_NODE, defaultNode.getAddress()).apply();
+        PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, defaultNode.getUri()).apply();
     }
 
     private void createOrImportWallet(String walletPassword, String walletSeed, String restoreHeightText) {

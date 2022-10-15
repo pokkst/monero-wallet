@@ -5,13 +5,9 @@ import android.util.Patterns;
 import androidx.lifecycle.ViewModel;
 
 import net.mynero.wallet.MoneroApplication;
-import net.mynero.wallet.data.DefaultNodes;
 import net.mynero.wallet.model.WalletManager;
 import net.mynero.wallet.service.PrefService;
 import net.mynero.wallet.util.Constants;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SettingsViewModel extends ViewModel {
 
@@ -21,7 +17,7 @@ public class SettingsViewModel extends ViewModel {
     public void updateProxy(MoneroApplication application) {
         application.getExecutor().execute(() -> {
             boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
-            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE, "");
+            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE_2, "");
             boolean isNodeLocalIp = currentNodeString.startsWith("10.") || currentNodeString.startsWith("192.168.") || currentNodeString.equals("localhost") || currentNodeString.equals("127.0.0.1");
 
             if (!usesProxy || isNodeLocalIp) {

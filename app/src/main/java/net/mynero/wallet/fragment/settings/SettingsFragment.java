@@ -174,7 +174,8 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
                 statusTextView.setText(getResources().getText(R.string.version_mismatch));
             }
         });
-        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE, "")); // shouldn't use default value here
+        DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
+        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE_2, defaultNode.getUri())); // shouldn't use default value here
         selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
         selectNodeButton.setOnClickListener(view1 -> {
             NodeSelectionBottomSheetDialog dialog = new NodeSelectionBottomSheetDialog();
@@ -220,7 +221,7 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     @Override
     public void onNodeSelected() {
-        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE, ""));
+        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE_2, ""));
         selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
         mViewModel.updateProxy(((MoneroApplication)getActivity().getApplication()));
         ((MoneroApplication)getActivity().getApplication()).getExecutor().execute(() -> {

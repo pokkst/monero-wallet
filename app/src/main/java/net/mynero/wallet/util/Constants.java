@@ -7,7 +7,7 @@ public class Constants {
     public static final String PREF_USES_TOR = "pref_uses_tor";
     public static final String PREF_NIGHT_MODE = "pref_night_mode";
     public static final String PREF_PROXY = "pref_proxy";
-    public static final String PREF_NODE = "pref_node";
+    public static final String PREF_NODE_2 = "pref_node_2";
     public static final String PREF_CUSTOM_NODES = "pref_custom_nodes";
 
     public static final String URI_PREFIX = "monero:";

@@ -83,7 +83,7 @@ public class NodeSelectionBottomSheetDialog extends BottomSheetDialogFragment im
                 Toast.makeText(activity, getString(R.string.node_selected), Toast.LENGTH_SHORT).show();
             });
         }
-        PrefService.getInstance().edit().putString(Constants.PREF_NODE, node.getAddress()).apply();
+        PrefService.getInstance().edit().putString(Constants.PREF_NODE_2, node.toNodeString()).apply();
         WalletManager.getInstance().setDaemon(node);
         adapter.updateSelectedNode();
         listener.onNodeSelected();
