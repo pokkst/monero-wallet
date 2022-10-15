@@ -59,6 +59,7 @@ public class PrefService extends ServiceBase {
         String nodesArray = PrefService.getInstance().getString(Constants.PREF_CUSTOM_NODES, "[]");
         JSONArray jsonArray = new JSONArray(nodesArray);
         for (int i = 0; i < jsonArray.length(); i++) {
+            //check custom nodes
             String jsonNodeString = jsonArray.getString(i);
             Node savedNode = Node.fromString(jsonNodeString);
             if(savedNode != null) {
@@ -69,6 +70,7 @@ public class PrefService extends ServiceBase {
             }
         }
         if(nodeString.isEmpty()) {
+            //not in custom nodes, maybe in default nodes?
             for (DefaultNodes defaultNode : DefaultNodes.values()) {
                 Node node = Node.fromString(defaultNode.getUri());
                 if(node != null) {
