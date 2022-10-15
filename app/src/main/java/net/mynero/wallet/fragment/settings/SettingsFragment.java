@@ -221,7 +221,9 @@ public class SettingsFragment extends Fragment implements PasswordBottomSheetDia
 
     @Override
     public void onNodeSelected() {
-        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE_2, ""));
+        boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
+        DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
+        Node node = Node.fromString(PrefService.getInstance().getString(Constants.PREF_NODE_2, defaultNode.getUri()));
         selectNodeButton.setText(getString(R.string.node_button_text, node.getAddress()));
         mViewModel.updateProxy(((MoneroApplication)getActivity().getApplication()));
         ((MoneroApplication)getActivity().getApplication()).getExecutor().execute(() -> {

@@ -96,7 +96,9 @@ public class NodeSelectionAdapter extends RecyclerView.Adapter<NodeSelectionAdap
         }
 
         public void bind(Node node) {
-            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE_2, "");
+            boolean usesProxy = PrefService.getInstance().getBoolean(Constants.PREF_USES_TOR, false);
+            DefaultNodes defaultNode = usesProxy ? DefaultNodes.SAMOURAI_ONION : DefaultNodes.SAMOURAI;
+            String currentNodeString = PrefService.getInstance().getString(Constants.PREF_NODE_2, defaultNode.getUri());
             Node currentNode = Node.fromString(currentNodeString);
             boolean match = node.equals(currentNode);
             if (match) {
