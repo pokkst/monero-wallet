@@ -2,106 +2,76 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingTop="12dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="12dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pbConfirmations"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="9"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/pbConfirmations"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:indeterminate="false"
-                    android:max="10"
-                    android:progress="8"
-                    android:visibility="visible"
-                    app:indicatorInset="0dp"
-                    app:indicatorSize="30dp"
-                    app:trackThickness="4dp" />
-
-                <TextView
-                    android:id="@+id/tvConfirmations"
-                    style="@style/MoneroText.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:paddingBottom="1dp"
-                    android:text="8"
-                    android:visibility="visible" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tx_amount"
-                    style="@style/MoneroText.PosAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    tools:text="+ 999.999999" />
-
-                <TextView
-                    android:id="@+id/tx_failed"
-                    style="@style/MoneroText.PosFee"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/tx_list_failed_text" />
-            </LinearLayout>
-        </LinearLayout>
+            android:indeterminate="false"
+            android:max="10"
+            android:progress="8"
+            android:visibility="visible"
+            app:indicatorInset="0dp"
+            app:indicatorSize="30dp"
+            app:trackThickness="4dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tx_amount"
+            app:layout_constraintBottom_toBottomOf="@id/tx_failed"/>
 
         <TextView
-            android:id="@+id/tx_paymentid"
-            style="@style/MoneroText.PosNote"
+            android:id="@+id/tvConfirmations"
+            style="@style/MoneroText.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="1dp"
+            android:text="8"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@id/pbConfirmations"
+            app:layout_constraintBottom_toBottomOf="@id/pbConfirmations"
+            app:layout_constraintStart_toStartOf="@id/pbConfirmations"
+            app:layout_constraintEnd_toEndOf="@id/pbConfirmations"/>
+
+        <TextView
+            android:id="@+id/tx_amount"
+            style="@style/MoneroText.PosAmount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="13"
-            android:gravity="start"
-            tools:text="0123456789abcdef" />
+            tools:text="+ 999.999999"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pbConfirmations"
+            app:layout_constraintEnd_toStartOf="@id/tx_datetime"/>
+
+        <TextView
+            android:id="@+id/tx_failed"
+            style="@style/MoneroText.PosFee"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tx_list_failed_text"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pbConfirmations"
+            app:layout_constraintTop_toBottomOf="@id/tx_amount"/>
 
         <TextView
             android:id="@+id/tx_datetime"
             style="@style/MoneroText.PosDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="6"
-            android:gravity="center"
-            tools:text="2017-05-22 21:32" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_navigate_next" />
-    </LinearLayout>
+            tools:text="2017-05-22 21:32"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="16dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

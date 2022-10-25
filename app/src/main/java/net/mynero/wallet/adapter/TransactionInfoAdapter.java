@@ -158,28 +158,6 @@ public class TransactionInfoAdapter extends RecyclerView.Adapter<TransactionInfo
                 ((TextView) itemView.findViewById(R.id.tx_amount)).setText(itemView.getContext().getString(R.string.tx_list_amount_positive, displayAmount));
             }
 
-            TextView paymentIdTextView = itemView.findViewById(R.id.tx_paymentid);
-            String tag = null;
-            String info = "";
-            UserNotes userNotes = new UserNotes(txInfo.notes);
-            if ((txInfo.addressIndex != 0) && (txInfo.direction == TransactionInfo.Direction.Direction_In))
-                tag = txInfo.getDisplayLabel();
-            if ((userNotes.note.isEmpty())) {
-                if (!txInfo.paymentId.equals("0000000000000000")) {
-                    info = txInfo.paymentId;
-                }
-            } else {
-                info = userNotes.note;
-            }
-            if (tag == null) {
-                paymentIdTextView.setText(info);
-            } else {
-                Spanned label = Html.fromHtml(itemView.getContext().getString(R.string.tx_details_notes,
-                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), R.attr.positiveColor) & 0xFFFFFF),
-                        Integer.toHexString(ThemeHelper.getThemedColor(itemView.getContext(), android.R.attr.colorBackground) & 0xFFFFFF),
-                        tag, info.isEmpty() ? "" : ("&nbsp; " + info)));
-                paymentIdTextView.setText(label);
-            }
             ((TextView) itemView.findViewById(R.id.tx_datetime)).setText(getDateTime(txInfo.timestamp));
             itemView.setOnClickListener(view -> {
                 listener.onClickTransaction(txInfo);
